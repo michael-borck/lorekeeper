@@ -1,0 +1,68 @@
+# Interactive lessons appended to Part 4 of The Human Edge.
+lessons:
+  - kind: checkpoint
+    title: "Checkpoint: design the human in"
+    questions:
+      - id: q1
+        prompt: What is the first decision before automating a workflow?
+        options:
+          - Scope: one workflow, one owner, one success measure and a recorded baseline
+          - Which model is the most powerful
+          - How many staff can be removed
+          - Which vendor has the best demo
+        answer: 0
+        explanation: "Without a baseline and a measure, the 30-day judgement is just competing impressions."
+      - id: q2
+        prompt: What should every amber or red step have?
+        options:
+          - A named person and the specific check they perform
+          - A note that the team will review it
+          - A larger model
+          - A weekly meeting
+        answer: 0
+        explanation: "Named matters. The team reviews it usually means nobody reviews it."
+      - id: q3
+        prompt: What are the three honest calls at the 30-day gate?
+        options:
+          - Scale, pivot or kill against criteria written at the start
+          - Expand, delay or ignore
+          - Buy, build or outsource
+          - Automate, remove or hide
+        answer: 0
+        explanation: "Criteria invented at the gate fit whatever happened. Write them before you start."
+      - id: q4
+        prompt: Which step should stay human?
+        options:
+          - The step where the person contributes attention, reassurance, authority or relationship
+          - Every step, always
+          - The cheapest step
+          - The step with the most data
+        answer: 0
+        explanation: "Some steps are the service. Automate the preparation, not the presence."
+      - id: q5
+        prompt: What is the two-pass habit?
+        options:
+          - Do the task yourself first, then with the tool, and compare both directions
+          - Run the prompt twice and pick the better answer
+          - Ask two different models
+          - Review the output twice
+        answer: 0
+        explanation: "Where the tool beats you is a blind spot. Where you beat it is a limit to check."
+      - id: q6
+        prompt: Why do the corners move?
+        options:
+          - Models improve, so some tasks need less checking, but the high-stakes precise corner never empties
+          - The Trust Tool is unreliable
+          - Checks are no longer needed
+          - Consequences disappear over time
+        answer: 0
+        explanation: "The line moves. The check stays. Re-test rather than believe a launch post."
+      - id: q7
+        prompt: What should a leader do when juniors lose the easy reps?
+        options:
+          - Explain the standard, run side-by-side drills and protect deliberate practice
+          - Hire fewer juniors and hope
+          - Let the tool mentor them
+          - Remove the fundamentals from the role
+        answer: 0
+        explanation: "If the job no longer supplies the reps, the organisation has to put practice back on purpose."

@@ -1,0 +1,57 @@
+# Interactive lessons appended to Part 3 of The Human Edge.
+lessons:
+  - kind: scenario
+    title: The confident brief
+    prompt: |
+      An AI analysis of six months of support tickets says Account Issues has
+      the lowest satisfaction and Sundays are twice as slow as average. The
+      prose is calm and the claims fit the story you expected. The meeting is
+      in an hour. Choose your next move.
+    options:
+      - id: verify
+        label: Recompute the category averages and the Sunday comparison from the source data
+        outcome: |
+          The category claim is wrong: Returns and Refunds has the lowest
+          satisfaction. The Sunday claim is overstated: about 1.5 times, not
+          double. The verified claims go to the meeting with the correction.
+        effects:
+          Accuracy: Restored
+          Decision: Evidence-based
+          Time: Slower now
+        recommended: true
+        feedback: If a number would change a decision, check it outside the tool.
+      - id: sure
+        label: Ask the AI whether it is sure and accept the answer
+        outcome: |
+          The tool says the analysis is correct. It is still wrong. The meeting
+          redirects effort to the wrong team and inflates the staffing case.
+        effects:
+          Accuracy: Unchanged
+          Decision: Misled
+          Confidence: False
+        feedback: Asking the tool to check itself is not a check. It agrees with itself.
+      - id: forward
+        label: Forward the brief because the claims sound professional
+        outcome: |
+          The prose carries no information about correctness. The false claim
+          and the inflated figure reach the decision-maker with your name on
+          the message.
+        effects:
+          Speed: Fast
+          Accuracy: Unknown
+          Trust: At risk
+        feedback: Tone is not evidence. Fluent output is not checked output.
+      - id: more
+        label: Ask for more analysis before checking the claims
+        outcome: |
+          The document grows. The original miscount and the invented
+          explanation remain, now surrounded by more confident prose.
+        effects:
+          Length: Higher
+          Accuracy: Unchanged
+          Time: Wasted
+        feedback: More analysis on a wrong base produces more wrong detail.
+    debrief: |
+      Frame the decision, explore the data, verify the claims outside the tool
+      and shape the brief for the reader. End with a line that says what you
+      checked.

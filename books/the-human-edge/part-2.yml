@@ -1,0 +1,56 @@
+# Interactive lessons appended to Part 2 of The Human Edge.
+lessons:
+  - kind: scenario
+    title: The generic first draft
+    prompt: |
+      You ask for a project update for the steering committee. The result is
+      correct in outline, useless in detail and written for nobody. You have
+      twenty minutes before the meeting. Choose your next move.
+    options:
+      - id: rtcf
+        label: Rewrite with RTCF, especially audience, stakes, constraints and format
+        outcome: |
+          The second version names the time-poor committee, states the delay in
+          the first two lines, proposes the recovery plan and fits the format.
+          The output is usable because the brief supplied what a colleague
+          would have asked.
+        effects:
+          First output: Closer
+          Rework: Less
+          Time: Spent on the brief
+        recommended: true
+        feedback: Context does most of the work. Role sets the voice.
+      - id: role
+        label: Add "You are a world-class project manager" and try again
+        outcome: |
+          The tone becomes more confident. The content is still generic because
+          the tool does not know the audience, the delay, the constraints or
+          what good looks like.
+        effects:
+          Tone: Confident
+          Content: Still generic
+          Time: Wasted on a role
+        feedback: Role adds less than the tip lists suggest. Spend the words on context and format.
+      - id: tryharder
+        label: Tell the AI to try harder and do better
+        outcome: |
+          The tool produces another fluent average. It has no new information
+          about the meeting, the committee or the standard.
+        effects:
+          Tone: More polished
+          Content: Unchanged
+          Time: Wasted
+        feedback: A vague instruction cannot close a gap the brief left open.
+      - id: copy
+        label: Copy the generic draft and fix it by hand in the meeting
+        outcome: |
+          You spend the meeting editing instead of deciding. The recovery plan
+          and the audience assumptions are still missing.
+        effects:
+          Speed: Fast start
+          Quality: Low
+          Meeting: Diverted
+        feedback: A poor brief moves the work to the worst possible moment.
+    debrief: |
+      Brief a colleague, not a search engine. Four to eight sentences for work
+      that matters, with context and a definition of done.

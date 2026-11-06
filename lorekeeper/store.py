@@ -198,6 +198,22 @@ def _follow_the_trace() -> dict:
     )
 
 
+def _the_human_edge() -> dict:
+    root = engine_root().parents[2] / "books" / "the-human-edge-using"
+    if not root.is_dir():
+        raise FileNotFoundError(f"the human edge source not found: {root}")
+    return build_book_pack(
+        root,
+        unit_id="the-human-edge",
+        title="The Human Edge: Using AI with Judgement",
+        theme="storybook",
+        tags=["ai", "judgement", "trust", "verification", "professional"],
+        level="beginner",
+        pitch="Judge, brief, check and deliver AI-assisted work without surrendering the decision.",
+        parts="1-4",
+    )
+
+
 def _write_pack(out: Path, pack: dict, key) -> dict:
     packs_dir = out / "packs"
     packs_dir.mkdir(parents=True, exist_ok=True)
@@ -247,6 +263,7 @@ def build_store(
         _build_web_guide_ai(),
         _systems_analysis_and_design(),
         _follow_the_trace(),
+        _the_human_edge(),
     ]
     catalog_packs = [_write_pack(out, pack, key) for pack in packs]
     catalog = {
