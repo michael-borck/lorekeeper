@@ -1,0 +1,94 @@
+# Lorekeeper overlay for the enterprise systems course, Module 01.
+
+lessons:
+  - id: 01-01
+    kind: reading
+    title: The estate as layers
+    source: overview.qmd
+    include:
+      - Learning objectives
+      - The week's idea
+      - The estate as layers
+      - The business decision
+
+  - id: 01-02
+    kind: reading
+    title: Inspect the host
+    source: in-class/activity-01.qmd
+    include:
+      - "Part 3: Inspect the host"
+
+  - id: 01-03
+    kind: checkpoint
+    title: "Checkpoint: the host and the estate"
+    questions:
+      - id: q1
+        prompt: Which layer sits directly above the operating system in the estate?
+        options:
+          - The service runtime, such as Docker or Podman
+          - The laptop
+          - Identity and access
+          - Storage backups
+        answer: 0
+        explanation: The runtime runs on the OS and hosts the service containers.
+      - id: q2
+        prompt: What does the install simulation cover that the host shell does not?
+        options:
+          - Hardware sizing and install choices
+          - Kernel scheduling
+          - Container networking
+          - The customer portal
+        answer: 0
+        explanation: The simulation is for the build decision. The real host is a fixed 2 GB, 2 CPU Ubuntu container.
+      - id: q3
+        prompt: Why can `free -h` show more memory than `/sys/fs/cgroup/memory.max`?
+        options:
+          - "`/proc/meminfo` is not namespaced, so it can show the host view"
+          - "`free` rounds up to the nearest gigabyte"
+          - The cgroup file is always wrong
+          - The container has no memory limit
+        answer: 0
+        explanation: The cgroup file is the enforceable container limit. `free` reads the host view.
+      - id: q4
+        prompt: Which list is the five AI habits in this module?
+        options:
+          - Predict, ask with context, verify, challenge, decide
+          - Prompt, copy, paste, trust, ship
+          - Install, configure, restart, log, forget
+          - Search, summarise, generate, accept, deploy
+        answer: 0
+        explanation: The habit is to predict first, give context, verify against the host, challenge the answer and make the decision yourself.
+      - id: q5
+        prompt: What makes a host rebuildable?
+        options:
+          - Recorded choices, a build record and a repeatable build path
+          - A long uptime
+          - A single administrator password
+          - Disabling logging
+        answer: 0
+        explanation: A rebuild is only possible when the choices and the path are recorded, not remembered.
+      - id: q6
+        prompt: What is the difference between the host and the estate?
+        options:
+          - The host is the Ubuntu machine; the estate is the service layer running on it
+          - The host is Docker; the estate is Ubuntu
+          - The host is the network; the estate is storage
+          - They are the same thing with different names
+        answer: 0
+        explanation: The host is the base. The estate is the services, network, storage and identity on top.
+
+  - id: 01-04
+    kind: order
+    title: Build order
+    prompt: |
+      Put the install decisions in the order you would make them in the simulation.
+    items:
+      - Choose the Ubuntu release
+      - Choose the network and hostname
+      - Choose the storage layout
+      - Create the administrative user
+      - Enable SSH and choose the package set
+      - Review the build record
+    explanation: |
+      The release and the network identity come first, then storage, the admin user,
+      remote access and the package set. Review the record before you build.

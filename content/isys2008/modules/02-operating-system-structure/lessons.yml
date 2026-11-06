@@ -1,0 +1,96 @@
+# Lorekeeper overlay for the enterprise systems course, Module 02.
+
+lessons:
+  - id: 02-01
+    kind: reading
+    title: Kernel, services and logs
+    source: overview.qmd
+    include:
+      - Learning objectives
+      - The week's idea
+      - Key ideas
+      - The CloudCore ticket
+
+  - id: 02-02
+    kind: reading
+    title: Read the service trail
+    source: in-class/activity-01.qmd
+    include:
+      - "Part 1: The kernel boundary"
+      - "Part 2: The service"
+      - "Part 3: Change the interval"
+      - "Part 4: Break it and fix it"
+
+  - id: 02-03
+    kind: checkpoint
+    title: "Checkpoint: boundary, supervisor, evidence"
+    questions:
+      - id: q1
+        prompt: What is the difference between the kernel and user space?
+        options:
+          - The kernel is privileged and manages hardware; user space runs services and applications
+          - The kernel runs in the browser; user space runs on the host
+          - User space is privileged; the kernel is optional
+          - They are the same layer with different names
+        answer: 0
+        explanation: The kernel schedules, manages memory and talks to hardware. User space is where services and shells run.
+      - id: q2
+        prompt: What is a system call?
+        options:
+          - The controlled boundary where user space asks the kernel to do something
+          - A function that runs only in JavaScript
+          - A network protocol
+          - A file permission
+        answer: 0
+        explanation: A process cannot touch hardware directly. It asks the kernel through a system call.
+      - id: q3
+        prompt: What is PID 1 in a container?
+        options:
+          - The first user-space process, usually the container's main process
+          - The kernel process
+          - The first login shell
+          - The supervisor's log file
+        answer: 0
+        explanation: PID 1 is the main process. It has special signal and reaping responsibilities.
+      - id: q4
+        prompt: What does `supervisorctl reread` do?
+        options:
+          - Reads changed configuration files without applying them yet
+          - Restarts every service
+          - Deletes the supervisor log
+          - Changes the kernel version
+        answer: 0
+        explanation: "`reread` notices changes. `update` applies them, including restarts."
+      - id: q5
+        prompt: A service points at a command that does not exist. What should you read first?
+        options:
+          - The supervisor state and the supervisor log
+          - The browser cache
+          - The DNS zone file
+          - The host's CPU temperature
+        answer: 0
+        explanation: The state tells you it failed; the log tells you why.
+      - id: q6
+        prompt: What should you monitor so a stopped heartbeat is caught before a person reports it?
+        options:
+          - Service state and log freshness or heartbeat age
+          - Only whether the host is powered on
+          - Only the disk size
+          - Only the number of users
+        answer: 0
+        explanation: A process can be present and still be unhealthy. Monitor the evidence the service produces.
+
+  - id: 02-04
+    kind: order
+    title: Diagnose the service
+    prompt: |
+      Put the service change and diagnosis steps in a safe order.
+    items:
+      - Edit the supervisor configuration
+      - Run supervisorctl reread
+      - Run supervisorctl update
+      - Check supervisorctl status
+      - Read the supervisor and service logs
+    explanation: |
+      Edit, reread to load the change, update to apply it, check the state, then read the
+      logs. Reading the log before applying the change tells you about the old state.

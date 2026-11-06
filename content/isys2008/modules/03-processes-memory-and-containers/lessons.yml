@@ -1,0 +1,132 @@
+# Lorekeeper overlay for the enterprise systems course, Module 03.
+
+lessons:
+  - id: 03-01
+    kind: reading
+    title: Processes, memory and containers
+    source: overview.qmd
+    include:
+      - Learning objectives
+      - The week's idea
+      - Key ideas
+      - The CloudCore ticket
+
+  - id: 03-02
+    kind: reading
+    title: Watch the limit
+    source: in-class/activity-01.qmd
+    include:
+      - "Part 1: What is running"
+      - "Part 2: Load and observe"
+      - "Part 3: Change the limit"
+
+  - id: 03-03
+    kind: checkpoint
+    title: "Checkpoint: the process budget"
+    questions:
+      - id: q1
+        prompt: How is a container different from a virtual machine?
+        options:
+          - It is an isolated process tree sharing the host kernel, not a separate kernel
+          - It has its own kernel and virtual hardware
+          - It always runs faster than a VM
+          - It cannot be limited
+        answer: 0
+        explanation: A container uses namespaces and cgroups on the host kernel. A VM virtualises hardware and runs its own kernel.
+      - id: q2
+        prompt: What does a namespace give a process?
+        options:
+          - A private view of PIDs, network, mounts or hostname
+          - More physical memory
+          - A separate kernel
+          - A permanent IP address
+        answer: 0
+        explanation: Namespaces isolate what the process can see. They do not allocate hardware.
+      - id: q3
+        prompt: What does a cgroup do?
+        options:
+          - Accounts for and limits CPU, memory, processes or I/O
+          - Creates a private network
+          - Encrypts the filesystem
+          - Schedules a cron job
+        answer: 0
+        explanation: Cgroups enforce budgets and account for usage.
+      - id: q4
+        prompt: What usually happens when a container hits a CPU limit?
+        options:
+          - It is throttled and becomes slower
+          - It is killed immediately
+          - It gets a new IP address
+          - It loses its filesystem
+        answer: 0
+        explanation: CPU is time-sliced. Hitting the limit throttles the group. A memory limit is what usually kills.
+      - id: q5
+        prompt: What happens when a container hits a hard memory limit?
+        options:
+          - The kernel may kill the process with an out-of-memory error
+          - The CPU gets faster
+          - The container gets more disk
+          - The network is disabled
+        answer: 0
+        explanation: Memory cannot be throttled the same way. The OOM killer ends the process.
+      - id: q6
+        prompt: What should come before raising a CPU limit?
+        options:
+          - Evidence from stats and load showing the limit is the bottleneck
+          - A guess that more CPU will help
+          - A larger disk
+          - A new hostname
+        answer: 0
+        explanation: A recommendation needs evidence. Otherwise you may spend capacity without fixing the cause.
+
+  - id: 03-04
+    kind: scenario
+    title: Choose the fix
+    prompt: |
+      The portal is slow under load. The stats show the web container reaching its CPU
+      limit while the database is mostly idle. Choose the response you would recommend.
+    options:
+      - id: reduce
+        label: Reduce the work per request
+        outcome: |
+          You profile the request path and remove repeated work. Response time improves
+          without adding host capacity.
+        effects:
+          Cost: Engineering time
+          Peak protection: Medium
+          Risk: The change may not be enough
+        recommended: true
+        feedback: Start with the cause if the evidence shows avoidable work. Revisit the limit after the change.
+      - id: raise
+        label: Raise the web CPU limit
+        outcome: |
+          The container gets more CPU. The portal improves until the next traffic increase,
+          and other services have less headroom.
+        effects:
+          Cost: More host capacity
+          Peak protection: High now
+          Risk: Less protection for other services
+        feedback: A valid option when the work is necessary and the host has headroom. Measure before and after.
+      - id: replica
+        label: Add a second web container
+        outcome: |
+          Two containers share the load. Peak capacity improves, but you now operate a
+          routing layer and another process to monitor.
+        effects:
+          Cost: More memory and routing
+          Peak protection: High
+          Risk: More moving parts
+        feedback: Good for horizontal scale, but it does not fix an inefficient request.
+      - id: leave
+        label: Leave the limit and manage expectations
+        outcome: |
+          Nothing changes. The portal is slow at peak and customers notice. The cost is
+          reputation, not infrastructure.
+        effects:
+          Cost: None now
+          Peak protection: Low
+          Risk: Customer patience
+        feedback: Doing nothing is a decision. It needs an explicit owner and a review trigger.
+    debrief: |
+      The right answer depends on the evidence. Name the bottleneck, the cost, the risk and
+      the condition under which you would revisit the choice.
