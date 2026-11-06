@@ -1,0 +1,68 @@
+# Interactive lessons appended to Part 1 of Break with Permission.
+lessons:
+  - kind: checkpoint
+    title: "Checkpoint: authorise and scope"
+    questions:
+      - id: q1
+        prompt: What is the one rule of ethical hacking?
+        options:
+          - Never test a system you do not own without written permission
+          - Always use the newest tool
+          - Never test a production system
+          - Always report a finding before exploiting it
+        answer: 0
+        explanation: "Written authorisation names the target, techniques, people and time window. Without it, the work is unauthorised access."
+      - id: q2
+        prompt: What is the difference between scope and rules of engagement?
+        options:
+          - Scope says where; rules of engagement say how
+          - Scope is legal; rules of engagement are technical
+          - Scope is for the client; rules of engagement are for the tester
+          - There is no difference
+        answer: 0
+        explanation: "Scope names the assets and windows. The rules of engagement name the permitted and prohibited techniques inside them."
+      - id: q3
+        prompt: What is a grey-box engagement?
+        options:
+          - The tester gets some information, such as a low-privilege account
+          - The tester gets no information
+          - The tester gets full source and credentials
+          - The tester tests only physical access
+        answer: 0
+        explanation: "Black-box starts from public information, grey-box adds partial access, white-box adds source and credentials."
+      - id: q4
+        prompt: What is the difference between passive and active reconnaissance?
+        options:
+          - Passive uses public information; active sends traffic to the target
+          - Passive is illegal; active is legal
+          - Passive uses tools; active uses search engines
+          - There is no difference
+        answer: 0
+        explanation: "Active work is visible and must sit inside the authorised scope and time window."
+      - id: q5
+        prompt: A scan of the authorised range returns a host owned by a third party. What do you do?
+        options:
+          - Stop, log the observation and notify the client
+          - Take a quick look because it is in the range
+          - Scan it but do not exploit it
+          - Ignore it and continue
+        answer: 0
+        explanation: "Reachability is not authorisation. Stop and ask before interacting with an out-of-scope asset."
+      - id: q6
+        prompt: What should a reconnaissance evidence record include?
+        options:
+          - Command or source, timestamp, scope item, output location, confidence and reviewer
+          - Only the screenshot
+          - Only the host name
+          - The final report text
+        answer: 0
+        explanation: "The record lets another tester reproduce the observation and shows that the work stayed in scope."
+      - id: q7
+        prompt: What is a stop condition?
+        options:
+          - A defined event that ends testing, such as an outage, a real breach or out-of-scope access
+          - The end of the working day
+          - The moment the scanner finishes
+          - The client's invoice date
+        answer: 0
+        explanation: "A tester who does not know when to stop is not in control of the engagement."

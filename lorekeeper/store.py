@@ -294,6 +294,22 @@ def _build_ai_understand_ai() -> dict:
     )
 
 
+def _break_with_permission() -> dict:
+    root = engine_root().parents[2] / "books" / "break-with-permission"
+    if not root.is_dir():
+        raise FileNotFoundError(f"break with permission source not found: {root}")
+    return build_book_pack(
+        root,
+        unit_id="break-with-permission",
+        title="Break with Permission: Ethical Hacking in Practice",
+        theme="pixel",
+        tags=["security", "ethical-hacking", "penetration-testing", "scope", "reporting"],
+        level="intermediate",
+        pitch="Scope, test and report an authorised security assessment without crossing the boundary.",
+        parts="1-3",
+    )
+
+
 def _write_pack(out: Path, pack: dict, key) -> dict:
     packs_dir = out / "packs"
     packs_dir.mkdir(parents=True, exist_ok=True)
@@ -349,6 +365,7 @@ def build_store(
         _conversation_not_delegation(),
         _prove_dont_persuade(),
         _build_ai_understand_ai(),
+        _break_with_permission(),
     ]
     catalog_packs = [_write_pack(out, pack, key) for pack in packs]
     catalog = {

@@ -1,0 +1,123 @@
+# Interactive lessons appended to Part 2 of Break with Permission.
+lessons:
+  - kind: checkpoint
+    title: "Checkpoint: get in"
+    questions:
+      - id: q1
+        prompt: What is the difference between scanning and enumeration?
+        options:
+          - Scanning finds hosts, ports and services; enumeration asks the services what they know
+          - Scanning is passive; enumeration is active
+          - Scanning is legal; enumeration is not
+          - They are the same
+        answer: 0
+        explanation: "Port 445 open is a fact. An anonymously readable staff share is a finding."
+      - id: q2
+        prompt: Why is offline hash cracking usually lower risk than online guessing?
+        options:
+          - It runs on the tester's machine and does not touch the target service
+          - It is always faster
+          - It is always legal
+          - It cannot fail
+        answer: 0
+        explanation: "Online guessing is visible, can lock accounts and can disrupt operations. It needs permission and rate limits."
+      - id: q3
+        prompt: What is the root-cause fix for SQL injection?
+        options:
+          - Parameterised queries and safe query construction
+          - A longer blocklist of dangerous words
+          - Hiding error messages only
+          - Renaming the parameter
+        answer: 0
+        explanation: "Blocklists are bypassed. Parameterised queries separate code from data."
+      - id: q4
+        prompt: What is the root-cause fix for cross-site scripting?
+        options:
+          - Context-aware output encoding, safe DOM APIs and a content security policy
+          - Disabling JavaScript everywhere
+          - A longer input blocklist
+          - Hiding the response
+        answer: 0
+        explanation: "Encode output for the context where it appears. Validate input as a secondary defence."
+      - id: q5
+        prompt: What is a safe proof of impact?
+        options:
+          - The smallest demonstration that the issue is real, without dumping or altering data
+          - Extracting the full customer database
+          - Leaving a backdoor
+          - Taking the service offline
+        answer: 0
+        explanation: "A boolean difference or a test record is enough to prove the issue. The goal is evidence, not damage."
+      - id: q6
+        prompt: Why is persistence usually out of scope?
+        options:
+          - It leaves a backdoor and changes the client's system beyond the proof
+          - It is too easy
+          - It is always illegal
+          - It slows the scan
+        answer: 0
+        explanation: "If persistence is required, it needs explicit permission and a cleanup plan."
+      - id: q7
+        prompt: What must happen after an exploitation test?
+        options:
+          - Cleanup and verification that the system was restored
+          - Nothing, the test is finished
+          - A second exploit
+          - Publishing the payload
+        answer: 0
+        explanation: "A test without cleanup is an incident you caused."
+  - kind: scenario
+    title: The reachable third party
+    prompt: |
+      A scan of the authorised range returns a host that belongs to the
+      client's payment provider. The host is reachable and responds to a
+      version probe. The rules of engagement say third parties are out of
+      scope. Choose your next move.
+    options:
+      - id: stop
+        label: Stop, log the observation, notify the client and wait for written authorisation
+        outcome: |
+          The observation is recorded with the address, time and scope
+          reference. The client confirms the host is a third party and
+          removes the range from the next scan. The engagement stays inside
+          its boundary.
+        effects:
+          Scope: Preserved
+          Evidence: Recorded
+          Risk: Contained
+        recommended: true
+        feedback: Reachability is not authorisation. Stop and ask before interacting with an out-of-scope asset.
+      - id: look
+        label: Take a quick look because the host is in the authorised range
+        outcome: |
+          The tester sends a request to a third party without permission.
+          The client's contract does not cover the provider, and the
+          provider's logs now show unauthorised traffic from the tester.
+        effects:
+          Scope: Breached
+          Evidence: Unauthorised
+          Risk: Legal
+        feedback: An address inside the range does not prove ownership. The scope is about permission, not geography.
+      - id: scan
+        label: Scan it but do not exploit it
+        outcome: |
+          The traffic still reaches a third party without authorisation.
+          "Only scanning" is not a legal or contractual defence.
+        effects:
+          Scope: Breached
+          Risk: High
+          Report: Tainted
+        feedback: Scanning is testing. If the asset is out of scope, the scan is out of scope.
+      - id: ignore
+        label: Ignore it and continue scanning the rest of the range
+        outcome: |
+          The report omits a host the client needed to know about. The
+          next scan repeats the same mistake.
+        effects:
+          Scope: Preserved
+          Communication: Failed
+          Risk: Hidden
+        feedback: Log the observation and notify. An out-of-scope host is a finding about the scope, not a secret.
+    debrief: |
+      The correct action is stop, log and notify. The client decides whether
+      to authorise the asset. The tester does not expand the boundary.

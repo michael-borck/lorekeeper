@@ -1,0 +1,68 @@
+# Interactive lessons appended to Part 3 of Break with Permission.
+lessons:
+  - kind: checkpoint
+    title: "Checkpoint: move and prove"
+    questions:
+      - id: q1
+        prompt: What is the difference between lateral movement and pivoting?
+        options:
+          - Lateral movement reaches another host; pivoting uses a compromised host as a relay
+          - Lateral movement is physical; pivoting is social
+          - Lateral movement is legal; pivoting is not
+          - They are the same
+        answer: 0
+        explanation: "A dual-homed host is the classic pivot. The tester sends traffic through it without changing the tester's routes."
+      - id: q2
+        prompt: Does reachability through a pivot create authorisation?
+        options:
+          - No. The scope must cover the next network and host.
+          - Yes. If it is reachable, it is fair game.
+          - Yes, if the first host is in scope.
+          - Only for read-only access.
+        answer: 0
+        explanation: "A route is not permission. The scope decides what may be tested."
+      - id: q3
+        prompt: What safeguards does a phishing simulation need?
+        options:
+          - Specific written authorisation, fictional or consented targets, a local environment and a debrief
+          - A real staff list and a real mail server
+          - A high click rate
+          - No debrief
+        answer: 0
+        explanation: "A simulation that frightens or shames people damages trust and can cross legal lines."
+      - id: q4
+        prompt: What is the physical access lab actually testing?
+        options:
+          - The access-control logic through a software simulation, not real RFID hardware
+          - Real badge cloning on a live door
+          - Lock picking on a real building
+          - Tailgating into a real office
+        answer: 0
+        explanation: "The lab simulates the backend so you learn the thinking without touching a real door."
+      - id: q5
+        prompt: What makes a finding reproducible?
+        options:
+          - Affected asset, evidence, reproduction steps, impact and remediation
+          - A severity score alone
+          - A screenshot with no context
+          - The tester's opinion
+        answer: 0
+        explanation: "Another tester or developer should be able to follow the evidence and verify the issue."
+      - id: q6
+        prompt: What should severity combine?
+        options:
+          - Technical score, exploitability and business impact
+          - Technical score alone
+          - The client's mood
+          - The number of tools used
+        answer: 0
+        explanation: "A medium issue on a payment path may outrank a high issue on an isolated test host."
+      - id: q7
+        prompt: What belongs in closeout?
+        options:
+          - Remove test accounts and files, close tunnels, rotate credentials, store or destroy evidence and schedule a retest
+          - Delete the report
+          - Leave the tunnel open for the client
+          - Publish the credentials
+        answer: 0
+        explanation: "Closeout is the difference between a test and a mess."
