@@ -80,7 +80,7 @@ def load_units() -> list[Unit]:
 def get_unit(key: str) -> Unit:
     wanted = key.lower()
     for unit in load_units():
-        if wanted in (unit.key.lower(), unit.code.lower()):
+        if wanted in (unit.key.lower(), unit.code.lower(), unit.slug.lower()):
             return unit
     known = ", ".join(u.code for u in load_units()) or "none"
     raise KeyError(f"unknown unit '{key}' (known: {known})")

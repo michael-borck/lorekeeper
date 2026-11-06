@@ -11,6 +11,7 @@ def test_pwa_assets_are_present():
         "player/manifest.webmanifest",
         "player/sw.js",
         "player/progress-file.js",
+        "player/library.js",
         "player/wayfinder.js",
         "player/icons/icon-192.png",
         "player/icons/icon-512.png",

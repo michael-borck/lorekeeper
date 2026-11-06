@@ -15,6 +15,9 @@
     lorekeeper site [--out _site] [--cname DOMAIN]
         assemble a static site for GitHub Pages or another static host
 
+    lorekeeper pack COURSE [--out FILE]
+        build a portable pack from a compiled course
+
     lorekeeper studio [--port 8765]
         open the local authoring studio for course overlays
 """
@@ -94,6 +97,25 @@ def _cmd_studio(args: argparse.Namespace) -> int:
     return start_studio(port=args.port, open_browser=not args.no_open)
 
 
+def _cmd_pack(args: argparse.Namespace) -> int:
+    from .pack import build_pack, write_pack
+
+    try:
+        unit = get_unit(args.unit)
+        pack = build_pack(unit)
+        out = (
+            Path(args.out).resolve()
+            if args.out
+            else engine_root() / "build" / "packs" / f"{unit.slug}.json"
+        )
+        target = write_pack(pack, out)
+    except (KeyError, ValueError, OSError) as exc:
+        print(f"✗ {exc}", file=sys.stderr)
+        return 1
+    print(f"✓ pack: {target}")
+    return 0
+
+
 def _cmd_site(args: argparse.Namespace) -> int:
     from .site import build_site
 
@@ -168,6 +190,11 @@ def build_parser() -> argparse.ArgumentParser:
     site.add_argument("--out", help="output directory (default: _site)")
     site.add_argument("--cname", help="custom domain to write into CNAME")
     site.set_defaults(func=_cmd_site)
+
+    pack = sub.add_parser("pack", help="build a portable course pack")
+    pack.add_argument("unit", help="course key, code or slug")
+    pack.add_argument("--out", help="output file (default: build/packs/<slug>.json)")
+    pack.set_defaults(func=_cmd_pack)
 
     return parser
 

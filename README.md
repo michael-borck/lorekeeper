@@ -304,6 +304,22 @@ Clearing browser storage erases the local copy. Lorekeeper asks the browser for
 persistent storage where the API exists, but a manual clear still wins. Export a
 backup before clearing site data or moving to another laptop.
 
+## Packs
+
+A pack is one course plus its compiled stories, in a single JSON file:
+
+```bash
+python3 -m lorekeeper pack ship-it
+# build/packs/ship-it.json
+```
+
+Import it from the course picker. Local packs live in `localStorage`, appear with
+a **Local pack** tag, and can be removed without touching the built-in courses.
+Progress and drafts stay separate from the pack file.
+
+Packs can contain exercise test code. Only import packs you trust. The static
+catalogue, signing and sandboxed test execution are the next step.
+
 ## What is built
 
 | Area | Status |
@@ -330,7 +346,8 @@ backup before clearing site data or moving to another laptop.
 | Field Kit demo | Complete |
 | Server-side sandbox | Not built |
 | LLM-backed Socratic tutor | Not built |
-| Pack format and static catalogue | Not built |
+| Pack build and local import | Working |
+| Static pack catalogue, signing and sandboxing | Not built |
 | Tauri desktop shell | Deferred |
 | LMS grade export | Not built |
 | Ink, Pixel and Storybook skins | Working |
@@ -343,16 +360,14 @@ backup before clearing site data or moving to another laptop.
 
 ## Roadmap
 
-1. Attach the custom domain once DNS is live.
-2. Define the pack format and local pack import/export.
-3. Build a static pack catalogue modelled on `swipeverse-store`, with a CI
-   validator.
-4. Add more real course overlays and Ink stories.
-5. Refine the skins with more custom art and course-specific scenes.
-6. Optional: a Tauri shell if native labs or offline pack management need it.
-7. Optional: a container runner for real shell exercises.
-8. Optional: an LLM-backed Socratic tutor for open viva answers.
-9. Optional: export completion to an LMS.
+1. Build a static pack catalogue modelled on `swipeverse-store`, with a CI
+   validator, signing and a trust warning.
+2. Add more real course overlays and Ink stories.
+3. Refine the skins with more custom art and course-specific scenes.
+4. Optional: a Tauri shell if native labs or offline pack management need it.
+5. Optional: a container runner for real shell exercises.
+6. Optional: an LLM-backed Socratic tutor for open viva answers.
+7. Optional: export completion to an LMS.
 
 ## Tests
 
