@@ -1,0 +1,123 @@
+# Interactive lessons appended to Part I of Assume Breach.
+lessons:
+  - kind: checkpoint
+    title: "Checkpoint: foundations"
+    questions:
+      - id: q1
+        prompt: Which property of the CIA triad does encryption primarily protect?
+        options:
+          - Confidentiality
+          - Availability
+          - Integrity
+          - Identity
+        answer: 0
+        explanation: Encryption keeps the content unreadable to someone without the key. Integrity and availability need other controls.
+      - id: q2
+        prompt: A system emails every new user their password in plain text. What kind of flaw is this?
+        options:
+          - A design flaw
+          - An implementation flaw
+          - A network fault
+          - A hardware fault
+        answer: 0
+        explanation: The system works as designed. The design itself is unsafe, so fixing it means changing the plan.
+      - id: q3
+        prompt: Which of these increases the attack surface?
+        options:
+          - An open port with an unused service
+          - A closed port
+          - A password manager
+          - A backup
+        answer: 0
+        explanation: Every reachable service adds a place to try. Unused services increase the surface without adding value.
+      - id: q4
+        prompt: What does ransomware usually do?
+        options:
+          - Encrypts files and demands payment for the key
+          - Steals the monitor
+          - Changes the DNS record only
+          - Deletes the operating system silently
+        answer: 0
+        explanation: Ransomware makes data unavailable and sells the recovery path. Backups are the defence that matters.
+      - id: q5
+        prompt: What does multi-factor authentication add?
+        options:
+          - A second factor from a different category
+          - A second password
+          - A longer username
+          - A faster login
+        answer: 0
+        explanation: Factors are knowledge, possession and inherence. Two passwords are still one factor.
+      - id: q6
+        prompt: Why do systems store password hashes rather than encrypted passwords?
+        options:
+          - A salted hash is one-way and cannot be reversed into the password
+          - Hashing is faster than encryption
+          - Hashes are always shorter
+          - Encryption cannot be stored
+        answer: 0
+        explanation: The system only needs to verify a candidate. It does not need the original password.
+      - id: q7
+        prompt: What does Kerckhoff's principle say?
+        options:
+          - The system should stay secure even if everything except the key is public
+          - The algorithm must be secret
+          - The key must be published
+          - Only the vendor may know the design
+        answer: 0
+        explanation: Security should rest on the key, not on hiding the method.
+
+  - kind: scenario
+    title: The inherited estate
+    prompt: |
+      You inherit a public web service. It has an old plugin, verbose logs, one
+      administrator account shared by three people, and no recent patches. This
+      morning the logs show a burst of failed logins from one address, followed by
+      one success. Choose your first move.
+    options:
+      - id: contain
+        label: Isolate the service and preserve the logs
+        outcome: |
+          You remove public access, keep the logs, and start a timeline. The service
+          is down for customers, but the evidence is intact and the account can be
+          contained deliberately.
+        effects:
+          Customer impact: Temporary outage
+          Evidence: Preserved
+          Risk: Lower until the account is secured
+        recommended: true
+        feedback: Contain first and keep the evidence. Then reset credentials and rebuild from a known state.
+      - id: reset
+        label: Reset every password immediately
+        outcome: |
+          The shared admin account is locked and reset. The attacker's session may
+          still be active, and the logs that would show what they touched are now
+          harder to interpret.
+        effects:
+          Customer impact: Low
+          Evidence: Partly lost
+          Risk: Attacker may remain
+        feedback: Credential reset matters, but it is not containment. Preserve the trail first.
+      - id: patch
+        label: Patch the plugin and redeploy
+        outcome: |
+          You close one known hole. The service goes back online with the same
+          shared account and the same unknown session.
+        effects:
+          Customer impact: Short outage
+          Evidence: Untouched
+          Risk: The original access remains
+        feedback: Patching is necessary, not sufficient. The compromise already happened.
+      - id: watch
+        label: Watch the logs for another day
+        outcome: |
+          You keep the service live. The attacker has more time, and the shared
+          account gives no clear attribution.
+        effects:
+          Customer impact: None now
+          Evidence: Growing
+          Risk: High
+        feedback: Watching is not containment when there is evidence of success.
+    debrief: |
+      Name what you protected, what you lost, and what you would do next. The
+      correct first move preserves the evidence and reduces the blast radius.

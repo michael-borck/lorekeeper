@@ -23,4 +23,4 @@ jobs:
       - name: Build the bundled demo course
         run: python -m lorekeeper build field-kit
       - name: Source-independent tests
-        run: pytest -q tests/test_parse.py tests/test_widgets.py tests/test_pwa.py tests/test_pack_root.py
+        run: pytest -q tests/test_parse.py tests/test_widgets.py tests/test_pwa.py tests/test_pack_root.py tests/test_book.py

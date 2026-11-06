@@ -318,6 +318,16 @@ python3 -m lorekeeper pack ship-it
 # build/packs/ship-it.json
 ```
 
+Build a pack from a Quarto book:
+
+```bash
+python3 -m lorekeeper pack-book /path/to/book \
+  --id assume-breach --part 1 --tags security,risk,incident
+```
+
+Parts become modules and chapters become reading lessons. Markdown images are
+stripped for now, and the book's CC BY licence is carried into the pack manifest.
+
 Package a unit folder directly, without registering it as a built-in course:
 
 ```bash
@@ -416,6 +426,7 @@ key-rotation procedure are in [`docs/store-policy.md`](docs/store-policy.md).
 | PWA install and offline shell | Working |
 | Progress export and import | Working |
 | Static site build and GitHub Pages deploy | Working |
+| Quarto book packs (`pack-book`) | Working |
 | Wayfinder onboarding and trails | Working |
 
 ## Roadmap

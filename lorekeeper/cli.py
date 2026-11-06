@@ -21,6 +21,9 @@
     lorekeeper pack --root DIR --id SLUG --title TITLE
         build a pack straight from a unit folder, without registering it
 
+    lorekeeper pack-book BOOK_ROOT [--id SLUG] [--part 1]
+        build a pack from a Quarto book, with optional part overlays
+
     lorekeeper store [--out DIR] [--key FILE]
         build the static pack catalogue and sample pack
 
@@ -156,6 +159,34 @@ def _cmd_keygen(args: argparse.Namespace) -> int:
     return 0
 
 
+def _cmd_pack_book(args: argparse.Namespace) -> int:
+    from .book import build_book_pack
+    from .pack import write_pack
+
+    try:
+        pack = build_book_pack(
+            Path(args.root),
+            unit_id=args.id,
+            title=args.title,
+            theme=args.theme,
+            tags=[tag.strip() for tag in args.tags.split(",") if tag.strip()],
+            level=args.level,
+            pitch=args.pitch or "",
+            parts=args.part,
+        )
+        out = (
+            Path(args.out).resolve()
+            if args.out
+            else engine_root() / "build" / "packs" / f"{pack['id']}.json"
+        )
+        target = write_pack(pack, out)
+    except (KeyError, ValueError, OSError, FileNotFoundError) as exc:
+        print(f"✗ {exc}", file=sys.stderr)
+        return 1
+    print(f"✓ book pack: {target}")
+    return 0
+
+
 def _cmd_pack(args: argparse.Namespace) -> int:
     import tempfile
 
@@ -280,6 +311,18 @@ def build_parser() -> argparse.ArgumentParser:
     pack.add_argument("--start", default="01-01", help="starting lesson for --root")
     pack.add_argument("--out", help="output file (default: build/packs/<slug>.json)")
     pack.set_defaults(func=_cmd_pack)
+
+    book = sub.add_parser("pack-book", help="build a pack from a Quarto book")
+    book.add_argument("root", help="book repository root")
+    book.add_argument("--id", help="pack/course slug")
+    book.add_argument("--title", help="learner-facing title")
+    book.add_argument("--theme", default="storybook", help="skin (default: storybook)")
+    book.add_argument("--tags", default="", help="comma-separated tags")
+    book.add_argument("--level", default="beginner", help="level")
+    book.add_argument("--pitch", help="one-line pitch")
+    book.add_argument("--part", help="book part number, range or list (default: all)")
+    book.add_argument("--out", help="output file")
+    book.set_defaults(func=_cmd_pack_book)
 
     store = sub.add_parser("store", help="build the static pack catalogue")
     store.add_argument("--out", help="output directory (default: store/)")
