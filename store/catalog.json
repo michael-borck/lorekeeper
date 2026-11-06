@@ -1,7 +1,7 @@
 {
   "format": "lorekeeper.catalog",
   "version": 1,
-  "updatedAt": "2026-11-06T12:25:46+00:00",
+  "updatedAt": "2026-11-06T12:44:14+00:00",
   "packs": [
     {
       "id": "pocket-incidents",
@@ -21,9 +21,9 @@
       "courses": 1,
       "lessons": 3,
       "size": 30578,
-      "sha256": "3f88aa147e4561fa2bcd4bbe98c941df0c9e81400bc06955b29e1a02610607de",
+      "sha256": "f2c76c73df2581e7899fe4f2cc3cb194469477b3e741b5e96b17016fccd5230a",
       "keyId": "c72e49ccf7055c89",
-      "signature": "5MuNJAKfv1d0WNgc8UTeE6Ngd/PK6vEviAUUqlYytQ05bOy0tNnoXt6GBmE36ptfb8rWpQXXoLxkA5WQcKcQBA==",
+      "signature": "vJFOcNK2zhAHsryAOuGQZtadxxX98qXgtpdmL6SKJJ3VqM6MXf3P5w6YwleXhuHjteFqCiObji7SEhdVJktjDw==",
       "url": "packs/pocket-incidents.json"
     },
     {
@@ -32,7 +32,7 @@
       "description": "A field guide to software security, malware, cryptography and incident planning.",
       "version": "1.0.0",
       "author": "",
-      "licence": "",
+      "licence": "Course content",
       "theme": "pixel",
       "tags": [
         "security",
@@ -43,10 +43,10 @@
       "level": "beginner",
       "courses": 1,
       "lessons": 24,
-      "size": 104815,
-      "sha256": "20f83792a8fcfd45031eae34814d069166e6c852b051efd2e35597937e320b41",
+      "size": 104829,
+      "sha256": "53de862ec19d445f4ef74a570c8ff5a1c41fa2e42c915985222e516bd5f425c2",
       "keyId": "c72e49ccf7055c89",
-      "signature": "Os5IYwhADlY+5gZv4APaq7ZzO/+/tqoKxDJn9PunSYGBlvMYS6rxdeyO4K6vJ1rHcFh+uJ5wedkSxWboDxT2Ag==",
+      "signature": "RmJjx7UONWYF3VWnbzcwl9S/Ip/xfgCcDbUQWjH9HCsC0HJBsF9ZLW2HXLpwIMGhoLHTkuCAroHrpxpeifcFBw==",
       "url": "packs/information-security.json"
     },
     {
@@ -55,7 +55,7 @@
       "description": "A field guide to audit evidence, risk, controls and professional judgement.",
       "version": "1.0.0",
       "author": "",
-      "licence": "",
+      "licence": "Course content",
       "theme": "storybook",
       "tags": [
         "audit",
@@ -67,11 +67,34 @@
       "level": "intermediate",
       "courses": 1,
       "lessons": 24,
-      "size": 304307,
-      "sha256": "108b41299646f51cd6375d28abff3b63840af1df94e575fb73f710cec92b4dce",
+      "size": 304321,
+      "sha256": "2eac2589feebf91646ed5a02e08a79a11c6e297035f0a8f1ef789e8f6cb1b8d2",
       "keyId": "c72e49ccf7055c89",
-      "signature": "tmmYlRHwAIVPEwaxhtd872EbnfO1qq/GFFpQy+xExZauIy6EujGL2MEfX68h/dGTS4hM2d1DbEWBqvXQgMBVBA==",
+      "signature": "L5Dt/4fTTopK9CZLKGmy2R6+KxloqwMEBp7mYeUw0NRcD95Ji1Rnw16e3C76jVH+U6eG/k3/5nGR9cwE3WwLDQ==",
       "url": "packs/audit-and-control.json"
+    },
+    {
+      "id": "assume-breach",
+      "title": "Assume Breach: A First Course in Defensive Security",
+      "description": "A first course in defensive security: what to protect, where to spend, and how to respond.",
+      "version": "1.0.0",
+      "author": "Michael Borck",
+      "licence": "CC BY 4.0 International",
+      "theme": "pixel",
+      "tags": [
+        "security",
+        "risk",
+        "incident",
+        "foundations"
+      ],
+      "level": "beginner",
+      "courses": 1,
+      "lessons": 18,
+      "size": 186817,
+      "sha256": "5f078a8d15b88dd0abf34ffd3a2501999c0d3f35d6560d4c13eee1492d07399d",
+      "keyId": "c72e49ccf7055c89",
+      "signature": "at0q9pCbH2gCtYUdCaadyZ3OsFIu40Y7/ngxi0TDLDeFgPGWqQTwHHaRIAcYTD7DHNa9p6in2ynT3+xqMoWNDQ==",
+      "url": "packs/assume-breach.json"
     }
   ]
 }

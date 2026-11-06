@@ -1,0 +1,53 @@
+# Interactive lessons appended to Part III of Assume Breach.
+lessons:
+  - kind: scenario
+    title: The exposed portal
+    prompt: |
+      A customer portal has a login form, a search box that feeds a database query, and
+      an admin page on the same public host. The firewall allows all outbound traffic.
+      The team asks what to fix first. Choose the response you would defend.
+    options:
+      - id: combined
+        label: Put admin behind the VPN and parameterise the queries
+        outcome: |
+          The admin surface leaves the public network, and the database stops treating input
+          as code. Two independent controls address two different failure modes.
+        effects:
+          Injection risk: Reduced
+          Admin exposure: Removed from the public host
+          Customer impact: Small
+        recommended: true
+        feedback: Fix the injection and reduce the exposed surface. A WAF or a secret URL alone leaves the root cause.
+      - id: obscurity
+        label: Move the admin page to a secret URL
+        outcome: |
+          The page is harder to guess. It is still public, still reachable, and the search
+          box still builds SQL from input.
+        effects:
+          Injection risk: Unchanged
+          Admin exposure: Hidden, not removed
+          Customer impact: None
+        feedback: A secret URL is obscurity, not access control. The injection is untouched.
+      - id: waf
+        label: Add a WAF and leave the code alone
+        outcome: |
+          The WAF blocks some known patterns. The query remains unsafe, and any bypass or
+          new encoding reaches the database.
+        effects:
+          Injection risk: Partly reduced
+          Admin exposure: Unchanged
+          Customer impact: None
+        feedback: A WAF is a useful layer, not a substitute for parameterised queries.
+      - id: firewall
+        label: Disable the firewall to simplify testing
+        outcome: |
+          Testing gets easier and the estate gets more exposed. You have removed a control
+          while investigating another.
+        effects:
+          Injection risk: Unchanged
+          Network exposure: Higher
+          Customer impact: None now
+        feedback: Never remove a control to make a test easier. Test the policy from both sides instead.
+    debrief: |
+      Name the layer each control protects. The web flaw is fixed in the code. The admin
+      surface is reduced in the network and identity layers.

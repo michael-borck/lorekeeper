@@ -1,0 +1,68 @@
+# Interactive lessons appended to Part IV of Assume Breach.
+lessons:
+  - kind: checkpoint
+    title: "Checkpoint: people and the evolving threat"
+    questions:
+      - id: q1
+        prompt: Why does blaming the user fail as a security strategy?
+        options:
+          - It ignores the design, workload and incentives that produced the mistake
+          - Users are never targets
+          - Phishing does not work
+          - Training is always enough
+        answer: 0
+        explanation: A usable system and a reporting culture reduce harm more than blame does.
+      - id: q2
+        prompt: Which combination best reduces the harm from phishing?
+        options:
+          - Usable reporting, MFA and a response process that acts on reports
+          - Annual slides and a threat of discipline
+          - Longer passwords only
+          - Hiding the report button
+        answer: 0
+        explanation: People will make mistakes. MFA limits the damage, and easy reporting gets help moving sooner.
+      - id: q3
+        prompt: Why is cybercrime described as a business?
+        options:
+          - It has specialised roles, markets and a profit motive
+          - It is always one person in a basement
+          - It has no division of labour
+          - It only targets governments
+        answer: 0
+        explanation: The criminal economy has builders, access brokers, operators and sellers. That division of labour explains the scale.
+      - id: q4
+        prompt: What is a botnet?
+        options:
+          - A network of compromised devices controlled at scale
+          - A firewall rule set
+          - A backup schedule
+          - A type of password hash
+        answer: 0
+        explanation: Botnets turn many compromised machines into a coordinated capability.
+      - id: q5
+        prompt: What matters first when investigating an incident?
+        options:
+          - Preserving evidence and maintaining a defensible chain of custody
+          - Reimaging every disk immediately
+          - Publishing an attribution
+          - Deleting the logs to save space
+        answer: 0
+        explanation: Attribution comes later. Without preserved evidence, you cannot establish what happened.
+      - id: q6
+        prompt: What changes when AI is available to attackers and defenders?
+        options:
+          - Convincing phishing and deepfakes get cheaper; verification still matters
+          - Phishing disappears
+          - Attribution becomes trivial
+          - Controls stop being necessary
+        answer: 0
+        explanation: AI lowers the cost of some attacks. It does not remove the need for verification, controls or evidence.
+      - id: q7
+        prompt: What makes a reporting culture work?
+        options:
+          - An easy channel, no blame for reporting and a visible response
+          - A rule that only confirmed incidents may be reported
+          - A single person who receives every report
+          - A promise that nothing will be recorded
+        answer: 0
+        explanation: People report when it is easy, safe and visibly useful. Waiting for certainty loses time.

@@ -1,0 +1,53 @@
+# Interactive lessons appended to Part V of Assume Breach.
+lessons:
+  - kind: scenario
+    title: The board question
+    prompt: |
+      The board asks: "Are we secure?" You have a completed dossier with two known
+      gaps: a boundary weakness the budget did not cover, and a recovery test that
+      missed the target. The launch date is close. Choose your response.
+    options:
+      - id: honest
+        label: Present the residual risk, the evidence and the decision options
+        outcome: |
+          The board sees what is ready, what is not, who owns the remaining risk and what
+          a changed budget or a deferred launch would buy. The decision is explicit.
+        effects:
+          Message: Specific and testable
+          Residual risk: Named and owned
+          Launch: A board decision, not a surprise
+        recommended: true
+        feedback: A defensible answer names the limit and the owner. It does not claim the gaps away.
+      - id: yes
+        label: Say the controls are in place and the service is secure
+        outcome: |
+          The room relaxes. The boundary weakness and the failed recovery test are still
+          there, now without an owner.
+        effects:
+          Message: Reassuring
+          Residual risk: Hidden
+          Launch: Proceeds with unknown exposure
+        feedback: A claim is not evidence. The failed test is the evidence.
+      - id: edit
+        label: Adjust the recovery test so it passes
+        outcome: |
+          The dashboard turns green. The service still misses the recovery target, and the
+          test no longer measures what the board asked about.
+        effects:
+          Message: Green
+          Residual risk: Hidden and worse
+          Launch: Based on a weakened check
+        feedback: Changing the test does not change the recovery time.
+      - id: tool
+        label: Buy another security tool and call the gap closed
+        outcome: |
+          A new product is added. The boundary weakness may remain, and the recovery target
+          is still unproven.
+        effects:
+          Message: Action has been taken
+          Residual risk: Possibly unchanged
+          Launch: Depends on an unverified claim
+        feedback: A tool is not a control until it is configured, tested and owned.
+    debrief: |
+      A good handover makes the limits as visible as the controls. Name the risk, the
+      evidence, the owner and the decision you are asking the board to make.

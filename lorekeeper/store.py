@@ -8,6 +8,7 @@ import json
 from datetime import datetime, timezone
 from pathlib import Path
 
+from .book import build_book_pack
 from .compile import compile_unit
 from .pack import build_pack, unit_from_root
 from .registry import engine_root, get_unit
@@ -95,7 +96,9 @@ def _information_security(build_root: Path) -> dict:
         pitch="A field guide to software security, malware, cryptography and incident planning.",
         start="01-01",
     )
-    return build_pack(unit, build_root)
+    pack = build_pack(unit, build_root)
+    pack["licence"] = "Course content"
+    return pack
 
 
 def _audit_and_control(build_root: Path) -> dict:
@@ -112,7 +115,24 @@ def _audit_and_control(build_root: Path) -> dict:
         pitch="A field guide to audit evidence, risk, controls and professional judgement.",
         start="01-01",
     )
-    return build_pack(unit, build_root)
+    pack = build_pack(unit, build_root)
+    pack["licence"] = "Course content"
+    return pack
+
+
+def _assume_breach() -> dict:
+    root = engine_root().parents[2] / "books" / "assume-breach"
+    if not root.is_dir():
+        raise FileNotFoundError(f"assume breach source not found: {root}")
+    return build_book_pack(
+        root,
+        unit_id="assume-breach",
+        title="Assume Breach: A First Course in Defensive Security",
+        theme="pixel",
+        tags=["security", "risk", "incident", "foundations"],
+        level="beginner",
+        pitch="A first course in defensive security: what to protect, where to spend, and how to respond.",
+    )
 
 
 def _write_pack(out: Path, pack: dict, key) -> dict:
@@ -159,6 +179,7 @@ def build_store(
         _pocket_incidents(build_root),
         _information_security(build_root),
         _audit_and_control(build_root),
+        _assume_breach(),
     ]
     catalog_packs = [_write_pack(out, pack, key) for pack in packs]
     catalog = {

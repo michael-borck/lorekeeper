@@ -14,7 +14,7 @@ def test_store_builds_catalog_and_pack(tmp_path: Path):
     catalog = build_store(tmp_path / "store")
     assert catalog["format"] == "lorekeeper.catalog"
     assert catalog["version"] == 1
-    assert len(catalog["packs"]) == 3
+    assert len(catalog["packs"]) == 4
     by_id = {entry["id"]: entry for entry in catalog["packs"]}
     entry = by_id["pocket-incidents"]
     assert entry["url"] == "packs/pocket-incidents.json"
@@ -26,6 +26,10 @@ def test_store_builds_catalog_and_pack(tmp_path: Path):
     assert audit["title"] == "Audit and Control: A Field Guide"
     assert audit["lessons"] == 24
     assert audit["theme"] == "storybook"
+    assume = by_id["assume-breach"]
+    assert assume["title"] == "Assume Breach: A First Course in Defensive Security"
+    assert assume["lessons"] == 18
+    assert assume["licence"] == "CC BY 4.0 International"
     pack_path = tmp_path / "store" / "packs" / "pocket-incidents.json"
     assert pack_path.is_file()
     digest = hashlib.sha256(pack_path.read_bytes()).hexdigest()

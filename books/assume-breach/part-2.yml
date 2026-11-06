@@ -1,0 +1,68 @@
+# Interactive lessons appended to Part II of Assume Breach.
+lessons:
+  - kind: checkpoint
+    title: "Checkpoint: risk and recovery"
+    questions:
+      - id: q1
+        prompt: How is risk defined in this book?
+        options:
+          - Likelihood multiplied by impact
+          - The number of vulnerabilities found
+          - The cost of the firewall
+          - The age of the oldest server
+        answer: 0
+        explanation: Risk combines how likely an event is with how much harm it would cause.
+      - id: q2
+        prompt: Which set is the four risk treatments?
+        options:
+          - Avoid, mitigate, transfer, accept
+          - Detect, contain, recover, learn
+          - Identify, authenticate, authorise, audit
+          - Scan, patch, reboot, repeat
+        answer: 0
+        explanation: You can avoid the activity, reduce the risk, transfer it such as through insurance, or accept it.
+      - id: q3
+        prompt: A loss would cost 100,000 and is expected once every five years. What is the annual loss expectancy?
+        options:
+          - 20,000
+          - 100,000
+          - 500,000
+          - 5,000
+        answer: 0
+        explanation: ARO is 0.2. ALE = SLE × ARO = 100,000 × 0.2 = 20,000 per year.
+      - id: q4
+        prompt: What is the difference between RTO and RPO?
+        options:
+          - RTO is how long the service can be down; RPO is how much data can be lost
+          - RTO is how much data can be lost; RPO is how long the service can be down
+          - RTO is the backup size; RPO is the restore speed
+          - They are the same measure
+        answer: 0
+        explanation: Recovery time objective is downtime. Recovery point objective is data loss, usually measured in time.
+      - id: q5
+        prompt: What is the difference between business continuity and disaster recovery?
+        options:
+          - Continuity keeps the organisation running; recovery restores IT systems and data
+          - Continuity restores IT; recovery keeps the organisation running
+          - They are both only about backups
+          - Continuity is only for cyberattacks
+        answer: 0
+        explanation: Continuity is the whole organisation. Disaster recovery is the technical subset that restores systems and data.
+      - id: q6
+        prompt: Which first response is safest when compromise is suspected?
+        options:
+          - Assess, preserve useful evidence and contain the damage under clear authority
+          - Wipe every system before anyone can look
+          - Wait for certainty before telling anyone
+          - Change five things at once
+        answer: 0
+        explanation: Response balances evidence and harm. Wiping early destroys the trail; waiting can let harm grow.
+      - id: q7
+        prompt: What proves that a backup is usable?
+        options:
+          - A restore with the expected data
+          - A green job status
+          - A large backup file
+          - A recent timestamp
+        answer: 0
+        explanation: The job can succeed and still produce a useless backup. The restore is the proof.
