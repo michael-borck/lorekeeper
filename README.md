@@ -244,6 +244,11 @@ by a per-run token. See [`docs/authoring-studio.md`](docs/authoring-studio.md).
 The Field Kit course is the living reference. It has one lesson per widget in
 `content/field-kit/modules/01-workbench/lessons.yml`.
 
+Exercise tests run in a hidden sandboxed iframe with a nonce CSP. They can read
+the rendered exercise, but they cannot reach the parent page, local storage or
+the network. The preview remains separate and blocks scripts. This is what makes
+third-party packs defensible, along with signing.
+
 Widget fields at a glance:
 
 | Kind | Required fields |
@@ -331,9 +336,28 @@ store/README.md
 
 The sample pack is **Pocket Incidents: The 3AM Page**, a short incident-response
 course built from the existing story. The player fetches `store/catalog.json`,
-checks the pack SHA-256, validates the pack and stores it locally. Signing and
-sandboxed test execution are still to come; the hash proves integrity, not
-authorship.
+checks the pack SHA-256 and Ed25519 signature, validates the pack and stores it
+locally.
+
+### Pack signing
+
+Generate a signing key outside the repository:
+
+```bash
+python3 -m lorekeeper keygen --trusted player/trusted-keys.js
+```
+
+The private key lives at `~/.lorekeeper/lorekeeper-signing.pem` (mode 600) and
+must never be committed. The public key is pinned in `player/trusted-keys.js`.
+Build and sign the store with:
+
+```bash
+python3 -m lorekeeper store --out store --key ~/.lorekeeper/lorekeeper-signing.pem
+```
+
+The deploy script requires the key and signs every published pack. The
+signature proves authorship and integrity for a known key; it does not sandbox
+third-party test code.
 
 ## What is built
 
@@ -363,7 +387,8 @@ authorship.
 | LLM-backed Socratic tutor | Not built |
 | Pack build and local import | Working |
 | Static pack catalogue and sample pack | Working |
-| Pack signing and sandboxed tests | Not built |
+| Ed25519 pack signing | Working |
+| Sandboxed exercise tests | Working |
 | Tauri desktop shell | Deferred |
 | LMS grade export | Not built |
 | Ink, Pixel and Storybook skins | Working |
@@ -376,7 +401,8 @@ authorship.
 
 ## Roadmap
 
-1. Add pack signing and sandboxed test execution before opening submissions.
+1. Open the catalogue to reviewed submissions with key rotation and a content
+   policy.
 2. Add more real course overlays and Ink stories.
 3. Refine the skins with more custom art and course-specific scenes.
 4. Optional: a Tauri shell if native labs or offline pack management need it.

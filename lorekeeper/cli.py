@@ -18,8 +18,11 @@
     lorekeeper pack COURSE [--out FILE]
         build a portable pack from a compiled course
 
-    lorekeeper store [--out DIR]
+    lorekeeper store [--out DIR] [--key FILE]
         build the static pack catalogue and sample pack
+
+    lorekeeper keygen [--private FILE] [--public FILE] [--trusted FILE]
+        create an Ed25519 signing key
 
     lorekeeper studio [--port 8765]
         open the local authoring studio for course overlays
@@ -104,12 +107,32 @@ def _cmd_store(args: argparse.Namespace) -> int:
     from .store import build_store
 
     out = Path(args.out).resolve() if args.out else engine_root() / "store"
+    key = Path(args.key).expanduser() if args.key else None
     try:
-        catalog = build_store(out)
+        catalog = build_store(out, key_path=key)
     except (ValueError, OSError, KeyError) as exc:
         print(f"✗ {exc}", file=sys.stderr)
         return 1
     print(f"✓ pack store: {out} ({len(catalog['packs'])} pack)")
+    return 0
+
+
+def _cmd_keygen(args: argparse.Namespace) -> int:
+    from .signing import DEFAULT_PRIVATE, DEFAULT_PUBLIC, keygen
+
+    private = Path(args.private).expanduser() if args.private else DEFAULT_PRIVATE
+    public = Path(args.public).expanduser() if args.public else DEFAULT_PUBLIC
+    trusted = Path(args.trusted) if args.trusted else None
+    try:
+        kid = keygen(private, public, trusted, force=args.force)
+    except (FileExistsError, ValueError, OSError) as exc:
+        print(f"✗ {exc}", file=sys.stderr)
+        return 1
+    print(f"✓ key {kid}")
+    print(f"  private: {private}")
+    print(f"  public:  {public}")
+    if trusted:
+        print(f"  trusted: {trusted}")
     return 0
 
 
@@ -214,7 +237,15 @@ def build_parser() -> argparse.ArgumentParser:
 
     store = sub.add_parser("store", help="build the static pack catalogue")
     store.add_argument("--out", help="output directory (default: store/)")
+    store.add_argument("--key", help="Ed25519 private key for signing")
     store.set_defaults(func=_cmd_store)
+
+    keygen = sub.add_parser("keygen", help="create an Ed25519 signing key")
+    keygen.add_argument("--private", help="private key path")
+    keygen.add_argument("--public", help="public key path")
+    keygen.add_argument("--trusted", help="write player/trusted-keys.js here")
+    keygen.add_argument("--force", action="store_true", help="overwrite an existing key")
+    keygen.set_defaults(func=_cmd_keygen)
 
     return parser
 

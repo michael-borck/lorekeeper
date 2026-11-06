@@ -10,6 +10,7 @@ from pathlib import Path
 
 from .compile import compile_unit
 from .registry import engine_root, get_unit
+from .signing import key_id, load_private_key, sign_bytes
 
 CATALOG_FORMAT = "lorekeeper.catalog"
 CATALOG_VERSION = 1
@@ -79,7 +80,11 @@ def _pocket_incidents(build_root: Path) -> dict:
     }
 
 
-def build_store(out: Path, build_root: Path | None = None) -> dict:
+def build_store(
+    out: Path,
+    build_root: Path | None = None,
+    key_path: Path | None = None,
+) -> dict:
     out = out.resolve()
     build_root = (build_root or engine_root() / "build").resolve()
     out.mkdir(parents=True, exist_ok=True)
@@ -91,8 +96,15 @@ def build_store(out: Path, build_root: Path | None = None) -> dict:
     pack_path.write_text(
         json.dumps(pack, indent=2, ensure_ascii=False) + "\n", encoding="utf-8"
     )
-    digest = hashlib.sha256(pack_path.read_bytes()).hexdigest()
+    pack_bytes = pack_path.read_bytes()
+    digest = hashlib.sha256(pack_bytes).hexdigest()
     entry = pack["courses"][0]
+    signature = None
+    signing_key_id = None
+    if key_path:
+        key = load_private_key(key_path)
+        signing_key_id = key_id(key)
+        signature = sign_bytes(key, pack_bytes)
 
     catalog = {
         "format": CATALOG_FORMAT,
@@ -115,6 +127,8 @@ def build_store(out: Path, build_root: Path | None = None) -> dict:
                 ),
                 "size": pack_path.stat().st_size,
                 "sha256": digest,
+                "keyId": signing_key_id,
+                "signature": signature,
                 "url": f"packs/{STORE_PACK}.json",
             }
         ],
