@@ -1,0 +1,68 @@
+# Interactive lessons appended to Part 2 of Test the Claim, Rate the Control.
+lessons:
+  - kind: checkpoint
+    title: "Checkpoint: evidence and corroboration"
+    questions:
+      - id: q1
+        prompt: What does a policy prove on its own?
+        options:
+          - That someone wrote and approved a claim about how the organisation intends to operate
+          - That the control is operating
+          - That the board has assurance
+          - That the log matches the claim
+        answer: 0
+        explanation: "A policy is a claim. It needs evidence of operation."
+      - id: q2
+        prompt: What makes an interview useful as audit evidence?
+        options:
+          - A recent example, a recorded claim and corroboration from another source
+          - A confident assurance from a senior person
+          - A yes answer to "do you comply"
+          - A long conversation with no notes
+        answer: 0
+        explanation: "One person's claim is a lead. Corroboration makes it evidence."
+      - id: q3
+        prompt: Why is a log not a complete record of what happened?
+        options:
+          - It records what the system was configured to capture, for the period it retained
+          - It always records every event
+          - It cannot be tampered with
+          - It has no time zone
+        answer: 0
+        explanation: "Logs have configuration, retention, gaps and blind spots."
+      - id: q4
+        prompt: What is triangulation?
+        options:
+          - Using more than one independent source to support the same claim
+          - Asking the same person twice
+          - Running the same query twice
+          - Using three tools from the same vendor
+        answer: 0
+        explanation: "A policy, an interview and a log that agree are stronger than any one of them."
+      - id: q5
+        prompt: What should you record when endpoints cannot be inspected?
+        options:
+          - The limitation and how it affects the confidence of the rating
+          - Nothing, because the audit is incomplete
+          - That the control is not met
+          - That the policy is sufficient
+        answer: 0
+        explanation: "Limitations change confidence and belong beside the finding."
+      - id: q6
+        prompt: How should AI be used in evidence gathering?
+        options:
+          - To draft questions, map evidence and challenge a claim, with every output verified
+          - To decide the rating
+          - To replace the interview
+          - To assume missing evidence is fine
+        answer: 0
+        explanation: "AI can speed the work. It cannot supply the evidence or own the judgement."
+      - id: q7
+        prompt: When is a sample sufficient?
+        options:
+          - When it can support the specific claim being made, and the limitation is stated
+          - When it is convenient
+          - When it is a single successful test
+          - When the client says it is enough
+        answer: 0
+        explanation: "A sample of one can support 'a restore worked once', not 'restores are tested regularly'."

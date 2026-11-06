@@ -214,6 +214,22 @@ def _the_human_edge() -> dict:
     )
 
 
+def _test_the_claim() -> dict:
+    root = engine_root().parents[2] / "books" / "test-the-claim"
+    if not root.is_dir():
+        raise FileNotFoundError(f"test the claim source not found: {root}")
+    return build_book_pack(
+        root,
+        unit_id="test-the-claim",
+        title="Test the Claim, Rate the Control: A Tessera Audit Workbook",
+        theme="storybook",
+        tags=["audit", "security", "essential-eight", "evidence", "governance"],
+        level="intermediate",
+        pitch="A guided workbook for scoping, evidencing and reporting the Tessera security audit.",
+        parts="1-3",
+    )
+
+
 def _write_pack(out: Path, pack: dict, key) -> dict:
     packs_dir = out / "packs"
     packs_dir.mkdir(parents=True, exist_ok=True)
@@ -264,6 +280,7 @@ def build_store(
         _systems_analysis_and_design(),
         _follow_the_trace(),
         _the_human_edge(),
+        _test_the_claim(),
     ]
     catalog_packs = [_write_pack(out, pack, key) for pack in packs]
     catalog = {

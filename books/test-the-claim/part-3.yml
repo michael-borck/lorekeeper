@@ -1,0 +1,57 @@
+# Interactive lessons appended to Part 3 of Test the Claim, Rate the Control.
+lessons:
+  - kind: scenario
+    title: The defensible rating
+    prompt: |
+      The MFA policy says all remote access requires MFA. The IAM log shows
+      74 legacy VPN logins without a challenge and a two-week gap. The
+      service desk lead says the legacy path is "being retired". You cannot
+      inspect endpoints. Choose the rating and the record.
+    options:
+      - id: partial
+        label: Rate Partial, cite the evidence, record the endpoint and log limitations, and name what would change the rating
+        outcome: |
+          The rating is defensible. The standard path is evidenced. The legacy
+          exception and the log gap are explicit. The board can decide whether
+          to fund closure of the legacy path and a log coverage check.
+        effects:
+          Evidence: Sufficient
+          Confidence: Medium
+          Board decision: Clear
+        recommended: true
+        feedback: A defensible Partial beats an unsupported Met.
+      - id: met
+        label: Rate Met because the policy requires MFA and the service desk says it is enforced
+        outcome: |
+          The rating ignores the log exception and the gap. The board receives
+          assurance the evidence does not support.
+        effects:
+          Evidence: Insufficient
+          Confidence: False
+          Risk: High
+        feedback: A policy and an assurance are not enough. The log contradicts the claim.
+      - id: notmet
+        label: Rate Not met because the legacy exception and log gap exist
+        outcome: |
+          The rating overcorrects. The standard remote path is evidenced, and
+          the exception is bounded. A Partial with a limitation is more
+          accurate than a blanket Not met.
+        effects:
+          Evidence: Understated
+          Confidence: Low
+          Decision: Skewed
+        feedback: Rate what the evidence supports, including the part that works.
+      - id: unassessed
+        label: Mark Not assessed because endpoints were unavailable
+        outcome: |
+          The endpoint limitation affects confidence, not the entire control.
+          The IAM log and interview still support a finding on the remote access
+          path.
+        effects:
+          Evidence: Ignored
+          Confidence: None
+          Decision: Deferred
+        feedback: A limitation narrows the conclusion. It does not erase the evidence you have.
+    debrief: |
+      Rate only what the evidence supports. Put the limitation beside the
+      rating, and write the condition that would change it.

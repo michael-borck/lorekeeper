@@ -1,0 +1,57 @@
+# Interactive lessons appended to Part 1 of Test the Claim, Rate the Control.
+lessons:
+  - kind: scenario
+    title: The generous scope
+    prompt: |
+      The board wants assurance over all eight Essential Eight controls in
+      four weeks. You have Tessera's documents, staff and logs, but no
+      endpoint access. The chair says: "Just cover everything and mark what
+      you cannot test." Choose your next move.
+    options:
+      - id: scoped
+        label: Scope four material controls, record the endpoint limitation and explain the choice to the board
+        outcome: |
+          The scope is defensible. MFA, privileged access, backups and
+          patching are tested with documents, interviews and logs. The three
+          endpoint controls are marked partly assessed, with the limitation
+          stated. The board understands what the report can and cannot say.
+        effects:
+          Coverage: Focused
+          Evidence: Sufficient
+          Limitation: Explicit
+        recommended: true
+        feedback: Scope is a professional judgement about what matters enough to test, not a promise to cover everything.
+      - id: all
+        label: Assess all eight from documents and interviews, and call it complete
+        outcome: |
+          The report covers every control and tests none of the endpoint
+          controls independently. The board reads "assessed" as assurance.
+          The limitation is buried in an appendix.
+        effects:
+          Coverage: Wide
+          Evidence: Thin
+          Risk: False comfort
+        feedback: A control assessed only from documents is a claim, not an operating control.
+      - id: refuse
+        label: Refuse the engagement because endpoint access is unavailable
+        outcome: |
+          The board loses the assurance it can have. The documents, people and
+          logs still support useful findings on several controls.
+        effects:
+          Coverage: None
+          Evidence: Unused
+          Decision: Delayed
+        feedback: A limitation is not a reason to refuse. It is a reason to scope honestly.
+      - id: ai
+        label: Ask an AI to choose the scope from the policy library
+        outcome: |
+          The AI proposes a generic eight-control audit with no view of the
+          breach, the board decision or the endpoint limitation.
+        effects:
+          Speed: Fast
+          Rationale: Generic
+          Risk: Misaligned
+        feedback: AI can help draft the scope. The client context and the limitation are yours.
+    debrief: |
+      Choose the controls that matter for this client and decision. Write the
+      limitation before fieldwork, not after the report is challenged.
