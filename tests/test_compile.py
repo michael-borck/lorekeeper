@@ -195,3 +195,16 @@ def test_every_story_is_copied_into_its_course_build(tmp_path):
                 for block in lesson["blocks"]:
                     if block["type"] == "story":
                         assert (tmp_path / slug / block["src"]).is_file(), block["src"]
+
+
+def test_course_wayfinder_metadata_is_compiled(tmp_path):
+    compile_all(tmp_path)
+    index = json.loads((tmp_path / "index.json").read_text(encoding="utf-8"))
+    courses = {course["slug"]: course for course in index["courses"]}
+    ship = courses["ship-it"]
+    assert ship["level"] == "beginner"
+    assert ship["start"] == "01-01"
+    assert "web" in ship["tags"]
+    assert ship["pitch"]
+    assert courses["signal-and-noise"]["level"] == "beginner"
+    assert "security" in courses["signal-and-noise"]["tags"]

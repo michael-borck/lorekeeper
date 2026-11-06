@@ -28,6 +28,36 @@ python3 -m http.server 8000
 # then open http://127.0.0.1:8000/player/
 ```
 
+## Static site and GitHub Pages
+
+Build a standalone site and serve it locally:
+
+```bash
+python3 -m lorekeeper site --out _site --cname lorekeeper.borck.education
+python3 -m http.server --directory _site 8000
+# open http://127.0.0.1:8000/
+```
+
+`scripts/deploy-site.sh` builds `_site/` and pushes it to the public
+`michael-borck/lorekeeper-site` repository. GitHub Pages serves that repo, while
+the source and private course repos stay private. The live test URL is
+<https://michael-borck.github.io/lorekeeper-site/>.
+
+The site contains only built player files and course JSON. The custom domain is
+`lorekeeper.borck.education`; point a Cloudflare `CNAME` for `lorekeeper` at
+`michael-borck.github.io` with the proxy off, then attach the domain in GitHub
+Pages.
+
+## Wayfinder
+
+A first visit offers a four-question wayfinder: goal, experience, a familiar
+situation and a preferred start. It scores the courses by tags, picks a starting
+course and three lessons, and stores the trail in `localStorage`.
+
+The trail appears in the picker and the sidebar, updates as lessons are
+completed, and can be changed at any time. It is a recommendation, not a gate:
+every course remains visible. No account, server or model call is involved.
+
 ## Install and offline
 
 Lorekeeper is a PWA. Open the player and use the browser's **Install** action if
@@ -308,18 +338,21 @@ backup before clearing site data or moving to another laptop.
 | Course-specific emblems | Working |
 | PWA install and offline shell | Working |
 | Progress export and import | Working |
+| Static site build and GitHub Pages deploy | Working |
+| Wayfinder onboarding and trails | Working |
 
 ## Roadmap
 
-1. Define the pack format and local pack import/export.
-2. Build a static pack catalogue modelled on `swipeverse-store`, with a CI
+1. Attach the custom domain once DNS is live.
+2. Define the pack format and local pack import/export.
+3. Build a static pack catalogue modelled on `swipeverse-store`, with a CI
    validator.
-3. Add more real course overlays and Ink stories.
-4. Refine the skins with more custom art and course-specific scenes.
-5. Optional: a Tauri shell if native labs or offline pack management need it.
-6. Optional: a container runner for real shell exercises.
-7. Optional: an LLM-backed Socratic tutor for open viva answers.
-8. Optional: export completion to an LMS.
+4. Add more real course overlays and Ink stories.
+5. Refine the skins with more custom art and course-specific scenes.
+6. Optional: a Tauri shell if native labs or offline pack management need it.
+7. Optional: a container runner for real shell exercises.
+8. Optional: an LLM-backed Socratic tutor for open viva answers.
+9. Optional: export completion to an LMS.
 
 ## Tests
 

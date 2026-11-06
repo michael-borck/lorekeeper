@@ -27,6 +27,16 @@ The PWA adds a manifest and service worker. It does not add accounts, analytics,
 push notifications, permissions or background execution. Progress stays in
 localStorage unless the learner exports it.
 
+## Hosting
+
+The player is deployed as a static site from `scripts/deploy-site.sh` to the
+public `michael-borck/lorekeeper-site` repository. GitHub Pages serves the built
+`_site/` output. The source and private course repositories stay private.
+
+Custom domain: `lorekeeper.borck.education`, with a Cloudflare `CNAME` for
+`lorekeeper` pointing at `michael-borck.github.io`, DNS-only (no proxy) while
+GitHub issues the certificate.
+
 ## Packs
 
 A pack is inert content, not an app:

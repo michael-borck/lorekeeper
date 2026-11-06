@@ -24,6 +24,10 @@ class Unit:
     root: Path
     theme: str = "ink"
     semester: str = ""
+    tags: tuple[str, ...] = ()
+    level: str = "beginner"
+    pitch: str = ""
+    start: str = ""
     replacements: dict[str, str] = field(default_factory=dict)
 
 
@@ -61,6 +65,10 @@ def load_units() -> list[Unit]:
                 root=root.resolve(),
                 theme=str(data.get("theme", "ink")),
                 semester=str(data.get("semester", "")),
+                tags=tuple(str(tag) for tag in (data.get("tags") or [])),
+                level=str(data.get("level", "beginner")),
+                pitch=str(data.get("pitch", "")),
+                start=str(data.get("start", "")),
                 replacements={
                     str(old): str(new) for old, new in raw_replacements.items()
                 },

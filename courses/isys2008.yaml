@@ -6,6 +6,10 @@ key: isys2008
 code: ISYS2008
 slug: signal-and-noise
 theme: pixel
+tags: [systems, networking, security, operations, incident, story, exercise]
+level: beginner
+start: "01-01"
+pitch: "Understand the estate behind the website: operating systems, networks, identity, storage and incidents."
 title: "Signal & Noise: An Enterprise Systems Field Guide"
 root: ../../isys2008-enterprise-technologies
 replacements:

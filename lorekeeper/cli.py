@@ -12,6 +12,9 @@
     lorekeeper serve [--port 8000] [--no-build]
         build if needed, then serve the player at http://localhost:PORT/player/
 
+    lorekeeper site [--out _site] [--cname DOMAIN]
+        assemble a static site for GitHub Pages or another static host
+
     lorekeeper studio [--port 8765]
         open the local authoring studio for course overlays
 """
@@ -91,6 +94,19 @@ def _cmd_studio(args: argparse.Namespace) -> int:
     return start_studio(port=args.port, open_browser=not args.no_open)
 
 
+def _cmd_site(args: argparse.Namespace) -> int:
+    from .site import build_site
+
+    out = Path(args.out).resolve() if args.out else engine_root() / "_site"
+    try:
+        target = build_site(out, cname=args.cname)
+    except (ValueError, OSError) as exc:
+        print(f"✗ {exc}", file=sys.stderr)
+        return 1
+    print(f"✓ static site: {target}")
+    return 0
+
+
 def _cmd_serve(args: argparse.Namespace) -> int:
     root = engine_root()
     out_root = _build_dir(args.out)
@@ -147,6 +163,11 @@ def build_parser() -> argparse.ArgumentParser:
     studio.add_argument("--port", type=int, default=8765)
     studio.add_argument("--no-open", action="store_true", help="do not open a browser")
     studio.set_defaults(func=_cmd_studio)
+
+    site = sub.add_parser("site", help="assemble a static site")
+    site.add_argument("--out", help="output directory (default: _site)")
+    site.add_argument("--cname", help="custom domain to write into CNAME")
+    site.set_defaults(func=_cmd_site)
 
     return parser
 
