@@ -1,0 +1,108 @@
+# Lorekeeper overlay for the enterprise systems course, Module 08.
+
+lessons:
+  - id: 08-01
+    kind: reading
+    title: Identity and access
+    source: overview.qmd
+    include:
+      - Learning objectives
+      - The week's idea
+      - Key ideas
+      - The CloudCore ticket
+
+  - id: 08-02
+    kind: reading
+    title: Read the identity data
+    source: in-class/activity-01.qmd
+    include:
+      - "Part 1: Observe the failure"
+      - "Part 2: Read the identity data"
+      - "Part 3: Fix the service account"
+      - "Part 4: Contractor access and scope"
+      - "Part 5: sudo and least privilege"
+
+  - id: 08-03
+    kind: checkpoint
+    title: "Checkpoint: who may do what"
+    questions:
+      - id: q1
+        prompt: What is the difference between authentication, authorisation and accounting?
+        options:
+          - Who you are, what you may do, and what you did
+          - Who you are, where you work, and what you own
+          - What you may do, who you are, and how fast you did it
+          - What you did, what you may do, and who you are
+        answer: 0
+        explanation: Authentication proves identity. Authorisation decides access. Accounting records actions.
+      - id: q2
+        prompt: Why does the kernel use numeric UIDs and GIDs?
+        options:
+          - Names are a convenience; the kernel checks numeric identity
+          - Numbers are easier to remember
+          - Names cannot be changed
+          - The kernel has no user database
+        answer: 0
+        explanation: The user and group names come from files or a directory. Permission checks use the numeric IDs.
+      - id: q3
+        prompt: What is the difference between a primary and a supplementary group?
+        options:
+          - The primary group is on the account and applies to new files; supplementary groups add access
+          - The primary group is only for administrators
+          - Supplementary groups replace the primary group
+          - There is no difference
+        answer: 0
+        explanation: A process has one primary group for file creation and any number of supplementary groups for access checks.
+      - id: q4
+        prompt: The service account lost its reporting group membership. What is the smallest safe fix?
+        options:
+          - Restore the group membership
+          - Make the report world-readable
+          - Add the account to every group
+          - Change the report owner to root
+        answer: 0
+        explanation: The account already exists; the missing relationship is the membership. Restoring it grants only the needed access.
+      - id: q5
+        prompt: Why is `chmod 777` the wrong fix?
+        options:
+          - It gives every account write access and hides the real permission model
+          - It is slower than chown
+          - It changes the UID
+          - It deletes the group
+        answer: 0
+        explanation: It solves the symptom by removing the control. The next problem is larger than the first.
+      - id: q6
+        prompt: What makes a narrow sudo rule safer than adding a user to the admin group?
+        options:
+          - It allows only the named command, for a named user
+          - It disables logging
+          - It gives the user a new password
+          - It removes the need for authentication
+        answer: 0
+        explanation: The rule grants one capability. A broad admin group grants everything.
+      - id: q7
+        prompt: Why does a company with thousands of staff use a directory instead of copying local account files?
+        options:
+          - One identity and group record, queried centrally, with consistent access and audit
+          - It removes the need for passwords
+          - It makes every host identical
+          - It avoids file permissions
+        answer: 0
+        explanation: A directory gives one source of truth and a shared way to query identities and groups.
+
+  - id: 08-04
+    kind: order
+    title: Grant the contractor access
+    prompt: |
+      Put the contractor access steps in the safest order. The contractor needs read
+      access to one report, not the finance share.
+    items:
+      - Confirm the contractor is currently denied
+      - Create a group scoped to the report
+      - Grant the group read access to the report
+      - Add the contractor to the group
+      - Test the report is readable and the board pack is still denied
+      - Schedule the access removal
+    explanation: |
+      Confirm the starting state, create the smallest scope, grant only what the scope
+      needs, add the person, test both the allow and the deny, then plan the removal.

@@ -1,0 +1,137 @@
+# Lorekeeper overlay for the enterprise systems course, Module 10.
+
+lessons:
+  - id: 10-01
+    kind: reading
+    title: Storage, virtualisation and cloud
+    source: overview.qmd
+    include:
+      - Learning objectives
+      - The week's idea
+      - Key ideas
+      - The CloudCore ticket
+
+  - id: 10-02
+    kind: reading
+    title: Inspect, restore, diagnose
+    source: in-class/activity-01.qmd
+    include:
+      - "Part 1: Take a backup and inspect it"
+      - "Part 2: Restore and compare"
+      - "Part 3: Diagnose"
+
+  - id: 10-03
+    kind: checkpoint
+    title: "Checkpoint: a backup is a claim"
+    questions:
+      - id: q1
+        prompt: What is the only real proof that a backup works?
+        options:
+          - A successful restore with the expected data
+          - A green job status
+          - A large backup file
+          - A snapshot timestamp
+        answer: 0
+        explanation: The job can succeed and still produce a useless backup. The restore shows what is recoverable.
+      - id: q2
+        prompt: What is the difference between a snapshot and a backup?
+        options:
+          - A snapshot is a point-in-time copy; a backup is a separate copy kept for recovery
+          - A snapshot is always offsite
+          - A backup is always faster
+          - They are the same thing
+        answer: 0
+        explanation: A snapshot usually shares the source failure domain. A backup should survive the loss of the source.
+      - id: q3
+        prompt: What does RPO mean?
+        options:
+          - How much data the business can lose
+          - How long the service can be down
+          - How often the backup runs
+          - How large the backup is
+        answer: 0
+        explanation: Recovery point objective is measured in data loss, usually time. RTO is recovery time.
+      - id: q4
+        prompt: What does RTO mean?
+        options:
+          - How long the service can be down
+          - How much data can be lost
+          - How many copies are kept
+          - How fast the disk is
+        answer: 0
+        explanation: Recovery time objective is the acceptable time to restore service.
+      - id: q5
+        prompt: Why restore into a separate database instead of over the live one?
+        options:
+          - It proves the backup without destroying the live data
+          - It is always faster
+          - It avoids encryption
+          - It removes the need for a backup
+        answer: 0
+        explanation: The live system stays available and the restore is a safe test.
+      - id: q6
+        prompt: The backup job exits 0 but the dump has no data rows. What failed?
+        options:
+          - The backup command or its options, not necessarily the job wrapper
+          - The network cable
+          - The monitoring server
+          - The certificate
+        answer: 0
+        explanation: The wrapper reported the command exit, not the usefulness of the output. Count data statements and restore.
+      - id: q7
+        prompt: What is the 3-2-1 rule?
+        options:
+          - Three copies, two media, one offsite
+          - Three servers, two clouds, one password
+          - Three backups, two restores, one owner
+          - Three disks, two hosts, one region
+        answer: 0
+        explanation: The rule reduces the chance that one failure removes every copy.
+
+  - id: 10-04
+    kind: scenario
+    title: Choose the resilience design
+    prompt: |
+      Louise needs a backup and hosting design for the ticket database. The current job
+      reports success but the restore is empty. Choose the recommendation you would make.
+    options:
+      - id: offsite
+        label: Offsite object storage with versioning and a restore test
+        outcome: |
+          The backup survives the loss of the host. Versioning and retention protect against
+          deletion and ransomware. A weekly restore test proves the data is usable.
+        effects:
+          Failure covered: Host or volume loss
+          RPO: Hours
+          RTO: Hours
+          Cost: Storage and transfer
+          Risk: The restore runbook must be owned
+        recommended: true
+        feedback: This covers the failure that matters while keeping the restore test visible and repeatable.
+      - id: snapshot
+        label: Local volume snapshots and a weekly restore test
+        outcome: |
+          Recovery is fast and cheap, but the snapshot shares the host with the live data. A
+          host loss or a compromised host can remove both.
+        effects:
+          Failure covered: Accidental file change
+          RPO: Minutes
+          RTO: Minutes
+          Cost: Low
+          Risk: Shared failure domain
+        feedback: Useful as a first line, not as the only copy.
+      - id: managed
+        label: A managed database backup from a cloud provider
+        outcome: |
+          The provider runs the backup and restore. The team owns less, pays more, and
+          depends on the provider's process and retention model.
+        effects:
+          Failure covered: Database and host loss
+          RPO: Provider-defined
+          RTO: Provider-defined
+          Cost: Higher monthly fee
+          Risk: Lock-in and less direct control
+        feedback: A sound option when the operational burden matters more than cost and portability.
+    debrief: |
+      Name the failure each option covers, the RPO and RTO, the cost, the risk you accept, and
+      who owns the restore test.

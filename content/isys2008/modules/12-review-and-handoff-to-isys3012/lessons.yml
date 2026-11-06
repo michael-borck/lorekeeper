@@ -1,0 +1,143 @@
+# Lorekeeper overlay for the enterprise systems course, Module 12.
+
+lessons:
+  - id: 12-01
+    kind: reading
+    title: Review and handover
+    source: overview.qmd
+    include:
+      - Learning objectives
+      - The week's idea
+      - Key ideas
+      - The CloudCore ticket
+
+  - id: 12-02
+    kind: reading
+    title: Demonstrate, drill, rehearse, hand over
+    source: in-class/activity-01.qmd
+    include:
+      - "Part 1: Portfolio demonstration"
+      - "Part 2: Fault drill"
+      - "Part 3: Oral rehearsal"
+      - "Part 4: Handover note"
+
+  - id: 12-03
+    kind: checkpoint
+    title: "Checkpoint: explain the estate"
+    questions:
+      - id: q1
+        prompt: What makes the estate one system rather than seven subjects?
+        options:
+          - The dependency chain between the layers, with evidence at each hop
+          - The number of containers
+          - The length of the runbook
+          - The host's uptime
+        answer: 0
+        explanation: Integration means you can follow the dependencies and explain what fails where.
+      - id: q2
+        prompt: In a fault drill, what should come first?
+        options:
+          - Record the symptom in the customer's words and predict the layer
+          - Change three things at once
+          - Rebuild the estate
+          - Restart every service
+        answer: 0
+        explanation: A prediction focuses the evidence collection. Changing several things destroys the trail.
+      - id: q3
+        prompt: What makes evidence usable in the oral?
+        options:
+          - A specific log, config or command output tied to the claim
+          - A confident opinion
+          - A screenshot of the dashboard
+          - A list of commands
+        answer: 0
+        explanation: A claim needs a check. The evidence should let someone else repeat the conclusion.
+      - id: q4
+        prompt: What belongs in a handover?
+        options:
+          - The map, runbook, known faults, residual risks, first fix and owner
+          - Only the compose file
+          - A transcript of every conversation
+          - The final status code
+        answer: 0
+        explanation: The next team needs to operate the estate, not only see that it ran.
+      - id: q5
+        prompt: What is residual risk?
+        options:
+          - The risk that remains after the controls you chose
+          - The risk before any controls
+          - A risk that has been deleted
+          - The cost of the backup
+        answer: 0
+        explanation: Every control leaves something. A handover should name what remains and who owns it.
+      - id: q6
+        prompt: What transfers to the next course when the platform changes?
+        options:
+          - The mental models: identity, naming, encapsulation, storage and evidence
+          - The exact product commands
+          - The host name
+          - The current certificate
+        answer: 0
+        explanation: Products change. The concepts and the diagnostic method transfer.
+      - id: q7
+        prompt: What does a good oral name besides the fix?
+        options:
+          - The trade-off, the verification and what would catch the fault sooner
+          - Only the command that fixed it
+          - The number of files changed
+          - The vendor's name
+        answer: 0
+        explanation: The reasoning, the evidence and the review are the professional practice.
+
+  - id: 12-04
+    kind: viva
+    title: Handover walkthrough
+    context: |
+      The examiner is the new operations team. You have ten minutes to hand over the estate
+      and explain what you would do first.
+    questions:
+      - prompt: Walk me through the estate and name one trade-off you made.
+        strong_answer: |
+          The customer request resolves the portal name, opens TCP to the proxy, completes
+          TLS, and reaches the proxy. The proxy forwards plain HTTP to web, which queries the
+          database. The trade-off is TLS termination at the proxy: it centralises certificates
+          but creates one component that must be patched and monitored. The residual risk is
+          the internal plain HTTP hop.
+        signals:
+          - label: Names the layers and a protocol per hop
+            pattern: "dns|name|tcp|tls|http|proxy|web|database"
+          - label: Names a trade-off
+            pattern: "trade|cost|risk|instead|alternative"
+          - label: Names residual risk
+            pattern: "residual|remain|accept|risk"
+      - prompt: The final practical gives you a broken estate. What is your first hour?
+        strong_answer: |
+          I write the symptom in the customer's words, predict the most likely layer, then
+          collect the cheapest evidence that can falsify that prediction. I form one
+          hypothesis, test it, make the smallest safe change, and verify the cause is gone.
+          Then I record the fault, the evidence and the fix.
+        signals:
+          - label: Starts with the symptom
+            pattern: "symptom|customer|report|observe"
+          - label: Predicts a layer
+            pattern: "predict|layer|hypothesis|likely"
+          - label: Uses evidence and a small change
+            pattern: "evidence|log|check|small|one|revert"
+          - label: Verifies and records
+            pattern: "verify|record|confirm|document"
+      - prompt: What would you carry to the next platform, and what would you leave behind?
+        strong_answer: |
+          I would carry the concepts: identity and least privilege, naming and resolution,
+          encapsulation, storage and recovery, evidence and incident response. I would leave
+          the product-specific commands and paths. The questions stay the same on the next
+          platform; the commands do not.
+        signals:
+          - label: Names transferable concepts
+            pattern: "identity|naming|encapsulation|storage|evidence|least privilege"
+          - label: Leaves product detail
+            pattern: "command|product|platform|path|leave"
+    rubric:
+      - Explains the estate as a dependency chain.
+      - Names evidence and a smallest safe change.
+      - Names a trade-off and a residual risk.
+      - Separates transferable concepts from product detail.
