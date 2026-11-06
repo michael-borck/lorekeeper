@@ -1,0 +1,124 @@
+# Interactive lessons appended to Act I of Prove, Don't Persuade.
+lessons:
+  - kind: checkpoint
+    title: "Checkpoint: foundation and stakeholders"
+    questions:
+      - id: q1
+        prompt: What is the useful difference between narrow, general-purpose and agentic AI?
+        options:
+          - The shift in who acts: the narrow model labels, the general model answers, the agent takes steps
+          - The size of the model
+          - The price of the subscription
+          - The number of parameters only
+        answer: 0
+        explanation: "The arrow points from labelling to answering to acting. More steps between you and the consequence increase the blast radius."
+      - id: q2
+        prompt: Why is "90% accurate" not enough to judge a model?
+        options:
+          - It hides per-class and per-group performance, including the failures that matter most
+          - Accuracy is never useful
+          - It is always measured on the test set
+          - It only applies to image models
+        answer: 0
+        explanation: "Overall accuracy is a weighted average. Always ask which class and which group the failures land in."
+      - id: q3
+        prompt: What is the Delegation Trap?
+        options:
+          - Gradually handing over the whole job and accepting the output without genuine review
+          - Refusing to use AI at all
+          - Asking too many follow-up questions
+          - Using a local model instead of a hosted one
+        answer: 0
+        explanation: "It starts with a small task that works once, grows, and ends with the output becoming the decision."
+      - id: q4
+        prompt: Why is rubber-stamping an ethical failure?
+        options:
+          - It offloads responsibility to a system that has none and distributes harm to real people
+          - It is slower than checking
+          - It uses too many tokens
+          - It breaks the model's terms
+        answer: 0
+        explanation: "If your review could be replaced by the word approved, it is not review."
+      - id: q5
+        prompt: What is the difference between association and intervention?
+        options:
+          - An association describes the data; an intervention claims that changing an input changes the outcome
+          - They are the same
+          - Association is causal; intervention is descriptive
+          - Intervention is only for image models
+        answer: 0
+        explanation: "A model can show that satisfaction and renewal labels move together. It cannot show that raising satisfaction causes renewal without different evidence."
+      - id: q6
+        prompt: What should a procurement comparison include?
+        options:
+          - Whole cost, data handling, jurisdiction, exit route and the evidence still missing
+          - The vendor's logo and market share
+          - The model's parameter count
+          - The fastest demo
+        answer: 0
+        explanation: "Compare the actual candidates against the same proof brief, and keep the unknowns visible."
+      - id: q7
+        prompt: Does local processing remove every privacy or jurisdiction question?
+        options:
+          - No. It may remove a particular transfer, but obligations, access risks and other jurisdictional issues remain
+          - Yes. Local means no rules apply
+          - Yes, if the model is open-weight
+          - No, but only because local models are less accurate
+        answer: 0
+        explanation: "An architecture choice is not a legal verdict. It changes the data flow, not all the obligations."
+  - kind: scenario
+    title: The polished persona
+    prompt: |
+      Tessera's customer-success lead asks an AI to draft the profile of the
+      typical at-risk churn customer. The result is a polished persona focused
+      on Education and small organisations. The lead wants to target the next
+      campaign on it. Choose your next move.
+    options:
+      - id: audit
+        label: Audit the persona for representativeness, harm, accountability and transparency, then test it against evidence
+        outcome: |
+          The audit finds the persona assumes a narrow segment and cannot be
+          verified from observed churn data. The campaign is paused until the
+          team supplies representative records, a selection rule and an error
+          analysis. The finding is a gap, not an invented measurement.
+        effects:
+          Evidence: Required
+          Harm: Visible
+          Decision: Accountable
+        recommended: true
+        feedback: A polished persona is a constructed output. Fluency is not a finding about real customers.
+      - id: use
+        label: Use the persona because it is specific, structured and ready for a slide
+        outcome: |
+          The campaign targets one segment and misses others. Nobody can say
+          who approved the profile or which evidence supported it.
+        effects:
+          Speed: Fast
+          Coverage: Narrow
+          Accountability: Absent
+        feedback: A shadow system forms when the output becomes the decision without being owned as one.
+      - id: ask
+        label: Ask the model whether the persona is biased and use its answer
+        outcome: |
+          The model says the persona is balanced and inclusive without
+          providing data. The assurance is another output, not an audit.
+        effects:
+          Check: Self-referential
+          Evidence: Missing
+          Risk: High
+        feedback: Asking the thing that produced the answer to confirm it is not verification.
+      - id: demographic
+        label: Add more demographic labels to the prompt and regenerate
+        outcome: |
+          The persona becomes more detailed and no more evidenced. The new
+          labels are still invented, and the targeting decision still lacks a
+          measured basis.
+        effects:
+          Detail: Higher
+          Evidence: Unchanged
+          Risk: Hidden
+        feedback: More detail is not more evidence. Test the output against real records and a stated use.
+    debrief: |
+      Place the use before you trust the output. Audit who is represented, who
+      could be harmed, who is accountable and whether the production can be
+      explained.

@@ -262,6 +262,22 @@ def _conversation_not_delegation() -> dict:
     )
 
 
+def _prove_dont_persuade() -> dict:
+    root = engine_root().parents[2] / "books" / "prove-dont-persuade"
+    if not root.is_dir():
+        raise FileNotFoundError(f"prove source not found: {root}")
+    return build_book_pack(
+        root,
+        unit_id="prove-dont-persuade",
+        title="Prove, Don't Persuade: Why Proof Beats the Demo in Applied AI",
+        theme="storybook",
+        tags=["ai", "evaluation", "evidence", "risk", "judgement"],
+        level="intermediate",
+        pitch="Judge applied AI by evidence, not by the demo: test the claim, measure what matters and report the failures.",
+        parts="1-2",
+    )
+
+
 def _write_pack(out: Path, pack: dict, key) -> dict:
     packs_dir = out / "packs"
     packs_dir.mkdir(parents=True, exist_ok=True)
@@ -315,6 +331,7 @@ def build_store(
         _test_the_claim(),
         _substantiate_dont_assume(),
         _conversation_not_delegation(),
+        _prove_dont_persuade(),
     ]
     catalog_packs = [_write_pack(out, pack, key) for pack in packs]
     catalog = {

@@ -1,0 +1,124 @@
+# Interactive lessons appended to Act II of Prove, Don't Persuade.
+lessons:
+  - kind: checkpoint
+    title: "Checkpoint: build and prove"
+    questions:
+      - id: q1
+        prompt: What are the four layers of the harness around a model?
+        options:
+          - Prompt, retrieval, tools and inference
+          - Screen, keyboard, network and database
+          - Role, task, context and format
+          - Model, vendor, licence and price
+        answer: 0
+        explanation: "The prompt is only one layer. Standing instructions, documents, tools and model settings also shape the answer."
+      - id: q2
+        prompt: What is indirect prompt injection?
+        options:
+          - Instructions hidden in material the system reads, trying to acquire the authority of an instruction
+          - A user typing a rude prompt
+          - A model refusing a request
+          - A vendor changing the price
+        answer: 0
+        explanation: "Retrieved material is evidence, not authority. Separate the source boundary from the instruction boundary."
+      - id: q3
+        prompt: What three lenses should an evaluation use?
+        options:
+          - Accuracy per class, fairness across groups, and explainability
+          - Speed, price and brand
+          - Accuracy overall, accuracy overall, accuracy overall
+          - Training loss, validation loss and test loss
+        answer: 0
+        explanation: "A single overall number hides the class and group failures that decide whether the system is fit for purpose."
+      - id: q4
+        prompt: What makes a threshold defensible?
+        options:
+          - It is stated before measurement and tied to the decision and the blast radius of being wrong
+          - It is chosen after seeing the score
+          - It matches the vendor's claim
+          - It is always 90%
+        answer: 0
+        explanation: "Good enough is a judgement tied to the decision. Moving the threshold after the result is how a weak evaluation is dressed up."
+      - id: q5
+        prompt: What is the difference between a demo and a deployment?
+        options:
+          - A demo proves the solution runs; a deployment requires evidence that it is reliable for the decision
+          - A demo is production; a deployment is a prototype
+          - They are the same
+          - A deployment is only for agents
+        answer: 0
+        explanation: "The gap between runs and reliable is where applied AI lives. Close it with evaluation, not a more impressive demo."
+      - id: q6
+        prompt: What does human-in-the-loop actually mean?
+        options:
+          - A checkpoint designed just before the output becomes load-bearing or irreversible
+          - A person glancing at the end
+          - A person in the same building
+          - A model with a human name
+        answer: 0
+        explanation: "A human glance at the end is a rubber stamp. Place the check before the consequential step."
+      - id: q7
+        prompt: When comparing two models, what should you judge?
+        options:
+          - Observable outputs on the same question, not brand or hidden internals
+          - The parameter count
+          - The vendor's market share
+          - Which one sounds more confident
+        answer: 0
+        explanation: "Judge the output against the task and the evidence. Brand confidence is not evidence."
+  - kind: scenario
+    title: The 90% demo
+    prompt: |
+      A router-status classifier is 90% accurate overall. The demo looks
+      convincing. In the held-out test it catches 6 of 10 faults in normal
+      light and 0 of 10 in dim light. The brief requires at least 9 of 10
+      faults in each condition. The vendor says the model is ready for
+      unattended triage. Choose your next move.
+    options:
+      - id: reject
+        label: Reject unattended triage, name the per-class failure and run a reviewed shadow exercise
+        outcome: |
+          The report states the overall accuracy and the per-class and
+          per-condition results. The fault threshold is failed. The system may
+          be developed further or used in a shadow exercise where every
+          suggestion is reviewed, but it cannot close customer faults.
+        effects:
+          Decision: Evidence-based
+          Harm: Contained
+          Next step: Clear
+        recommended: true
+        feedback: The honest map of where the solution breaks is the deliverable. A failed threshold is a useful result.
+      - id: deploy
+        label: Deploy it because 90% is a strong overall score
+        outcome: |
+          The average hides the fault class. Customers with real faults are
+          misclassified as healthy and wait for help that never comes.
+        effects:
+          Accuracy: Misleading
+          Harm: Real
+          Trust: Lost
+        feedback: Overall accuracy is a weighted average, and averages hide the people the model fails.
+      - id: vendor
+        label: Ask the vendor to confirm the model is ready
+        outcome: |
+          The vendor repeats the overall score and the demo. The per-class
+          failure and the dim-light condition remain unanswered.
+        effects:
+          Evidence: Vendor-led
+          Risk: Unchanged
+          Decision: Deferred
+        feedback: A vendor's assurance is persuasion. Judge the measured output.
+      - id: tune
+        label: Keep changing the threshold until the demo passes
+        outcome: |
+          The threshold moves to fit the result. The system still misses the
+          faults that matter, and the evaluation no longer means anything.
+        effects:
+          Threshold: Moved
+          Evidence: Corrupted
+          Risk: Hidden
+        feedback: Write the threshold before measurement. Moving it after the result is not evaluation.
+    debrief: |
+      State what good enough means before you measure. Report per class and
+      per group, include the failures, and place the human check before the
+      consequential action.
