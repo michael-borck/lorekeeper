@@ -1,0 +1,270 @@
+# Lorekeeper overlay for the web craft course, Module 06 (The Taste Test).
+# The hero-image exercise runs at 375px. The critique exercise is text.
+
+lessons:
+  - id: 06-01
+    kind: reading
+    title: The taste test
+    source: overview.qmd
+    include:
+      - The question
+      - Learning objectives
+      - This module
+      - The lab deliverable
+
+  - id: 06-02
+    kind: reading
+    title: Critique, choose, defend
+    source: in-class/activity-01.qmd
+    include:
+      - The situation
+      - "Round 1: Critique pairs (30 minutes)"
+      - "Round 2: Finalise `CRITIQUE.md` (30 minutes)"
+      - "Round 4: Viva readiness (20 minutes)"
+
+  - id: 06-03
+    kind: checkpoint
+    title: "Checkpoint: judgement, not taste"
+    questions:
+      - id: q1
+        prompt: Two builds pass every check. How do you decide which is better?
+        options:
+          - Judge both against the client's brief and top tasks
+          - Pick the one with the higher Lighthouse score
+          - Pick the one you would use yourself
+          - Pick the one with more features
+        answer: 0
+        explanation: The brief is the standard. Personal taste and a single score are not.
+      - id: q2
+        prompt: What is a performance budget?
+        options:
+          - A limit you choose before you build, such as LCP under 2.5 seconds
+          - The amount of money the client will pay
+          - The number of pages in the site
+          - The maximum number of commits
+        answer: 0
+        explanation: A budget turns performance into a target you can design and test against.
+      - id: q3
+        prompt: What is the usual cause of a hero image shifting the page as it loads?
+        options:
+          - The image has no width and height, so no space is reserved
+          - The image has alt text
+          - The page uses a stylesheet
+          - The image loads eagerly
+        answer: 0
+        explanation: Without explicit dimensions the browser does not know how much space to reserve. The content jumps when the image arrives.
+      - id: q4
+        prompt: What does `srcset` do?
+        options:
+          - Offers several image files so the browser can choose by viewport and pixel density
+          - Compresses the image automatically
+          - Loads every image at once
+          - Replaces the need for alt text
+        answer: 0
+        explanation: srcset is a menu, not a download list. With sizes, the browser picks the smallest file that fits.
+      - id: q5
+        prompt: A page scores 100 for performance in Lighthouse. Is that enough?
+        options:
+          - No. Lab scores vary, and field data and the user's task still matter
+          - Yes. Lighthouse is the standard the client cares about
+          - Yes, if the accessibility score is also 100
+          - No, because Lighthouse only checks CSS
+        answer: 0
+        explanation: A lab score is one run on one machine. It does not prove the customer can book on a bus.
+      - id: q6
+        prompt: A critique lists ten problems. What is missing?
+        options:
+          - A choice about what matters most and why
+          - More problems
+          - A screenshot of each problem
+          - A higher Lighthouse score
+        answer: 0
+        explanation: A critique chooses. A list leaves the decision to the client.
+      - id: q7
+        prompt: In the viva, what should you say about a commit?
+        options:
+          - What changed, why, and what else it could affect
+          - Who wrote it and when
+          - How many lines it changed
+          - Which branch it is on
+        answer: 0
+        explanation: The examiner wants your understanding, not the commit metadata.
+
+  - id: 06-04
+    kind: exercise
+    title: Fix the hero image
+    language: html
+    viewport:
+      width: 375
+      height: 667
+    brief: |
+      The hero is an 800 x 600 JPEG served as one large file. It has no explicit
+      dimensions, so the page shifts as it loads, and it renders wider than a
+      phone. Fix the markup so the browser reserves space, chooses a sensible
+      file, and keeps the hero inside a 375px screen.
+    prompt: |
+      Update the `img` element:
+
+      - add numeric `width` and `height`
+      - add a `srcset` with at least two width descriptors
+      - add a `sizes` attribute
+      - load the hero eagerly, because it is the largest image on the page
+      - write alt text that describes the image
+      - point `src` at a sized file such as `hero-800.jpg`
+      - keep the hero inside the 375px preview without horizontal scrolling
+
+      The preview is sandboxed and the image files do not exist, but the
+      attributes and layout are real.
+    starter: |
+      <!doctype html>
+      <html lang="en">
+      <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Harbour &amp; Hearth</title>
+        <style>
+          body { margin: 0; font-family: system-ui, sans-serif; }
+          h1 { padding: 0 16px; }
+        </style>
+      </head>
+      <body>
+        <main>
+          <h1>Harbour &amp; Hearth</h1>
+          <img src="images/hero.jpg" alt="Hero">
+          <p style="padding: 0 16px">Fresh bread in Northbridge.</p>
+        </main>
+      </body>
+      </html>
+    tests:
+      - name: Width and height reserve space
+        script: |
+          const img = doc.querySelector('img');
+          assert(img, 'Keep the hero image.');
+          assert(Number(img.getAttribute('width')) > 0 && Number(img.getAttribute('height')) > 0, 'Add numeric width and height so the browser reserves space.');
+      - name: srcset offers at least two widths
+        script: |
+          const img = doc.querySelector('img');
+          const srcset = img.getAttribute('srcset') || '';
+          const candidates = srcset.split(',').filter((part) => /\d+w/.test(part));
+          assert(candidates.length >= 2, 'Add a srcset with at least two width descriptors, for example 400w and 800w.');
+      - name: sizes describes the display width
+        script: |
+          const img = doc.querySelector('img');
+          assert((img.getAttribute('sizes') || '').trim().length > 0, 'Add a sizes attribute so the browser knows how wide the image will display.');
+      - name: The hero loads eagerly
+        script: |
+          const img = doc.querySelector('img');
+          const loading = (img.getAttribute('loading') || '').toLowerCase();
+          const priority = (img.getAttribute('fetchpriority') || '').toLowerCase();
+          assert(loading === 'eager' || priority === 'high', 'The hero is the largest image. Use loading="eager" or fetchpriority="high".');
+      - name: The alt text describes the image
+        script: |
+          const img = doc.querySelector('img');
+          const alt = (img.getAttribute('alt') || '').trim();
+          assert(alt.length >= 8, 'Write alt text that describes the image.');
+          assert(!/^(hero|image|photo|picture|img)$/i.test(alt), '"Hero" is not a description.');
+      - name: src points at a sized file
+        script: |
+          const img = doc.querySelector('img');
+          assert(/-\d{3,4}\.(jpe?g|png|webp|avif)$/i.test(img.getAttribute('src') || ''), 'Point src at a sized file such as hero-800.jpg, not the original.');
+      - name: The hero fits a 375px screen
+        script: |
+          const img = doc.querySelector('img');
+          const width = img.getBoundingClientRect().width;
+          assert(width <= 375.5, 'The hero is ' + Math.round(width) + 'px wide. Add max-width: 100% and height: auto.');
+    hints:
+      - width and height do not have to be the display size. They set the aspect ratio so the space is reserved.
+      - srcset is a menu and sizes is the instruction. Together the browser picks a file.
+      - The hero is the largest contentful paint. Do not lazy-load it.
+      - CSS max-width 100% and height auto stops the image overflowing.
+
+  - id: 06-05
+    kind: exercise
+    title: Write the critique
+    language: text
+    brief: |
+      You reviewed a classmate's site for the same Harbour & Hearth brief. You
+      found:
+
+      - the booking flow takes four taps from the home page
+      - the menu is a PDF that does not reflow on a phone
+      - the hero image is 1.8 MB and shifts the page as it loads
+      - the about page alt text says "image"
+      - the visual design is more polished than yours
+
+      Write a critique that chooses. Use the four sections in the starter.
+    prompt: |
+      Finish all four sections.
+
+      1. **Would you charge money for this?** Answer yes or no, then give a reason.
+      2. **The first three things I would change.** Number them and give a reason
+         for each. Put the most important one first.
+      3. **Compared with.** Name what you compared it with and one difference
+         that matters to the customer.
+      4. **What I still do not understand.** Name one thing honestly.
+
+      Judge against the client's tasks, not your taste. Do not just list every
+      problem.
+    starter: |
+      ## Would you charge money for this?
+
+      Answer yes or no, and why.
+
+      ## The first three things I would change
+
+      1.
+      2.
+      3.
+
+      ## Compared with
+
+      Name the other site and one difference that matters.
+
+      ## What I still do not understand
+
+      Name one thing.
+    tests:
+      - name: All four sections are present
+        script: |
+          const sections = [
+            /##\s*Would you charge money for this\?/i,
+            /##\s*The first three things I would change/i,
+            /##\s*Compared with/i,
+            /##\s*What I still do not understand/i
+          ];
+          for (const section of sections) {
+            assert(section.test(text), 'Keep all four section headings from the starter.');
+          }
+      - name: The charge section takes a side
+        script: |
+          const match = text.match(/##\s*Would you charge money for this\?([\s\S]*?)(?=##\s|$)/i);
+          const section = match ? match[1] : '';
+          assert(/\b(yes|no)\b/i.test(section), 'Answer yes or no about charging money.');
+          assert(section.trim().split(/\s+/).length >= 12, 'Give a reason for your answer, not just the word.');
+      - name: Three ordered changes with reasons
+        script: |
+          const match = text.match(/##\s*The first three things I would change([\s\S]*?)(?=##\s|$)/i);
+          const section = match ? match[1] : '';
+          const fixes = section.split('\n').filter((line) => /^\s*\d+[.)]\s+\S/.test(line));
+          assert(fixes.length >= 3, 'Number three changes.');
+          for (const fix of fixes.slice(0, 3)) {
+            assert(/because|so that|so the|which|means|to avoid/i.test(fix), 'Give a reason for: "' + fix.trim() + '"');
+          }
+      - name: The critique compares
+        script: |
+          const match = text.match(/##\s*Compared with([\s\S]*?)(?=##\s|$)/i);
+          const section = match ? match[1] : '';
+          assert(/classmate|competitor|replica|other site|their site/i.test(section), 'Name what you compared it with.');
+          assert(section.trim().split(/\s+/).length >= 10, 'Say one difference that matters to the customer.');
+      - name: The critique is honest about a gap
+        script: |
+          const match = text.match(/##\s*What I still do not understand([\s\S]*?)(?=##\s|$)/i);
+          const section = match ? match[1] : '';
+          assert(section.trim().split(/\s+/).length >= 5, 'Name one thing you still do not understand.');
+      - name: The judgement uses the client's tasks
+        script: |
+          assert(/booking|menu|hero|alt|task|customer|client|phone/i.test(text), 'Judge against the customer tasks: booking, menu, images, phone use.');
+    hints:
+      - "Choose, then justify. \"No, because the booking task takes four taps\" is a critique. \"No\" is an opinion."
+      - Put the change that affects the customer task first, not the easiest one.
+      - The comparison is about the task, not the visual polish.

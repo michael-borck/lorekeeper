@@ -1,0 +1,274 @@
+# Lorekeeper overlay for the web craft course, Module 11 (The Last 20%).
+# The polish exercise runs at 375px and checks computed styles.
+
+lessons:
+  - id: 11-01
+    kind: reading
+    title: The last 20 percent
+    source: overview.qmd
+    include:
+      - The question
+      - Learning objectives
+      - This module
+      - The lab deliverable
+
+  - id: 11-02
+    kind: reading
+    title: Polish, replicate, submit, defend
+    source: in-class/activity-01.qmd
+    include:
+      - The situation
+      - "Round 1: Polish sprint (50 minutes)"
+      - "Round 2: Replication test (30 minutes)"
+      - "Round 3: Final submission check (20 minutes)"
+      - "Round 4: Viva readiness (10 minutes)"
+
+  - id: 11-03
+    kind: checkpoint
+    title: "Checkpoint: the last 20 percent is the product"
+    questions:
+      - id: q1
+        prompt: What is a design token?
+        options:
+          - A named design value, such as a spacing step or a colour, reused across the UI
+          - A password for the design tool
+          - A one-off pixel value chosen per page
+          - An icon file
+        answer: 0
+        explanation: Tokens turn design decisions into a shared vocabulary. They make polish consistent and reviewable.
+      - id: q2
+        prompt: Why use a spacing scale such as 4, 8, 16, 24, 32?
+        options:
+          - Consistent rhythm, and instructions a developer can follow precisely
+          - More spacing is always better
+          - It removes the need for a stylesheet
+          - It makes every page the same
+        answer: 0
+        explanation: A scale bounds the choices. "Use 16px" is testable; "make it breathe" is not.
+      - id: q3
+        prompt: When does a CSS framework help?
+        options:
+          - When you need standard components and consistency, and the cost is acceptable
+          - Always. A framework is the professional choice
+          - Only when you cannot write CSS
+          - Never. Frameworks are always bloat
+        answer: 0
+        explanation: A framework buys speed and consistency. It costs bundle size, override work, and a look you may have to fight.
+      - id: q4
+        prompt: What counts as a cross-browser and device check?
+        options:
+          - The tasks on a real phone, plus the browsers your users actually use
+          - One run in Chrome on your laptop
+          - A screenshot at desktop width
+          - The HTML validator passing
+        answer: 0
+        explanation: Your laptop is not the client's phone. Test the tasks where the customers are.
+      - id: q5
+        prompt: What makes the A2 replication test valid?
+        options:
+          - A fresh session, an empty folder, and only SPEC.md v2 and the fact sheet
+          - Your current chat and your deployed app
+          - A classmate reading your code
+          - Running the checks again
+        answer: 0
+        explanation: The test measures the spec. The builder must have nothing else.
+      - id: q6
+        prompt: What belongs in a handover pack?
+        options:
+          - README, runbook, decision record and retrospective
+          - Only the source code
+          - The chat transcript
+          - The Lighthouse screenshot
+        answer: 0
+        explanation: The next person needs to run it, deploy it, understand the decisions and know what you learned.
+      - id: q7
+        prompt: In the viva, how do you trace a booking from the form to the dashboard?
+        options:
+          - Browser form, serverless function, REST API with a stored credential, WordPress, then the authenticated dashboard
+          - Form, CSS, WordPress, browser
+          - Dashboard, WordPress, form, function
+          - "The agent built it, so it works"
+        answer: 0
+        explanation: Name each hop, the credential, and who can read the data at each step.
+
+  - id: 11-04
+    kind: exercise
+    title: Apply the spacing scale
+    language: html
+    viewport:
+      width: 375
+      height: 667
+    brief: |
+      The app works. The polish request is precise: use a spacing scale, set
+      readable line heights, and keep the booking action inside a 375px screen.
+      Do not change the colour or the structure.
+    prompt: |
+      Edit the CSS only.
+
+      1. Define spacing tokens on `:root`: `--space-1: 4px`, `--space-2: 8px`,
+         `--space-3: 16px`, `--space-4: 24px`, `--space-5: 32px`.
+      2. Use a token for the card padding, for example
+         `padding: var(--space-3)`. The computed padding must be on the scale.
+      3. Set the heading line height to 1.2 and the body line height to 1.5.
+      4. Keep the booking button inside 375px without horizontal scrolling.
+      5. Leave the button colour as it is.
+
+      The tests read computed styles, so they check the result, not the text.
+    starter: |
+      <!doctype html>
+      <html lang="en">
+      <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Menu</title>
+        <style>
+          :root {
+          }
+          body {
+            margin: 0;
+            font-family: system-ui, sans-serif;
+            line-height: 1;
+          }
+          main {
+            padding: 1px;
+          }
+          .card {
+            padding: 3px;
+            margin-bottom: 2px;
+            border: 1px solid #ddd;
+          }
+          h2 {
+            font-size: 24px;
+            line-height: 1;
+          }
+          .cta {
+            display: inline-block;
+            background: #7a3b1d;
+            color: #fff;
+            padding: 14px 24px;
+            width: 500px;
+          }
+        </style>
+      </head>
+      <body>
+        <main>
+          <h2>Menu</h2>
+          <div class="card"><p>Sourdough</p></div>
+          <div class="card"><p>Croissant</p></div>
+          <p>Baked each morning.</p>
+          <a class="cta" href="#book">Book a table</a>
+        </main>
+      </body>
+      </html>
+    tests:
+      - name: The spacing tokens are defined
+        script: |
+          const root = doc.defaultView.getComputedStyle(doc.documentElement);
+          const expected = { '--space-1': '4px', '--space-2': '8px', '--space-3': '16px', '--space-4': '24px', '--space-5': '32px' };
+          for (const [name, value] of Object.entries(expected)) {
+            assert(root.getPropertyValue(name).trim() === value, 'Define ' + name + ': ' + value + '.');
+          }
+      - name: The card padding is on the scale
+        script: |
+          const css = [...doc.querySelectorAll('style')].map((el) => el.textContent).join('\n');
+          assert(/padding\s*:\s*var\(--space-\d\)/.test(css), 'Use a spacing token for the card padding.');
+          const card = doc.querySelector('.card');
+          const padding = parseFloat(doc.defaultView.getComputedStyle(card).paddingTop);
+          assert([4, 8, 16, 24, 32].includes(padding), 'Card padding is ' + padding + 'px. Use 4, 8, 16, 24 or 32.');
+      - name: The heading line height is 1.2
+        script: |
+          const style = doc.defaultView.getComputedStyle(doc.querySelector('h2'));
+          const ratio = parseFloat(style.lineHeight) / parseFloat(style.fontSize);
+          assert(Math.abs(ratio - 1.2) < 0.06, 'Heading line height is ' + ratio.toFixed(2) + '. Set it to 1.2.');
+      - name: The body line height is 1.5
+        script: |
+          const style = doc.defaultView.getComputedStyle(doc.body);
+          const ratio = parseFloat(style.lineHeight) / parseFloat(style.fontSize);
+          assert(Math.abs(ratio - 1.5) < 0.06, 'Body line height is ' + ratio.toFixed(2) + '. Set it to 1.5.');
+      - name: The booking button fits 375px
+        script: |
+          const button = doc.querySelector('.cta');
+          const rect = button.getBoundingClientRect();
+          assert(rect.width > 0 && rect.right <= 375.5, 'The button extends past the 375px screen. Use max-width: 100% and let it shrink.');
+      - name: The button colour is unchanged
+        script: |
+          const colour = doc.defaultView.getComputedStyle(doc.querySelector('.cta')).backgroundColor;
+          assert(colour === 'rgb(122, 59, 29)', 'Keep the button colour as #7a3b1d. This is a spacing and type polish, not a redesign.');
+      - name: No horizontal scroll
+        script: |
+          const root = doc.documentElement;
+          assert(root.scrollWidth <= root.clientWidth + 1, 'The page still scrolls sideways at 375px.');
+    hints:
+      - Define all five tokens on :root even if you only use one or two.
+      - 'width: 500px forces the button past the screen. Use width: auto with max-width: 100%, or box-sizing and width: 100%.'
+      - Line height 1.2 on the h2 and 1.5 on the body is the whole typography change.
+      - The colour test will fail if you "improve" the brown. Leave it.
+
+  - id: 11-05
+    kind: exercise
+    title: Write the runbook
+    language: text
+    brief: |
+      The app is finished. The next person needs to run it, deploy it, find the
+      data and fix it when it breaks. Write the runbook.
+    prompt: |
+      Complete the four sections.
+
+      - **Local**: how to start the WordPress site and the front end.
+      - **Deploy**: how the front end ships and how the backend is backed up.
+      - **Data**: the menu endpoint and the rule for bookings.
+      - **If it breaks**: the first three places to look.
+
+      Be specific: commands, hosts, endpoint paths, environment variables and
+      the `.wpress` export.
+    starter: |
+      # Runbook
+
+      ## Local
+
+      ## Deploy
+
+      ## Data
+
+      ## If it breaks
+    tests:
+      - name: All four sections are present
+        script: |
+          for (const heading of ['Local', 'Deploy', 'Data', 'If it breaks']) {
+            assert(new RegExp('##\\s*' + heading, 'i').test(text), 'Add the section: ' + heading + '.');
+          }
+      - name: Local explains how to start
+        script: |
+          const match = text.match(/##\s*Local([\s\S]*?)(?=##\s|$)/i);
+          const section = match ? match[1] : '';
+          assert(/localwp|wordpress/i.test(section), 'Say how the WordPress site starts.');
+          assert(/npm install|npm run|serve|start/i.test(section), 'Give the front-end commands.');
+      - name: Deploy names the host and the branch
+        script: |
+          const match = text.match(/##\s*Deploy([\s\S]*?)(?=##\s|$)/i);
+          const section = match ? match[1] : '';
+          assert(/netlify|cloudflare|pages/i.test(section), 'Name the front-end host.');
+          assert(/main|site\//i.test(section), 'Say what deploys, such as the main branch or site/.');
+          assert(/wpress|backup|export/i.test(section), 'Say how the backend is backed up.');
+      - name: Data names the endpoint and the rule
+        script: |
+          const match = text.match(/##\s*Data([\s\S]*?)(?=##\s|$)/i);
+          const section = match ? match[1] : '';
+          assert(/\/wp-json\/wp\/v2\/menu_item/.test(section), 'Name the menu endpoint.');
+          assert(/booking/i.test(section), 'Say how bookings are handled.');
+          assert(/auth|staff|private|login|server/i.test(section), 'Say that bookings are not public.');
+      - name: If it breaks gives a triage order
+        script: |
+          const match = text.match(/##\s*If it breaks([\s\S]*?)(?=##\s|$)/i);
+          const section = match ? match[1] : '';
+          assert(/deploy log|build log/i.test(section), 'Start with the deploy log.');
+          assert(/rest|wp-json|endpoint/i.test(section), 'Check the REST endpoint.');
+          assert(/console|cors|mixed content/i.test(section), 'Check the browser console for CORS or mixed content.');
+      - name: The runbook is substantial
+        script: |
+          assert(text.trim().split(/\s+/).length >= 80, 'Write enough detail for the next person to act on. Aim for 80 words or more.');
+    hints:
+      - A runbook is instructions, not description. Use commands and URLs.
+      - The backend is not on Netlify. Say where it lives and how it is exported.
+      - Bookings are staff-only. The public site never reads the collection.
+      - Triage in order: deploy log, endpoint, console.

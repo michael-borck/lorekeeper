@@ -1,0 +1,249 @@
+# Lorekeeper overlay for the web craft course, Module 08 (The Inherited Site).
+# The plugin review is a text exercise: PHP is inspected by pattern, not run.
+
+lessons:
+  - id: 08-01
+    kind: reading
+    title: The inherited site
+    source: overview.qmd
+    include:
+      - The question
+      - Learning objectives
+      - This module
+      - The lab deliverable
+
+  - id: 08-02
+    kind: reading
+    title: Audit, build, review, hand over
+    source: in-class/activity-01.qmd
+    include:
+      - The situation
+      - "Round 2: Audit the provided site (30 minutes)"
+      - "Round 3: Build a small plugin (25 minutes)"
+      - "Round 4: Security review (10 minutes)"
+      - "Round 5: Record and hand over (5 minutes)"
+
+  - id: 08-03
+    kind: checkpoint
+    title: "Checkpoint: read the trail"
+    questions:
+      - id: q1
+        prompt: What does `/wp-json/wp/v2/users` expose on a default WordPress site?
+        options:
+          - User accounts and display names to anonymous requests
+          - Only the administrator's password hash
+          - Nothing, because the endpoint requires a login
+          - A list of installed plugins
+        answer: 0
+        explanation: The REST API can list users publicly unless it is restricted. That helps an attacker enumerate accounts.
+      - id: q2
+        prompt: A theme was edited directly, with no child theme. Why is that a risk?
+        options:
+          - An update can overwrite the customisations
+          - The theme cannot be activated
+          - WordPress refuses to load it
+          - It stops plugins from working
+        answer: 0
+        explanation: Direct edits live inside the theme, so the next update replaces them. A child theme keeps the customisations separate.
+      - id: q3
+        prompt: A plugin works. What four security checks do you make before installing it?
+        options:
+          - Nonce, sanitisation, escaping and capability checks
+          - Colours, fonts, icons and layout
+          - Version, author, licence and download count
+          - Speed, size, cache and minification
+        answer: 0
+        explanation: Working is not the same as safe. Read the PHP for those four things.
+      - id: q4
+        prompt: What is a nonce for?
+        options:
+          - Confirming that a form submission came from the site and the user intended it
+          - Encrypting the saved option
+          - Hiding the admin menu from other users
+          - Compressing the form data
+        answer: 0
+        explanation: A nonce protects against cross-site request forgery. It is not encryption.
+      - id: q5
+        prompt: Where do sanitisation and escaping belong?
+        options:
+          - Sanitise input when it is saved, escape output when it is shown
+          - Escape input and sanitise output
+          - Only sanitise input
+          - Only escape input
+        answer: 0
+        explanation: Clean the data on the way in, then escape it for the context on the way out.
+      - id: q6
+        prompt: Which finding belongs in a handover as a launch blocker?
+        options:
+          - The domain is registered to the previous developer's email
+          - The footer uses a serif font
+          - A slider plugin is installed but unused
+          - The blog has three old posts
+        answer: 0
+        explanation: If the client does not control the domain, they do not control the site. That blocks launch.
+      - id: q7
+        prompt: What should a handover note say?
+        options:
+          - What to keep, remove and replace, plus what must happen before launch
+          - Everything the previous developer did wrong
+          - A complete rewrite plan only
+          - The plugin download links
+        answer: 0
+        explanation: The next person needs decisions and blockers, not blame.
+
+  - id: 08-04
+    kind: exercise
+    title: Fix the vulnerable plugin
+    language: text
+    brief: |
+      A previous developer left this WordPress plugin. It registers a setting,
+      renders a settings form and exposes a shortcode. It works. It is not safe.
+
+      Fix the PHP so it meets the four checks: capability, nonce, sanitisation
+      and escaping.
+    prompt: |
+      Rewrite the plugin. Keep the same feature: opening hours, a settings page
+      and an `[opening_hours]` shortcode.
+
+      Add:
+
+      1. a capability check with `current_user_can('manage_options')`
+      2. a nonce with `settings_fields('hh_settings')`
+      3. a sanitise callback with `sanitize_text_field`
+      4. escaped output with `esc_attr` in the input and `esc_html` in the
+         shortcode
+
+      Do not echo or return the option raw. The tests inspect your PHP for each
+      control. They do not run it.
+    starter: |
+      <?php
+      /*
+      Plugin Name: Harbour Hours
+      Description: Opening hours shortcode and settings.
+      Version: 1.0
+      */
+
+      add_action('admin_menu', function () {
+          add_options_page('Harbour Hours', 'Harbour Hours', 'manage_options', 'harbour-hours', 'hh_settings');
+      });
+
+      add_action('admin_init', function () {
+          register_setting('hh_settings', 'hh_opening_hours');
+      });
+
+      function hh_settings() {
+          ?>
+          <div class="wrap">
+              <h1>Opening hours</h1>
+              <form method="post" action="options.php">
+                  <input name="hh_opening_hours" value="<?php echo get_option('hh_opening_hours'); ?>">
+                  <?php submit_button(); ?>
+              </form>
+          </div>
+          <?php
+      }
+
+      add_shortcode('opening_hours', function () {
+          return get_option('hh_opening_hours');
+      });
+    tests:
+      - name: Capability check on the settings page
+        script: |
+          assert(/current_user_can\s*\(\s*['"]manage_options['"]\s*\)/.test(text), 'Add current_user_can(\'manage_options\') before rendering the settings page.');
+      - name: The form has a nonce
+        script: |
+          assert(/settings_fields\s*\(\s*['"]hh_settings['"]\s*\)|wp_nonce_field\s*\(|check_admin_referer\s*\(/.test(text), 'Add a nonce with settings_fields(\'hh_settings\').');
+      - name: The option is sanitised on save
+        script: |
+          assert(/sanitize_callback/.test(text), 'Add a sanitize_callback to register_setting.');
+          assert(/sanitize_text_field|sanitize_textarea_field/.test(text), 'Sanitise the hours with sanitize_text_field.');
+      - name: The input value is escaped
+        script: |
+          assert(/esc_attr\s*\(\s*get_option/.test(text), 'Escape the input value with esc_attr(get_option(...)).');
+      - name: The shortcode output is escaped
+        script: |
+          assert(/esc_html\s*\(\s*get_option|wp_kses_post\s*\(\s*get_option/.test(text), 'Escape the shortcode output with esc_html(get_option(...)).');
+      - name: No raw option output
+        script: |
+          assert(!/echo\s+get_option|return\s+get_option\s*\(/.test(text), 'Do not echo or return the option raw. Escape it first.');
+    hints:
+      - Check the capability before you render anything, not inside the form.
+      - settings_fields() adds the nonce and the option page fields.
+      - Sanitise on the way in, escape on the way out.
+      - The shortcode should return a string containing esc_html(get_option(...)), not the option itself.
+
+  - id: 08-05
+    kind: exercise
+    title: Write the handover
+    language: text
+    brief: |
+      Your audit of the inherited site found:
+
+      - two caching plugins active, one unmaintained
+      - an unused slider plugin
+      - the theme edited directly, with no child theme
+      - an old administrator account for the previous developer
+      - `/wp-json/wp/v2/users` lists users publicly
+      - the menu is a PDF from 2024
+      - no `main` landmark and low-contrast text
+      - a 2.4 MB hero image on every page
+      - the domain is registered to the previous developer's email
+
+      Write the handover the last developer did not.
+    prompt: |
+      Write a short handover note with four sections:
+
+      - **Keep**: what is worth keeping, and any change needed to keep it safely
+      - **Remove**: what to remove, and why
+      - **Replace**: what to replace, and with what
+      - **Before launch**: the blockers that must be fixed first
+
+      Be specific. Name the plugins, the account, the endpoint, the PDF and the
+      domain. The note is for the next developer, not the client.
+    starter: |
+      ## Keep
+
+      ## Remove
+
+      ## Replace
+
+      ## Before launch
+    tests:
+      - name: The handover has four sections
+        script: |
+          for (const heading of ['Keep', 'Remove', 'Replace', 'Before launch']) {
+            assert(new RegExp('##\\s*' + heading, 'i').test(text), 'Add the section: ' + heading + '.');
+          }
+      - name: Keep is specific
+        script: |
+          const match = text.match(/##\s*Keep([\s\S]*?)(?=##\s|$)/i);
+          const section = match ? match[1] : '';
+          assert(/theme|content/i.test(section), 'Say what you would keep.');
+          assert(/child theme|update|review/i.test(section), 'Say what the kept part needs to stay safe.');
+      - name: Remove names the risks
+        script: |
+          const match = text.match(/##\s*Remove([\s\S]*?)(?=##\s|$)/i);
+          const section = match ? match[1] : '';
+          assert(/slider|unused/i.test(section), 'Name the unused slider.');
+          assert(/caching|cache/i.test(section), 'Name the duplicate caching plugin.');
+          assert(/admin|account|developer/i.test(section), 'Name the old administrator account.');
+      - name: Replace fixes the content
+        script: |
+          const match = text.match(/##\s*Replace([\s\S]*?)(?=##\s|$)/i);
+          const section = match ? match[1] : '';
+          assert(/pdf/i.test(section), 'Replace the PDF menu.');
+          assert(/hero|image/i.test(section), 'Replace or compress the hero image.');
+      - name: Launch blockers are named
+        script: |
+          const match = text.match(/##\s*Before launch([\s\S]*?)(?=##\s|$)/i);
+          const section = match ? match[1] : '';
+          assert(/domain/i.test(section), 'The domain must transfer before launch.');
+          assert(/admin|account|user|api|wp-json/i.test(section), 'Name the account or API exposure as a blocker.');
+      - name: The note is substantial
+        script: |
+          assert(text.trim().split(/\s+/).length >= 80, 'Write enough detail for the next developer to act on. Aim for 80 words or more.');
+    hints:
+      - Keep the theme, but move the customisations into a child theme.
+      - Remove, do not replace, what nobody uses.
+      - The domain and the old administrator account are launch blockers, not tidy-up tasks.
+      - 'Replace the PDF menu with an HTML page is specific. "Improve the content" is not.'

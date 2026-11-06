@@ -1,0 +1,155 @@
+# Lorekeeper overlay for the web craft course, Module 04 (Checks It Can't Charm).
+# The check-writing exercise is a text block: it validates the shape of a
+# Playwright check, not a live browser run.
+
+lessons:
+  - id: 04-01
+    kind: reading
+    title: Checks it can't charm
+    source: overview.qmd
+    include:
+      - The question
+      - Learning objectives
+      - This module
+      - The lab deliverable
+
+  - id: 04-02
+    kind: reading
+    title: Run, fix, write, prove
+    source: in-class/activity-01.qmd
+    include:
+      - The situation
+      - "Round 1: Run the checks (20 minutes)"
+      - "Round 2: Fix the site, not the checks (30 minutes)"
+      - "Round 3: Write one check (30 minutes)"
+      - "Round 4: Prove the checks were not weakened (15 minutes)"
+
+  - id: 04-03
+    kind: checkpoint
+    title: "Checkpoint: evidence, not a green tick"
+    questions:
+      - id: q1
+        prompt: Which set is the four WCAG principles?
+        options:
+          - Perceivable, Operable, Understandable, Robust
+          - Perceivable, Readable, Usable, Secure
+          - Visible, Clickable, Readable, Fast
+          - Structure, Style, Behaviour, Data
+        answer: 0
+        explanation: POUR. Each principle asks a different question of the page.
+      - id: q2
+        prompt: The page passes axe with zero violations. Is it accessible?
+        options:
+          - Not necessarily. Automated checks cannot judge meaning or usability
+          - Yes, axe covers every WCAG rule
+          - Yes, if the HTML validator also passes
+          - Only if the page has no images
+        answer: 0
+        explanation: axe can find a missing alt attribute. It cannot tell whether the alt text is useful.
+      - id: q3
+        prompt: Where should a check come from?
+        options:
+          - An acceptance criterion in the spec
+          - The code the agent just wrote
+          - The easiest element to select
+          - A copy of the template check
+        answer: 0
+        explanation: A check is evidence for a requirement. Start from the requirement, not the implementation.
+      - id: q4
+        prompt: The agent made a failing check pass. What do you inspect first?
+        options:
+          - The diff. Did it fix the page or the check?
+          - The commit message
+          - The npm version
+          - The browser zoom level
+        answer: 0
+        explanation: Agents optimise for the green check. The diff tells you whether the page or the test changed.
+      - id: q5
+        prompt: Which change is gaming the check?
+        options:
+          - Adding aria-hidden to the element that failed
+          - Making the container fluid
+          - Adding useful alt text
+          - Fixing the heading order
+        answer: 0
+        explanation: aria-hidden removes the problem from assistive technology instead of fixing it.
+      - id: q6
+        prompt: Before you trust a new check, what must you do?
+        options:
+          - Make it fail on the broken page, then pass after the fix
+          - Run it once and see green
+          - Ask the agent to confirm it is correct
+          - Add a fixed wait so it is stable
+        answer: 0
+        explanation: A check that has never failed has not proven it can catch anything.
+      - id: q7
+        prompt: What can an automated check still not see?
+        options:
+          - Whether the alt text is meaningful and the copy is clear
+          - Whether a heading element exists
+          - Whether an image has an alt attribute
+          - Whether the page returns HTTP 200
+        answer: 0
+        explanation: Structure is checkable. Meaning, clarity and usability need a human.
+
+  - id: 04-04
+    kind: exercise
+    title: Write the check
+    language: text
+    brief: |
+      A check is evidence for one acceptance criterion. Write a Playwright check
+      for the criterion below. The tests inspect the shape and safety of your
+      check, not a live browser.
+
+      Criterion: the booking action is visible at 375px without scrolling.
+      The booking control is `[data-cta="primary"]`.
+    prompt: |
+      Write the check in `tests/`, never in `checks/`.
+
+      Your check must:
+
+      - import `test` and `expect` from `@playwright/test`
+      - set the viewport to 375px wide
+      - navigate with `await page.goto(...)`
+      - find `[data-cta="primary"]` with `page.locator(...)`
+      - assert it is in the viewport, not merely visible in the DOM
+      - avoid `test.skip`, `test.fixme` and `test.only`
+      - avoid hiding the problem with `overflow: hidden` or `display: none`
+    starter: |
+      import { test, expect } from '@playwright/test';
+
+      test('booking action is visible at 375px', async ({ page }) => {
+        // Your check here.
+      });
+    tests:
+      - name: Imports test and expect
+        script: |
+          assert(/@playwright\/test/.test(text), 'Import from @playwright/test.');
+          assert(/\btest\b/.test(text) && /\bexpect\b/.test(text), 'Import both test and expect.');
+      - name: Has a named test
+        script: |
+          assert(/test\s*\(\s*['"`][^'"`]+['"`]/.test(text), 'Call test() with a description string.');
+      - name: Sets a 375px viewport
+        script: |
+          assert(/375/.test(text), 'Set the viewport width to 375.');
+          assert(/setViewportSize|viewport/i.test(text), 'Use page.setViewportSize or test.use with a viewport.');
+      - name: Navigates with await page.goto
+        script: |
+          assert(/await\s+page\.goto\s*\(/.test(text), 'Navigate with await page.goto("/").');
+      - name: Uses the booking locator
+        script: |
+          assert(/locator\s*\(\s*['"`]\[data-cta=["']?primary/.test(text), 'Find the booking control with page.locator(\'[data-cta="primary"]\').');
+      - name: Asserts it is in the viewport
+        script: |
+          assert(/toBeInViewport|boundingBox/.test(text), 'Assert the call to action is in the viewport, not just present in the DOM.');
+          assert(/await\s+expect\s*\(/.test(text), 'Use await expect(...) for the assertion.');
+      - name: Does not skip or focus the test
+        script: |
+          assert(!/test\.(skip|fixme|only)/.test(text), 'Remove test.skip, test.fixme or test.only.');
+      - name: Does not hide the problem
+        script: |
+          assert(!/overflow\s*:\s*hidden|display\s*:\s*none/.test(text), 'Fix the layout. Do not hide the element or the overflow.');
+    hints:
+      - Set the viewport before you navigate.
+      - Playwright's toBeVisible checks CSS visibility. toBeInViewport checks that the element is actually on screen.
+      - The check should fail on the broken page. If it passes immediately, it is not testing the criterion.

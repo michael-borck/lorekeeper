@@ -1,0 +1,250 @@
+# Lorekeeper overlay for the web craft course, Module 12 (Tech Radar).
+# Two text exercises: the radar and the board memo.
+
+lessons:
+  - id: 12-01
+    kind: reading
+    title: Tech radar
+    source: overview.qmd
+    include:
+      - The question
+      - Learning objectives
+      - This module
+      - The lab deliverable
+
+  - id: 12-02
+    kind: reading
+    title: Scenario, memo, viva
+    source: in-class/activity-01.qmd
+    include:
+      - The situation
+      - "Round 1: Read the scenario (20 minutes)"
+      - "Round 2: Audit and memo (40 minutes)"
+      - "Round 3: Mock viva (30 minutes)"
+      - "Round 4: Feedback (20 minutes)"
+
+  - id: 12-03
+    kind: checkpoint
+    title: "Checkpoint: recommend with evidence"
+    questions:
+      - id: q1
+        prompt: Which set is the technology evaluation criteria from this module?
+        options:
+          - Maturity, cost, lock-in, skills, risk, reversibility
+          - Colour, animation, framework, version, stars, downloads
+          - Speed, size, syntax, licence, author, date
+          - Popularity, hype, conference talks, blog posts, age, logo
+        answer: 0
+        explanation: Evaluate against the client and the maintenance reality, not the trend.
+      - id: q2
+        prompt: What does the Adopt ring mean on a tech radar?
+        options:
+          - Proven enough to use now, with confidence
+          - Interesting, but not yet understood
+          - Use only in a timeboxed trial
+          - Do not use
+        answer: 0
+        explanation: Adopt is for technology you would use on a real project now. Trial, Assess and Hold follow.
+      - id: q3
+        prompt: The AI builder is half the price of the agency. What is the hidden cost?
+        options:
+          - The three-year cost and the cost of leaving, not just the build
+          - The cost of the domain
+          - The cost of the office wifi
+          - There is no hidden cost; the quote is the cost
+        answer: 0
+        explanation: A cheap build can be expensive to maintain or leave. The board is buying a three-year outcome.
+      - id: q4
+        prompt: The board is non-technical. How should the memo lead?
+        options:
+          - With the recommendation and the reason, then the evidence
+          - With the full list of bugs
+          - With the code diff
+          - With the vendor's marketing copy
+        answer: 0
+        explanation: The board needs a decision and its trade-offs. Evidence follows to support it.
+      - id: q5
+        prompt: In the viva, the examiner says "the budget halves". What do you do?
+        options:
+          - Adjust the recommendation and name what you would drop or defer
+          - Repeat the same recommendation word for word
+          - Refuse to answer
+          - Recommend the cheapest quote
+        answer: 0
+        explanation: Adaptation is part of the assessment. Keep the priority, change the scope.
+      - id: q6
+        prompt: A technology is new and popular. Is that a reason to adopt it?
+        options:
+          - No. Popularity is not evidence for this client's needs
+          - Yes. Popular technology is always safer
+          - Yes, if it has a large community
+          - No, because new technology never works
+        answer: 0
+        explanation: Evaluate maturity, cost, lock-in, skills, risk and reversibility for the brief.
+      - id: q7
+        prompt: What is a known-issues register?
+        options:
+          - A list of accepted problems with severity and a plan or mitigation
+          - A list of every bug in the backlog
+          - A list of the team's mistakes
+          - A list of the vendor's promises
+        answer: 0
+        explanation: A known issue is a decision to ship with a problem, recorded with its risk and what you will do about it.
+
+  - id: 12-04
+    kind: exercise
+    title: Build the radar
+    language: text
+    brief: |
+      The client is a small cafe. They need staff editing, online bookings and a
+      relaunch with a small budget. The candidates are:
+
+      - WordPress with a child theme
+      - a static front end with a headless CMS
+      - a PWA
+      - AI-assisted content migration
+      - agent-readable web (`llms.txt`)
+      - on-device AI in the browser
+      - AI app builders for production
+      - a native app for a small cafe
+    prompt: |
+      Place each candidate in one ring: **Adopt**, **Trial**, **Assess** or
+      **Hold**. Give a reason for each, tied to the client or the maintenance
+      reality.
+
+      Use the four sections in the starter. At minimum:
+
+      - Adopt: WordPress with a child theme
+      - Trial: the PWA
+      - Assess: one emerging technology
+      - Hold: AI app builders for production, and a native app for a small cafe
+    starter: |
+      ## Adopt
+
+      ## Trial
+
+      ## Assess
+
+      ## Hold
+    tests:
+      - name: All four rings are present
+        script: |
+          for (const ring of ['Adopt', 'Trial', 'Assess', 'Hold']) {
+            assert(new RegExp('##\\s*' + ring, 'i').test(text), 'Add the ring: ' + ring + '.');
+          }
+      - name: Adopt holds WordPress with a reason
+        script: |
+          const match = text.match(/##\s*Adopt([\s\S]*?)(?=##\s|$)/i);
+          const section = match ? match[1] : '';
+          assert(/wordpress/i.test(section), 'Put WordPress in Adopt.');
+          assert(/staff|edit|mature|pool|child theme|cost/i.test(section), 'Give a reason for adopting WordPress.');
+      - name: Trial holds the PWA
+        script: |
+          const match = text.match(/##\s*Trial([\s\S]*?)(?=##\s|$)/i);
+          const section = match ? match[1] : '';
+          assert(/pwa|progressive web/i.test(section), 'Put the PWA in Trial.');
+          assert(/offline|store|reach|install|design|mobile/i.test(section), 'Give a reason for trialling the PWA.');
+      - name: Assess holds an emerging technology
+        script: |
+          const match = text.match(/##\s*Assess([\s\S]*?)(?=##\s|$)/i);
+          const section = match ? match[1] : '';
+          assert(/agent|llms|on-device|browser ai|webgpu/i.test(section), 'Put one emerging technology in Assess.');
+          assert(/unclear|early|limited|watch|unknown|value/i.test(section), 'Say why it is only being assessed.');
+      - name: Hold holds the risky options
+        script: |
+          const match = text.match(/##\s*Hold([\s\S]*?)(?=##\s|$)/i);
+          const section = match ? match[1] : '';
+          assert(/ai (app )?builder|site builder/i.test(section), 'Put AI app builders for production in Hold.');
+          assert(/native/i.test(section), 'Put a native app for a small cafe in Hold.');
+          assert(/cost|maintenance|exit|reach|update|rebuild/i.test(section), 'Give the reason for holding them.');
+      - name: Every ring has content
+        script: |
+          for (const ring of ['Adopt', 'Trial', 'Assess', 'Hold']) {
+            const match = text.match(new RegExp('##\\s*' + ring + '([\\s\\S]*?)(?=##\\s|$)', 'i'));
+            assert((match ? match[1] : '').trim().length > 20, 'Add at least one item and reason to ' + ring + '.');
+          }
+    hints:
+      - Adopt means you would use it on a real project now, not that it is fashionable.
+      - The PWA is promising, but the offline state needs design. That is a trial.
+      - A native app for a small cafe costs more to build and update than it returns.
+      - '"Unclear value" is a reason to assess, not to adopt.'
+
+  - id: 12-05
+    kind: exercise
+    title: Write the board memo
+    language: text
+    brief: |
+      The board has two proposals: a WordPress agency and an AI site-builder
+      subscription. The current site has a public user endpoint, an outdated PDF
+      menu, unused plugins and an unowned administrator account. The board's
+      priorities are staff editing, online bookings and a reliable relaunch.
+
+      Write the one-page recommendation memo.
+    prompt: |
+      Use the five sections in the starter:
+
+      - **What we found**: five issues, rated high, medium or low.
+      - **What we would fix first**: an ordered list.
+      - **The proposals**: compare build cost, three-year cost, who edits content,
+        lock-in and hidden cost.
+      - **Recommendation**: choose one, with benefits, limitations and risks.
+      - **Known issues**: what you accept, with severity and a mitigation.
+
+      Lead with the decision. Keep it under 650 words. The board is not technical.
+    starter: |
+      # Recommendation: Harbour & Hearth relaunch
+
+      ## What we found
+
+      ## What we would fix first
+
+      ## The proposals
+
+      ## Recommendation
+
+      ## Known issues
+    tests:
+      - name: The memo has the five sections
+        script: |
+          for (const heading of ['What we found', 'What we would fix first', 'The proposals', 'Recommendation', 'Known issues']) {
+            assert(new RegExp('##\\s*' + heading, 'i').test(text), 'Add the section: ' + heading + '.');
+          }
+      - name: Findings are rated
+        script: |
+          assert(/high/i.test(text) && /medium/i.test(text) && /low/i.test(text), 'Rate the findings high, medium and low.');
+          const match = text.match(/##\s*What we found([\s\S]*?)(?=##\s|$)/i);
+          const section = match ? match[1] : '';
+          const items = section.split('\n').filter((line) => /^\s*([-*]|\d+[.)])\s+\S/.test(line));
+          assert(items.length >= 5, 'List at least five findings.');
+      - name: The proposal comparison covers the cost of ownership
+        script: |
+          const match = text.match(/##\s*The proposals([\s\S]*?)(?=##\s|$)/i);
+          const section = match ? match[1] : '';
+          assert(/build cost|build/i.test(section), 'Compare the build cost.');
+          assert(/three-year|3-year|tco|total cost/i.test(section), 'Compare the three-year cost.');
+          assert(/lock-in|exit|hidden/i.test(section), 'Name lock-in, exit cost or the hidden cost.');
+      - name: The recommendation chooses and justifies
+        script: |
+          const match = text.match(/##\s*Recommendation([\s\S]*?)(?=##\s|$)/i);
+          const section = match ? match[1] : '';
+          assert(/wordpress|agency|builder/i.test(section), 'Name the option you recommend.');
+          assert(section.trim().split(/\s+/).length >= 15, 'Give the benefits, limitations and risks, not just the name.');
+          assert(/staff|edit|exit|cost|lock|risk|maintenance/i.test(section), 'Tie the recommendation to the board priorities.');
+      - name: Known issues have severity and mitigation
+        script: |
+          const match = text.match(/##\s*Known issues([\s\S]*?)(?=##\s|$)/i);
+          const section = match ? match[1] : '';
+          assert(/users|wp-json|endpoint/i.test(section), 'Record the public user endpoint.');
+          assert(/pdf|menu/i.test(section), 'Record the outdated menu.');
+          assert(/high|medium|low/i.test(section), 'Rate each known issue.');
+          assert(/mitigat|fix|disable|restrict|replace|accept/i.test(section), 'Say what you will do about each issue.');
+      - name: The memo is concise
+        script: |
+          const words = text.trim().split(/\s+/).length;
+          assert(words >= 150, 'The memo needs enough detail to support the recommendation.');
+          assert(words <= 650, 'Keep the memo under 650 words. The board needs one page, not a report.');
+    hints:
+      - Lead with the recommendation. The evidence supports it; it does not replace it.
+      - The cheap proposal is cheap to build, not cheap to leave.
+      - A limitation is not a weakness in your argument. Name it before the board asks.
+      - The user endpoint and the PDF menu are high-severity known issues.

@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Lorekeeper · field notes</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="app">
+    <aside id="sidebar" class="sidebar" aria-label="Course outline">
+      <a class="brand" href="./" id="brand">
+        <span class="brand-mark">✦</span>
+        <span class="brand-text">Lorekeeper<span class="brand-sub">field notes</span></span>
+      </a>
+      <div id="course-meta" class="course-meta"></div>
+      <nav id="outline" class="outline"></nav>
+      <div class="sidebar-footer">
+        <div class="xp-row"><span>XP</span><strong id="xp">0</strong></div>
+        <div class="progress"><div id="progress-bar" class="progress-bar"></div></div>
+        <button id="reset-progress" class="ghost small" type="button">Reset progress</button>
+      </div>
+    </aside>
+
+    <main id="main" class="main">
+      <div id="content" class="content">
+        <div class="placeholder">
+          <h1>Lorekeeper</h1>
+          <p>Opening the course index...</p>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>

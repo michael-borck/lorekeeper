@@ -1,0 +1,152 @@
+# Lorekeeper overlay for the web craft course, Module 03 (Say What You Mean).
+# Text exercises pass the learner's answer to tests as `text`, not `doc`.
+
+lessons:
+  - id: 03-01
+    kind: reading
+    title: Say what you mean
+    source: overview.qmd
+    include:
+      - The question
+      - Learning objectives
+      - This module
+      - The lab deliverable
+
+  - id: 03-02
+    kind: reading
+    title: Interview, spec, replicate
+    source: in-class/activity-01.qmd
+    include:
+      - The situation
+      - "Round 1: Interview (25 minutes)"
+      - "Round 2: Write `SPEC.md` v1 (30 minutes)"
+      - "Round 3: Replication test (25 minutes)"
+      - "Round 4: Revise the spec (20 minutes)"
+
+  - id: 03-03
+    kind: checkpoint
+    title: "Checkpoint: requirements, not wishes"
+    questions:
+      - id: q1
+        prompt: Dev says "add a gallery". What should you ask first?
+        options:
+          - What are you trying to do that the gallery would help with?
+          - What colour should the gallery be?
+          - Which JavaScript library should we use?
+          - How many photos do you have?
+        answer: 0
+        explanation: A feature request is not a requirement. Ask about the task behind it.
+      - id: q2
+        prompt: Maria says the site must look "professional". What is the next move?
+        options:
+          - Turn it into checkable criteria with the client
+          - Put it in the spec exactly as she said it
+          - Ignore it because it cannot be measured
+          - Ask the agent to decide what professional means
+        answer: 0
+        explanation: Vague words are requirements in disguise. Convert them into something a stranger can test.
+      - id: q3
+        prompt: Dev wants the menu first; Sam wants booking first. What do you do?
+        options:
+          - Record the conflict and the decision in DECISIONS.md
+          - Pick one silently and move on
+          - Put both first on every page
+          - Ask the agent to break the tie
+        answer: 0
+        explanation: Conflicts are evidence. Record who wanted what and why you decided as you did.
+      - id: q4
+        prompt: What makes a replication test valid?
+        options:
+          - A fresh agent, an empty folder, and only SPEC.md and the fact sheet
+          - Your current chat, your screenshots and your deployed site
+          - The same agent that built the site
+          - A second student reviewing your code
+        answer: 0
+        explanation: The test measures the spec, so the builder must have nothing else to go on.
+      - id: q5
+        prompt: The replica differs from your site. How do you tell a spec problem from a build problem?
+        options:
+          - Ask whether a stranger could have known the requirement from the spec alone
+          - Assume every difference is the agent's fault
+          - Assume every difference is your fault
+          - Rebuild the replica until it matches
+        answer: 0
+        explanation: If the spec did not say it, the replica could not know it. That is a spec problem.
+      - id: q6
+        prompt: The replication test exposed a gap. Where does the fix go?
+        options:
+          - In the spec, then re-test
+          - In the chat, then carry on
+          - In DECISIONS.md only
+          - In the replica's CSS
+        answer: 0
+        explanation: The next person will not have your chat. Change the artefact that travels.
+
+  - id: 03-04
+    kind: exercise
+    title: Rewrite vague criteria as checks
+    language: text
+    brief: |
+      These are a draft spec's acceptance criteria. Each one sounds reasonable
+      and none of them can be tested. Rewrite them so a stranger could run each
+      check and give a clear pass or fail.
+    prompt: |
+      Replace the draft with at least five numbered or bulleted acceptance
+      criteria. Cover the essentials for this client:
+
+      - a phone width and no horizontal scrolling
+      - a booking action with a measurable outcome
+      - the menu showing the current week
+      - keyboard-only use
+      - headings or landmarks
+      - alt text
+
+      Remove vague words. "Professional", "modern", "simple", "fast" and
+      "user-friendly" are not checks. Press **Run tests** when you have a draft.
+    starter: |
+      Draft acceptance criteria (v0)
+
+      1. The site looks professional.
+      2. The menu is easy to update.
+      3. Booking is simple on mobile.
+      4. The site is accessible.
+      5. It loads fast.
+    tests:
+      - name: At least five criteria
+        script: |
+          const lines = text.split('\n').map((line) => line.trim()).filter((line) => /^([-*]|\d+[.)])\s+\S/.test(line));
+          assert(lines.length >= 5, 'Write at least five numbered or bulleted criteria. Found ' + lines.length + '.');
+      - name: No vague words
+        script: |
+          const lines = text.split('\n').map((line) => line.trim());
+          const vague = /\b(professional|modern|nice|user-friendly|clean|simple|fast)\b/i;
+          const offender = lines.find((line) => vague.test(line));
+          assert(!offender, 'Replace the vague wording: "' + offender + '". Name what you would check instead.');
+      - name: Width and horizontal scroll
+        script: |
+          const lines = text.split('\n');
+          assert(lines.some((line) => /375\s*px/i.test(line) && /(horizontal|sideways|scroll)/i.test(line)), 'Add a criterion that names 375px and rules out horizontal scrolling.');
+      - name: Booking has a measurable outcome
+        script: |
+          const lines = text.split('\n');
+          assert(lines.some((line) => /book/i.test(line) && /(minute|second|visible|tap|steps?)/i.test(line)), 'Say what a booking user must be able to do, and by when.');
+      - name: The menu is current
+        script: |
+          const lines = text.split('\n');
+          assert(lines.some((line) => /menu/i.test(line) && /(week|monday|current)/i.test(line)), 'Add a criterion for the menu showing the current week.');
+      - name: Keyboard only
+        script: |
+          const lines = text.split('\n');
+          assert(lines.some((line) => /keyboard/i.test(line)), 'Add a criterion that every task can be completed with a keyboard.');
+      - name: Headings or landmarks
+        script: |
+          const lines = text.split('\n');
+          assert(lines.some((line) => /\b(h1|heading|landmark)\b/i.test(line)), 'Add a criterion about the h1, heading order, or landmarks.');
+      - name: Alt text
+        script: |
+          const lines = text.split('\n');
+          assert(lines.some((line) => /\balt\b/i.test(line)), 'Add a criterion for meaningful alt text.');
+    hints:
+      - A criterion names the user, the action, and the result.
+      - 'Works at 375px with no horizontal scroll is a check. "Looks good on mobile" is not.'
+      - The model spec in the unit uses six criteria. You can use exactly those.

@@ -1,0 +1,119 @@
+# Lorekeeper overlay for the web craft course, Module 01.
+# The unit repo is the source of truth; this file only adds interactive lessons.
+# `include` names headings from the source file, in source order.
+
+lessons:
+  - id: 01-01
+    kind: reading
+    title: What a website actually is
+    source: overview.qmd
+    include:
+      - The question
+      - Learning objectives
+      - This module
+      - The lab deliverable
+      - The client
+
+  - id: 01-02
+    kind: checkpoint
+    title: "Checkpoint: the shape of Module 01"
+    questions:
+      - id: q1
+        prompt: What is the evidence trio you carry through the client project?
+        options:
+          - SPEC.md, DECISIONS.md and CRITIQUE.md
+          - README.md, LICENSE and index.html
+          - spec.md, quiz.md and notes.md
+          - plan.md, build.md and deploy.md
+        answer: 0
+        explanation: The three files record what was asked, what you changed and what you would do differently.
+      - id: q2
+        prompt: What is the first marked checkpoint in the unit?
+        options:
+          - CP1.1, the 375px audit in Module 02
+          - The A3 systems audit in the exam period
+          - The A2 viva at the end of Module 11
+          - The Module 01 deployment
+        answer: 0
+        explanation: Module 01 is formative. The first marks come from the 375px audit in Module 02.
+      - id: q3
+        prompt: What does Maria need the site to do?
+        options:
+          - Help people find the business, see the menu and book a table
+          - Run an online store with payments and delivery
+          - Replace her Facebook page and phone entirely
+          - Rank first for every cafe search in Perth
+        answer: 0
+        explanation: The brief is narrow on purpose. Find, see, book.
+      - id: q4
+        prompt: What do you ship at the end of the Module 01 lab?
+        options:
+          - A live URL and SPEC.md v0
+          - A finished A2 application
+          - A deck of lecture slides
+          - A marked portfolio
+        answer: 0
+        explanation: A stranger can open the URL on a phone, and the spec says what done means.
+
+  - id: 01-03
+    kind: exercise
+    title: Build the home page skeleton
+    language: html
+    brief: |
+      Maria has no website. Build the first skeleton of her home page: one clear
+      heading, navigation, a menu section and a booking call to action. No CSS is
+      required yet; this exercise checks structure and content only.
+    prompt: |
+      Write the body of a single home page for a Harbour & Hearth franchise.
+
+      Requirements:
+
+      - exactly one `h1` that names the business
+      - a `nav` with at least three links
+      - a `main` element that holds the page content
+      - a section that mentions the menu
+      - a link or button whose text contains the word "Book"
+
+      Press **Run tests** to check your work. The preview is sandboxed, so
+      scripts will not run.
+    starter: |
+      <!doctype html>
+      <html lang="en">
+      <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Harbour &amp; Hearth</title>
+      </head>
+      <body>
+        <!-- Build the page skeleton here. -->
+      </body>
+      </html>
+    tests:
+      - name: One h1 that names the business
+        script: |
+          const headings = doc.querySelectorAll('h1');
+          assert(headings.length === 1, 'Use exactly one <h1>.');
+          assert(headings[0].textContent.trim().length >= 3, 'The <h1> needs the business name.');
+      - name: A nav with three or more links
+        script: |
+          const links = doc.querySelectorAll('nav a');
+          assert(links.length >= 3, 'Put at least three links inside <nav>.');
+      - name: A main element
+        script: |
+          assert(doc.querySelector('main'), 'Wrap the page content in <main>.');
+      - name: A menu section
+        script: |
+          const candidates = [...doc.querySelectorAll('section, article, div')];
+          const hasMenu = candidates.some((el) => {
+            const heading = el.querySelector('h2, h3');
+            return /menu/i.test(el.id + ' ' + el.className + ' ' + (heading ? heading.textContent : ''));
+          });
+          assert(hasMenu, 'Add a section that mentions the menu.');
+      - name: A booking call to action
+        script: |
+          const actions = [...doc.querySelectorAll('a, button')];
+          assert(actions.some((el) => /book/i.test(el.textContent)), 'Add a link or button whose text contains "Book".');
+    hints:
+      - The order is header, nav, main, footer. Only nav and main are checked.
+      - Use a real heading inside the menu section so the test can find it.
+      - The booking control can be a link to a contact section.

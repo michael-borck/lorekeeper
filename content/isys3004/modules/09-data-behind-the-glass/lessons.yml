@@ -1,0 +1,260 @@
+# Lorekeeper overlay for the web craft course, Module 09 (Data Behind the Glass).
+# The fetch exercise uses the WordPress REST shape. The exposure review is text.
+
+lessons:
+  - id: 09-01
+    kind: reading
+    title: Data behind the glass
+    source: overview.qmd
+    include:
+      - The question
+      - Learning objectives
+      - This module
+      - The lab deliverable
+
+  - id: 09-02
+    kind: reading
+    title: Expose, present, review, decide
+    source: in-class/activity-01.qmd
+    include:
+      - The situation
+      - "Round 1: Expose the data (30 minutes)"
+      - "Round 2: Fetch and present (30 minutes)"
+      - "Round 3: Exposure review (20 minutes)"
+      - "Round 4: Decide what is private (20 minutes)"
+
+  - id: 09-03
+    kind: checkpoint
+    title: "Checkpoint: who can see the data?"
+    questions:
+      - id: q1
+        prompt: What does `show_in_rest` do on a custom post type?
+        options:
+          - Exposes the type through the WordPress REST API
+          - Shows the type in the admin menu only
+          - Makes the type searchable on the front end
+          - Turns on the block editor
+        answer: 0
+        explanation: Without show_in_rest the endpoint does not exist. With it, the collection becomes a public URL unless you restrict it.
+      - id: q2
+        prompt: What is a resource in a REST API?
+        options:
+          - A thing addressed by a URL and returned as a representation such as JSON
+          - A CSS file served by the server
+          - A database table with no URL
+          - A user permission
+        answer: 0
+        explanation: REST maps resources to URLs. The JSON shape tells you what the resource contains.
+      - id: q3
+        prompt: Which default endpoint can list WordPress users to an anonymous request?
+        options:
+          - /wp-json/wp/v2/users
+          - /wp-json/wp/v2/settings
+          - /wp-json/wp/v2/media
+          - /feed
+        answer: 0
+        explanation: The users endpoint can leak account names unless it is restricted.
+      - id: q4
+        prompt: Should the bookings endpoint, with customer names and phone numbers, be public?
+        options:
+          - No. Authenticate it or keep it server-only
+          - Yes, because the site is public
+          - Yes, if the page has no login link
+          - Yes, as long as the IDs are hidden
+        answer: 0
+        explanation: Public by default is not a decision. Private data needs a gate.
+      - id: q5
+        prompt: When should you present data as a chart rather than a table?
+        options:
+          - When the task is to see a trend or comparison over time
+          - When there are many exact values to look up
+          - When the data has more than three columns
+          - Always, because charts look better
+        answer: 0
+        explanation: The task decides the form. Tables suit lookup and precision; charts suit trend and shape.
+      - id: q6
+        prompt: The API returns an empty array. What should the page do?
+        options:
+          - Show a clear empty state, not a blank space
+          - Show a spinner forever
+          - Show the error message
+          - Hide the whole page
+        answer: 0
+        explanation: Empty is a state, separate from loading and error. Say that there is nothing yet.
+      - id: q7
+        prompt: 'The API is public, so it is fine. What is wrong with that reasoning?'
+        options:
+          - Public by default is not a decision. Decide who needs the data and protect the rest
+          - Nothing. Public endpoints are always safe
+          - It is fine if the endpoint has a long URL
+          - It is fine if the data is in JSON
+        answer: 0
+        explanation: Exposure is a choice. Name every endpoint and decide its audience.
+
+  - id: 09-04
+    kind: exercise
+    title: Render the menu from the API
+    language: js
+    html: &menu_html |
+      <!doctype html>
+      <html lang="en">
+      <head>
+        <meta charset="utf-8">
+        <title>Menu</title>
+      </head>
+      <body>
+        <main>
+          <h1>Menu</h1>
+          <p id="menu-status"></p>
+          <table id="menu-table">
+            <thead>
+              <tr><th>Item</th><th>Price</th></tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </main>
+      </body>
+      </html>
+    mock:
+      status: 200
+      body:
+        - title:
+            rendered: Sourdough
+          meta:
+            price: "$8"
+        - title:
+            rendered: Croissant
+          meta:
+            price: "$6"
+        - title:
+            rendered: Flat white
+          meta:
+            price: "$5"
+    prompt: |
+      Fetch the menu from the WordPress REST endpoint and render it as a table.
+
+      The endpoint returns an array of items in the WordPress shape:
+
+      ```json
+      [
+        { "title": { "rendered": "Sourdough" }, "meta": { "price": "$8" } }
+      ]
+      ```
+
+      Add one row per item to `#menu-table tbody`, with the title in the first
+      cell and the price in the second. Clear the loading message when the data
+      arrives. Check `response.ok` before you read the data.
+
+      The preview mocks the fetch, so the endpoint is always available.
+    starter: |
+      const status = document.querySelector('#menu-status');
+      const body = document.querySelector('#menu-table tbody');
+
+      async function loadMenu() {
+        status.textContent = 'Loading menu...';
+        body.replaceChildren();
+
+        const response = await fetch('/wp-json/wp/v2/menu_item?per_page=20');
+        const items = await response.json();
+
+        // Render one row per item with the title and the price.
+      }
+
+      loadMenu();
+    tests:
+      - name: One row per item
+        script: |
+          const rows = doc.querySelectorAll('#menu-table tbody tr');
+          assert(rows.length === 3, 'Render one row per item. Found ' + rows.length + '.');
+      - name: Each row has two cells
+        script: |
+          const rows = [...doc.querySelectorAll('#menu-table tbody tr')];
+          for (const row of rows) {
+            assert(row.querySelectorAll('td').length === 2, 'Each row needs a name cell and a price cell.');
+          }
+      - name: Titles and prices are rendered
+        script: |
+          const table = doc.querySelector('#menu-table tbody').textContent;
+          for (const value of ['Sourdough', 'Croissant', 'Flat white', '$8', '$6', '$5']) {
+            assert(table.includes(value), 'Missing "' + value + '" in the table.');
+          }
+      - name: The loading message is cleared
+        script: |
+          const status = doc.querySelector('#menu-status').textContent.trim();
+          assert(!/loading/i.test(status), 'Clear the loading message when the data arrives.');
+      - name: Checks the response before reading JSON
+        script: |
+          assert(/response\.ok/.test(text), 'Check response.ok before you read the JSON.');
+      - name: Uses await with fetch
+        script: |
+          assert(/await\s+fetch|await\s+response\.json/.test(text), 'Use await with fetch and response.json().');
+
+  - id: 09-05
+    kind: exercise
+    title: Write the exposure review
+    language: text
+    brief: |
+      The site exposes these endpoints. Write the exposure review the client
+      needs before launch.
+
+      | Endpoint | What it exposes |
+      |---|---|
+      | `/wp-json/wp/v2/users` | account names |
+      | `/wp-json/wp/v2/menu_item` | the public menu |
+      | `/wp-json/wp/v2/bookings` | customer names and phone numbers |
+      | `/wp-json/wp/v2/enquiries` | enquiry messages |
+      | `/wp-json/wp/v2/staff` | staff names, photos and bios |
+    prompt: |
+      Complete the table with one row for every endpoint.
+
+      Columns:
+
+      - **Endpoint**: the URL
+      - **Exposes**: what a stranger can read
+      - **Public?**: yes, no, or authenticated
+      - **Action**: keep, restrict, authenticate, disable, or server-only
+
+      Decide per data set. The menu is public. Customer bookings and enquiries
+      are not. Staff bios are a judgement call: say which and why in the action.
+    starter: |
+      | Endpoint | Exposes | Public? | Action |
+      |---|---|---|---|
+    tests:
+      - name: Every endpoint has a row
+        script: |
+          const rows = text.split('\n').filter((line) => line.includes('|'));
+          for (const endpoint of ['/wp-json/wp/v2/users', '/wp-json/wp/v2/menu_item', '/wp-json/wp/v2/bookings', '/wp-json/wp/v2/enquiries', '/wp-json/wp/v2/staff']) {
+            assert(rows.some((row) => row.includes(endpoint)), 'Add a row for ' + endpoint + '.');
+          }
+      - name: Users are not public
+        script: |
+          const row = text.split('\n').find((line) => line.includes('/wp-json/wp/v2/users'));
+          assert(row, 'Add the users endpoint.');
+          assert(/no|restrict|disable|not public/i.test(row), 'Restrict or disable the users endpoint. It is not public.');
+      - name: The menu stays public
+        script: |
+          const row = text.split('\n').find((line) => line.includes('/wp-json/wp/v2/menu_item'));
+          assert(row, 'Add the menu endpoint.');
+          assert(/yes|public|keep/i.test(row), 'The menu is public. Keep it.');
+      - name: Bookings and enquiries are gated
+        script: |
+          for (const endpoint of ['/wp-json/wp/v2/bookings', '/wp-json/wp/v2/enquiries']) {
+            const row = text.split('\n').find((line) => line.includes(endpoint));
+            assert(row, 'Add a row for ' + endpoint + '.');
+            assert(/no|auth|private|server-only|login/i.test(row), 'Gate ' + endpoint + '. Customer data is not public.');
+          }
+      - name: Staff has a decision
+        script: |
+          const row = text.split('\n').find((line) => line.includes('/wp-json/wp/v2/staff'));
+          assert(row, 'Add the staff endpoint.');
+          assert(/yes|no|public|auth|private|keep|restrict/i.test(row), 'Say whether the staff endpoint is public, authenticated or restricted.');
+      - name: The table names actions
+        script: |
+          const rows = text.split('\n').filter((line) => line.includes('|'));
+          assert(rows.length >= 6, 'Keep the header row and add one row per endpoint.');
+          assert(/restrict|disable|authenticate|server-only|keep|login/i.test(text), 'Name a concrete action for each row.');
+    hints:
+      - "Public by default is not a decision. Write the audience in the Public? column."
+      - Account names help an attacker. Restrict or disable the users endpoint.
+      - Bookings and enquiries contain customer details. Authenticate them or keep them server-only.
+      - Staff bios can be public. Decide, and write the action that matches your choice.

@@ -1,0 +1,206 @@
+# Lorekeeper overlay for the web craft course, Module 02 (The 375px Problem).
+# Adds a reading, a checkpoint and an HTML/CSS repair exercise.
+# The exercise renders in a 375 x 667 iframe so the viewport tests are real.
+
+lessons:
+  - id: 02-01
+    kind: reading
+    title: The 375px problem
+    source: overview.qmd
+    include:
+      - The question
+      - Learning objectives
+      - This module
+      - The lab deliverable
+
+  - id: 02-02
+    kind: reading
+    title: Name the cause before you fix it
+    source: in-class/activity-01.qmd
+    include:
+      - The situation
+      - "Round 1: Find it (35 minutes)"
+      - "Round 2: Name it (25 minutes)"
+
+  - id: 02-03
+    kind: checkpoint
+    title: "Checkpoint: symptom, name, check"
+    questions:
+      - id: q1
+        prompt: A page renders as a wide desktop layout on a 375px phone, so the text looks tiny. What is the cause?
+        options:
+          - The viewport meta tag is missing
+          - The CSS uses flexbox
+          - The images have alt text
+          - The page has too many headings
+        answer: 0
+        explanation: Without width=device-width the phone assumes a desktop viewport and scales the page down.
+      - id: q2
+        prompt: The page scrolls sideways at 375px. What is the usual cause?
+        options:
+          - Fixed pixel widths on containers or images
+          - A missing favicon
+          - Too many CSS variables
+          - A short page title
+        answer: 0
+        explanation: A container fixed at 1200px stays 1200px wide. Use fluid widths with a max-width.
+      - id: q3
+        prompt: Keyboard users cannot see which link they are on. What is the usual cause?
+        options:
+          - outline none on focus
+          - Headings that skip a level
+          - Images without width attributes
+          - A missing lang attribute
+        answer: 0
+        explanation: Removing the focus outline removes the only visible keyboard position cue.
+      - id: q4
+        prompt: A screen reader user cannot jump straight to the page content. What is missing?
+        options:
+          - A main landmark and a logical heading order
+          - A meta description
+          - A table of contents
+          - An animated hero image
+        answer: 0
+        explanation: Landmarks and headings are the two navigation structures a screen reader user relies on.
+      - id: q5
+        prompt: axe reports zero violations. Does that prove the page is accessible?
+        options:
+          - No. Automated checks miss meaning, order and usability
+          - Yes. axe covers every accessibility rule
+          - Yes, if the page also passes the HTML validator
+          - Only if the page has no images
+        answer: 0
+        explanation: A check can see a missing alt attribute. It cannot tell whether the alt text is useful or whether the task is possible.
+      - id: q6
+        prompt: Which acceptance criterion prevents sideways scrolling from returning?
+        options:
+          - Every page works at 375px wide with no horizontal scroll
+          - The site looks good on my laptop
+          - Use a modern CSS framework
+          - Add overflow-x hidden to the body
+        answer: 0
+        explanation: A checkable criterion names the width and the observable result. overflow-x hidden hides the symptom.
+
+  - id: 02-04
+    kind: exercise
+    title: Repair the 375px page
+    language: html
+    viewport:
+      width: 375
+      height: 667
+    brief: |
+      This is the page the agent shipped. It looks fine on a laptop and fails at
+      375px. Fix the HTML and CSS in the editor. The preview is a real 375px
+      browser, so the tests inspect the rendered page, not the source.
+    prompt: |
+      Work through the defects the way the lab does: find, name, fix.
+
+      Fix all of these:
+
+      1. The phone renders at desktop width. Add the viewport meta tag.
+      2. The page scrolls sideways. Make the container fluid and keep the hero
+         image inside the screen.
+      3. Keyboard users cannot see focus. Remove the rule that hides it and add
+         a visible focus style.
+      4. The page has no landmarks. Add `main` and a `nav` with an accessible
+         name, and fix the heading order.
+      5. The image is announced as "image". Write useful alt text.
+
+      Press **Run tests** to check the rendered page at 375 x 667.
+    starter: |
+      <!doctype html>
+      <html lang="en">
+      <head>
+        <meta charset="utf-8">
+        <title>Harbour &amp; Hearth</title>
+        <style>
+          body { margin: 0; font-family: system-ui, sans-serif; color: #241c17; }
+          .wrap { width: 1200px; margin: 0 auto; }
+          header { padding: 16px 0; border-bottom: 1px solid #d8cbb8; }
+          h1 { margin: 0; font-size: 2rem; }
+          .hero img { display: block; width: 1200px; height: auto; }
+          .hero h2 { font-size: 2rem; }
+          .cta { display: inline-block; background: #7a3b1d; color: #fff; padding: 14px 24px; text-decoration: none; }
+          a:focus { outline: none; }
+          section { padding: 24px 0; }
+        </style>
+      </head>
+      <body>
+        <header>
+          <div class="wrap">
+            <h1>Harbour &amp; Hearth</h1>
+            <div class="nav">
+              <a href="#menu">Menu</a>
+              <a href="#about">About</a>
+              <a href="#book">Book</a>
+            </div>
+          </div>
+        </header>
+
+        <div class="wrap hero">
+          <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='600'%3E%3Crect width='1200' height='600' fill='%23e8dcc8'/%3E%3C/svg%3E" alt="image">
+          <h2>Fresh bread in Northbridge</h2>
+          <p>Baked each morning. Open seven days.</p>
+          <a class="cta" href="#book">Book a table</a>
+        </div>
+
+        <div class="wrap">
+          <section id="menu">
+            <h4>Menu</h4>
+            <p>Sourdough, pastries and coffee.</p>
+          </section>
+          <section id="book">
+            <h4>Book a table</h4>
+            <p>Call us or book online.</p>
+          </section>
+        </div>
+      </body>
+      </html>
+    tests:
+      - name: The viewport meta tag is present
+        script: |
+          const meta = doc.querySelector('meta[name="viewport"]');
+          assert(meta, 'Add a meta viewport tag in the head.');
+          assert(/width=device-width/i.test(meta.content), 'Set width=device-width in the viewport tag.');
+      - name: No horizontal scroll at 375px
+        script: |
+          const root = doc.documentElement;
+          const overflow = root.scrollWidth - root.clientWidth;
+          assert(overflow <= 1, 'The page is ' + root.scrollWidth + 'px wide inside a ' + root.clientWidth + 'px screen. Remove the fixed width.');
+      - name: The hero image fits the screen
+        script: |
+          const img = doc.querySelector('.hero img');
+          assert(img, 'Keep the hero image.');
+          const width = img.getBoundingClientRect().width;
+          assert(width <= 375.5, 'The hero image is ' + Math.round(width) + 'px wide. Constrain it to the container.');
+      - name: Focus is visible
+        script: |
+          const css = [...doc.querySelectorAll('style')].map((el) => el.textContent).join('\n');
+          assert(!/outline\s*:\s*none/i.test(css), 'Remove the rule that hides the focus outline.');
+          assert(/(:focus-visible|:focus)[^{]*\{[^}]*outline/i.test(css), 'Add a visible outline for keyboard focus.');
+      - name: Landmarks and heading order
+        script: |
+          assert(doc.querySelector('main'), 'Wrap the page content in <main>.');
+          const nav = doc.querySelector('nav');
+          assert(nav, 'Use a <nav> element for the navigation.');
+          assert(nav.getAttribute('aria-label'), 'Give the nav an aria-label.');
+          const headings = [...doc.querySelectorAll('h1,h2,h3,h4,h5,h6')];
+          const h1s = headings.filter((h) => h.tagName === 'H1');
+          assert(h1s.length === 1, 'Keep exactly one h1.');
+          assert(headings[0].tagName === 'H1', 'The first heading should be the h1.');
+          let previous = 1;
+          for (const heading of headings.slice(1)) {
+            const level = Number(heading.tagName[1]);
+            assert(level <= previous + 1, 'Heading order jumps from h' + previous + ' to h' + level + ': "' + heading.textContent.trim() + '".');
+            previous = level;
+          }
+      - name: The image has useful alt text
+        script: |
+          const img = doc.querySelector('.hero img');
+          const alt = (img.getAttribute('alt') || '').trim();
+          assert(alt.length >= 8, 'Write alt text that describes the image.');
+          assert(!/^(image|photo|picture|img)$/i.test(alt), 'The alt text must say what the image shows, not just that it is an image.');
+    hints:
+      - Start with the viewport tag; without it the other width tests are meaningless.
+      - Replace a fixed width with width 100% and a max-width, then let images use max-width 100%.
+      - The heading skip is h2 straight to h4 in the menu sections.

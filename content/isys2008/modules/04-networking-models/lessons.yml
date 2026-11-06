@@ -1,0 +1,56 @@
+# Lorekeeper overlay for the enterprise systems course, Module 04.
+# Reading lessons are derived automatically; this adds a checkpoint.
+# Lab exercises stay in the estate labs repo and are linked from the unit.
+
+lessons:
+  - id: 04-01
+    kind: reading
+    title: Networking models
+    source: overview.qmd
+    include:
+      - Learning objectives
+      - The week's idea
+      - Key ideas
+      - The CloudCore ticket
+
+  - id: 04-02
+    kind: checkpoint
+    title: "Checkpoint: layers, units and evidence"
+    questions:
+      - id: q1
+        prompt: How many layers are in the OSI model?
+        options: ["4", "5", "7", "9"]
+        answer: 2
+        explanation: OSI has seven layers. TCP/IP collapses them into four.
+      - id: q2
+        prompt: Which list is the TCP/IP model, from top to bottom?
+        options:
+          - Application, Transport, Internet, Link
+          - Application, Presentation, Session, Transport
+          - Physical, Data link, Network, Transport
+          - Link, Internet, Transport, Application
+        answer: 0
+        explanation: TCP/IP has four layers. Link is the bottom, Application the top.
+      - id: q3
+        prompt: Which unit carries the source and destination ports?
+        options:
+          - Frame
+          - Packet
+          - Segment
+          - Datagram
+        answer: 2
+        explanation: The transport layer adds ports. On the wire that unit is a segment (TCP) or datagram (UDP).
+      - id: q4
+        prompt: Which protocol resolves a local IP address to a MAC address?
+        options: [DNS, ARP, DHCP, ICMP]
+        answer: 1
+        explanation: ARP maps an IP address to the MAC address on the local link.
+      - id: q5
+        prompt: In the CloudCore ticket, what is the first piece of evidence to gather?
+        options:
+          - A packet capture or trace that shows where the request stops
+          - A rewrite of the web tier configuration
+          - A new monitoring dashboard
+          - A list of every customer who complained
+        answer: 0
+        explanation: The ticket asks where the request stops. Capture that before changing anything.

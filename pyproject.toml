@@ -1,0 +1,22 @@
+[project]
+name = "lorekeeper"
+version = "0.2.0"
+description = "Story-driven learning engine for information systems courses"
+requires-python = ">=3.10"
+dependencies = ["PyYAML>=6.0", "Markdown>=3.5"]
+
+[project.scripts]
+lorekeeper = "lorekeeper.cli:main"
+
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = ["lorekeeper"]
+
+[tool.ruff]
+extend-exclude = ["._*", "build"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

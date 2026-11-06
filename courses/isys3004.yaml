@@ -1,0 +1,10 @@
+# Lorekeeper course registry.
+# `key` and `code` are internal provenance. They never appear in the player.
+# `title` is the learner-facing course title.
+key: isys3004
+code: ISYS3004
+slug: ship-it
+title: "Ship It: Web Craft with an AI Partner"
+root: ../../isys3004-business-web-and-mobile-technologies
+replacements:
+  "ISYS3004": "this course"

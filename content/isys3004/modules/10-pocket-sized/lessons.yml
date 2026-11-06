@@ -1,0 +1,213 @@
+# Lorekeeper overlay for the web craft course, Module 10 (Pocket-Sized).
+# The manifest and service worker are text exercises: parsed and pattern-checked.
+
+lessons:
+  - id: 10-01
+    kind: reading
+    title: Pocket-sized
+    source: overview.qmd
+    include:
+      - The question
+      - Learning objectives
+      - This module
+      - The lab deliverable
+
+  - id: 10-02
+    kind: reading
+    title: Manifest, worker, offline
+    source: in-class/activity-01.qmd
+    include:
+      - The situation
+      - "Round 2: Manifest (30 minutes)"
+      - "Round 3: Service worker (25 minutes)"
+      - "Round 4: Offline state (10 minutes)"
+      - "Round 5: Install and test (10 minutes)"
+
+  - id: 10-03
+    kind: checkpoint
+    title: "Checkpoint: installable, and honest offline"
+    questions:
+      - id: q1
+        prompt: What does a web app need before a phone offers to install it?
+        options:
+          - HTTPS, a manifest with name, start URL, display and 192/512 icons, and a service worker
+          - A React build and an app store listing
+          - A native wrapper and a signing certificate
+          - A separate mobile domain
+        answer: 0
+        explanation: The browser checks the manifest, the icons, the start URL and a service worker over HTTPS.
+      - id: q2
+        prompt: Which manifest display value opens the app without browser chrome?
+        options:
+          - standalone
+          - browser
+          - minimal-ui
+          - fullscreen is the only option
+        answer: 0
+        explanation: standalone gives an app-like window. fullscreen is an option but is not required.
+      - id: q3
+        prompt: What does a service worker do?
+        options:
+          - Intercepts network requests and can serve cached responses
+          - Styles the app for small screens
+          - Compiles JavaScript for the phone
+          - Stores the database on the server
+        answer: 0
+        explanation: The worker sits between the page and the network. That is what makes the shell work offline.
+      - id: q4
+        prompt: Which caching strategy suits the app shell and which suits business data?
+        options:
+          - Cache-first for the shell, network-first for data
+          - Network-first for the shell, cache-first for data
+          - Cache everything forever
+          - Never cache anything
+        answer: 0
+        explanation: The shell changes rarely, so cache it. Data changes often, so try the network first.
+      - id: q5
+        prompt: Offline, the installed app shows the browser's error page. What is wrong?
+        options:
+          - The offline state was not designed. Add a fallback that says what still works
+          - The phone has no manifest
+          - The icons are the wrong size
+          - The site is not on HTTPS
+        answer: 0
+        explanation: Offline is a state to design. A browser error is the absence of a design.
+      - id: q6
+        prompt: Why might a PWA beat an app-store app for this client?
+        options:
+          - One codebase, instant updates and no store fee or review
+          - It has more features than native
+          - It is always faster than native
+          - It does not need HTTPS
+        answer: 0
+        explanation: Reach and cost favour the web for a small business. Native wins when it needs deep device features.
+      - id: q7
+        prompt: The client says "we should put it in the store". What do you ask?
+        options:
+          - What does the store give this client that the web does not?
+          - Which store has the best icon?
+          - How many screenshots should we take?
+          - Which framework is most modern?
+        answer: 0
+        explanation: A store adds review, fees and release friction. It needs a reason tied to the client's reach or device needs.
+
+  - id: 10-04
+    kind: exercise
+    title: Write the manifest
+    language: text
+    brief: |
+      The client wants the site to install on a phone. Write the web app
+      manifest for Harbour & Hearth Northbridge.
+
+      The icons live at `/icons/icon-192.png` and `/icons/icon-512.png`.
+    prompt: |
+      Write valid JSON for `manifest.webmanifest`. Include:
+
+      - `name` and `short_name`
+      - `start_url` set to `/`
+      - `display` set to `standalone`
+      - `theme_color` and `background_color`
+      - an `icons` array with 192x192 and 512x512 PNG icons
+
+      The tests parse your JSON and check the install fields. Do not wrap it in
+      markdown fences.
+    starter: |
+      {
+      }
+    tests:
+      - name: The manifest is valid JSON
+        script: |
+          try {
+            JSON.parse(text);
+          } catch (error) {
+            assert(false, 'The manifest must be valid JSON: ' + error.message);
+          }
+      - name: Name and short name are set
+        script: |
+          const data = JSON.parse(text);
+          assert(typeof data.name === 'string' && data.name.trim().length > 0, 'Add a name.');
+          assert(typeof data.short_name === 'string' && data.short_name.trim().length > 0, 'Add a short_name for the home screen.');
+      - name: Start URL and display are set
+        script: |
+          const data = JSON.parse(text);
+          assert(data.start_url === '/', 'Set start_url to "/".');
+          assert(data.display === 'standalone', 'Set display to "standalone".');
+      - name: Theme and background colours are set
+        script: |
+          const data = JSON.parse(text);
+          assert(/^#([0-9a-f]{3}|[0-9a-f]{6})$/i.test(data.theme_color || ''), 'Add a hex theme_color.');
+          assert(/^#([0-9a-f]{3}|[0-9a-f]{6})$/i.test(data.background_color || ''), 'Add a hex background_color.');
+      - name: Both icon sizes are present
+        script: |
+          const data = JSON.parse(text);
+          assert(Array.isArray(data.icons), 'Add an icons array.');
+          const sizes = data.icons.map((icon) => icon.sizes);
+          assert(sizes.includes('192x192'), 'Add a 192x192 icon.');
+          assert(sizes.includes('512x512'), 'Add a 512x512 icon.');
+          assert(data.icons.every((icon) => icon.type === 'image/png'), 'Every icon needs type image/png.');
+      - name: The icon paths are usable
+        script: |
+          const data = JSON.parse(text);
+          for (const icon of data.icons) {
+            assert(typeof icon.src === 'string' && icon.src.endsWith('.png'), 'Each icon needs a PNG src path.');
+          }
+    hints:
+      - A manifest without a 192px and a 512px icon will not install.
+      - short_name is what the phone shows under the icon. Keep it short.
+      - start_url should be a path on the site, not a full URL to another domain.
+
+  - id: 10-05
+    kind: exercise
+    title: Write the service worker
+    language: text
+    brief: |
+      Write the service worker that makes the shell load offline.
+
+      Cache the shell: `/`, `/menu.html`, `/css/styles.css`, `/js/main.js` and
+      `/offline.html`. Use cache-first for the shell. For `/wp-json/` requests,
+      try the network, then fall back to `/offline.html`.
+    prompt: |
+      Write `sw.js` and include the registration snippet for `main.js`.
+
+      Your worker must:
+
+      - listen for `install` and cache the shell with `cache.addAll`
+      - listen for `activate` and delete old caches
+      - listen for `fetch`
+      - serve the shell cache-first
+      - try the network first for `/wp-json/` and fall back to `/offline.html`
+      - register the worker with `navigator.serviceWorker.register('/sw.js')`
+    starter: |
+      // sw.js
+      // Cache the shell, handle fetch, and register at the bottom.
+    tests:
+      - name: Registers the service worker
+        script: |
+          assert(/serviceWorker\.register\s*\(\s*['"]\/sw\.js['"]\s*\)/.test(text), 'Register the worker with navigator.serviceWorker.register(\'/sw.js\').');
+      - name: Caches the shell on install
+        script: |
+          assert(/addEventListener\s*\(\s*['"]install['"]/.test(text), 'Add an install listener.');
+          assert(/cache\.addAll|addAll\s*\(/.test(text), 'Cache the shell with cache.addAll.');
+          for (const asset of ['/', '/menu.html', '/css/styles.css', '/js/main.js', '/offline.html']) {
+            assert(text.includes(asset), 'Include ' + asset + ' in the shell cache.');
+          }
+      - name: Cleans old caches on activate
+        script: |
+          assert(/addEventListener\s*\(\s*['"]activate['"]/.test(text), 'Add an activate listener.');
+          assert(/caches\.delete/.test(text), 'Delete caches that are not the current version.');
+      - name: Handles fetch
+        script: |
+          assert(/addEventListener\s*\(\s*['"]fetch['"]/.test(text), 'Add a fetch listener.');
+          assert(/caches\.match|cache\.match/.test(text), 'Serve the shell from the cache.');
+      - name: Treats the API as network-first
+        script: |
+          assert(/wp-json/.test(text), 'Handle /wp-json/ requests separately.');
+          assert(/(wp-json[\s\S]{0,300}offline\.html)|(offline\.html[\s\S]{0,300}wp-json)/i.test(text), 'For API requests, try the network and fall back to offline.html.');
+      - name: The offline fallback is cached
+        script: |
+          assert(/offline\.html/.test(text), 'Add offline.html to the cache and as the fallback.');
+    hints:
+      - Put the cache name and the shell list in constants at the top.
+      - "In the fetch handler, check the URL first: if it starts with /wp-json/, use network-first."
+      - "After each handler, register the worker once the page has loaded."
+      - The offline fallback is the page the user sees, so make it useful.

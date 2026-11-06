@@ -1,0 +1,254 @@
+# Lorekeeper overlay for the web craft course, Module 05 (Keys in the Window).
+# The js exercises run in a sandboxed iframe with a mocked fetch.
+
+lessons:
+  - id: 05-01
+    kind: reading
+    title: Keys in the window
+    source: overview.qmd
+    include:
+      - The question
+      - Learning objectives
+      - This module
+      - The lab deliverable
+
+  - id: 05-02
+    kind: reading
+    title: Data, secrets and the unhappy path
+    source: in-class/activity-01.qmd
+    include:
+      - The situation
+      - "Round 1: Fetch the data (25 minutes)"
+      - "Round 2: Move it to a serverless function (25 minutes)"
+      - "Round 3: The unhappy path (25 minutes)"
+      - "Round 4: A failing-API check (20 minutes)"
+
+  - id: 05-03
+    kind: checkpoint
+    title: "Checkpoint: who can see the key?"
+    questions:
+      - id: q1
+        prompt: Where can a browser user read an API key that is embedded in client-side JavaScript?
+        options:
+          - Anywhere. View Source, DevTools and the network tab all show it
+          - Nowhere, if the file is minified
+          - Only if they have the repository
+          - Only on the production site, not locally
+        answer: 0
+        explanation: The browser must download and run the code, so the user can read it. Minifying does not hide it.
+      - id: q2
+        prompt: Where should a key that the browser must not see live?
+        options:
+          - A server-side environment variable, read by a function
+          - A constant at the top of app.js
+          - A hidden input in the HTML
+          - A comment in the CSS
+        answer: 0
+        explanation: The server can hold a secret. Anything the browser receives is public.
+      - id: q3
+        prompt: You deleted the key from the current file. Are you safe?
+        options:
+          - No. It is still in git history. Rotate it and clean the history
+          - Yes. The file no longer contains it
+          - Yes, if the repository is private
+          - No, you must also add it to .gitignore
+        answer: 0
+        explanation: A deleted line is still in earlier commits. Rotate the key, then remove it from history.
+      - id: q4
+        prompt: The API is down. What should the page show?
+        options:
+          - A friendly message and a way to retry
+          - A blank space where the widget was
+          - A spinner that keeps going
+          - The browser's raw network error
+        answer: 0
+        explanation: Loading, error and empty are three different states. The user needs to know what happened and what to do.
+      - id: q5
+        prompt: Which check proves the unhappy path works?
+        options:
+          - A Playwright test that mocks a 500 and asserts the message
+          - A manual click on the happy path
+          - A screenshot of the loading state
+          - A check that the HTTP server is running
+        answer: 0
+        explanation: Mock the failure and assert the user-visible result. That is the only way to know the error state exists.
+      - id: q6
+        prompt: Why is `innerHTML` with API data risky?
+        options:
+          - It can inject untrusted markup and scripts. Use textContent
+          - It is slower than textContent in every browser
+          - It strips all styles from the page
+          - It stops fetch from working
+        answer: 0
+        explanation: API data is untrusted input. Setting innerHTML lets that input become active markup.
+
+  - id: 05-04
+    kind: exercise
+    title: Render the rates
+    language: js
+    html: &rates_html |
+      <!doctype html>
+      <html lang="en">
+      <head>
+        <meta charset="utf-8">
+        <title>Today's rates</title>
+      </head>
+      <body>
+        <main>
+          <h1>Today's rates</h1>
+          <p id="rates-status"></p>
+          <ul id="rates-list"></ul>
+        </main>
+      </body>
+      </html>
+    mock:
+      status: 200
+      body:
+        rates:
+          AUD: 1.52
+          EUR: 0.91
+          GBP: 0.78
+    prompt: |
+      Fetch the rates from the serverless function and render them.
+
+      The function returns JSON in this shape:
+
+      ```json
+      { "rates": { "AUD": 1.52, "EUR": 0.91, "GBP": 0.78 } }
+      ```
+
+      Show one list item per rate with the currency code and the value. Clear the
+      loading message when the data arrives. The page has `#rates-status` and
+      `#rates-list`.
+
+      The preview mocks the fetch, so the data is always available.
+    starter: |
+      const status = document.querySelector('#rates-status');
+      const list = document.querySelector('#rates-list');
+
+      async function loadRates() {
+        status.textContent = 'Loading rates...';
+        list.replaceChildren();
+
+        const response = await fetch('/.netlify/functions/rates');
+        const data = await response.json();
+
+        // Render one <li> per rate, then clear the status message.
+      }
+
+      loadRates();
+    tests:
+      - name: One list item per rate
+        script: |
+          const items = doc.querySelectorAll('#rates-list li');
+          assert(items.length === 3, 'Render one <li> per rate. Found ' + items.length + '.');
+      - name: Each item shows the code and the value
+        script: |
+          const items = [...doc.querySelectorAll('#rates-list li')].map((li) => li.textContent);
+          for (const code of ['AUD', 'EUR', 'GBP']) {
+            assert(items.some((text) => text.includes(code)), 'Show the currency code ' + code + '.');
+          }
+          assert(items.some((text) => /1\.52/.test(text)), 'Show the rate value, not just the code.');
+      - name: The loading message is cleared
+        script: |
+          const status = doc.querySelector('#rates-status').textContent.trim();
+          assert(!/loading/i.test(status), 'Clear the loading message when the data arrives.');
+      - name: Uses await with fetch
+        script: |
+          assert(/await\s+fetch|await\s+response\.json/.test(text), 'Use await with fetch and response.json().');
+
+  - id: 05-05
+    kind: exercise
+    title: Handle a failed request
+    language: js
+    html: *rates_html
+    mock:
+      status: 500
+      body:
+        error: upstream
+    prompt: |
+      The function now returns HTTP 500. Add the unhappy path.
+
+      When the request fails, the status message must tell the user the rates are
+      unavailable and that they can try again. The list stays empty. Do not leave
+      the loading message on screen.
+
+      Check `response.ok` before you read the data. The preview mocks the 500.
+    starter: |
+      const status = document.querySelector('#rates-status');
+      const list = document.querySelector('#rates-list');
+
+      async function loadRates() {
+        status.textContent = 'Loading rates...';
+        list.replaceChildren();
+
+        const response = await fetch('/.netlify/functions/rates');
+        const data = await response.json();
+
+        // Handle a failed response, then render the rates.
+      }
+
+      loadRates();
+    tests:
+      - name: Shows a friendly message
+        script: |
+          const status = doc.querySelector('#rates-status').textContent.trim();
+          assert(/unavailable|try again|error|failed|could not|problem/i.test(status), 'Tell the user the rates are unavailable and that they can retry. Got: "' + status + '"');
+      - name: The list stays empty
+        script: |
+          const items = doc.querySelectorAll('#rates-list li');
+          assert(items.length === 0, 'Do not render items when the request fails.');
+      - name: The loading message is gone
+        script: |
+          const status = doc.querySelector('#rates-status').textContent.trim();
+          assert(status.length > 0, 'Do not leave the status blank.');
+          assert(!/^loading/i.test(status), 'Do not leave the loading message on screen.');
+      - name: Checks response.ok
+        script: |
+          assert(/response\.ok|status\s*>=|status\s*===?\s*500/.test(text), 'Check response.ok before reading the data. A 500 still resolves the fetch promise.');
+
+  - id: 05-06
+    kind: exercise
+    title: Handle an empty result
+    language: js
+    html: *rates_html
+    mock:
+      status: 200
+      body:
+        rates: {}
+    prompt: |
+      The function returns 200 with no rates:
+
+      ```json
+      { "rates": {} }
+      ```
+
+      Show a message that there are no rates today. The list stays empty. Do not
+      treat an empty result as an error. The preview mocks the empty response.
+    starter: |
+      const status = document.querySelector('#rates-status');
+      const list = document.querySelector('#rates-list');
+
+      async function loadRates() {
+        status.textContent = 'Loading rates...';
+        list.replaceChildren();
+
+        const response = await fetch('/.netlify/functions/rates');
+        const data = await response.json();
+
+        // Handle an empty rates object before you render.
+      }
+
+      loadRates();
+    tests:
+      - name: Shows an empty message
+        script: |
+          const status = doc.querySelector('#rates-status').textContent.trim();
+          assert(/no rates|none|empty|not available|nothing/i.test(status), 'Tell the user there are no rates today. Got: "' + status + '"');
+      - name: The list stays empty
+        script: |
+          const items = doc.querySelectorAll('#rates-list li');
+          assert(items.length === 0, 'Do not render items when there are no rates.');
+      - name: Checks for emptiness before rendering
+        script: |
+          assert(/Object\.keys|Object\.entries|rates\.length|!data\.rates|rates\s*\)\s*===?\s*0/.test(text), 'Check whether the rates object is empty before you render.');

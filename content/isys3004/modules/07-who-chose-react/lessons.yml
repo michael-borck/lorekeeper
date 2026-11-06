@@ -1,0 +1,193 @@
+# Lorekeeper overlay for the web craft course, Module 07 (Who Chose React?).
+# The decision-record exercise is a text block with structural checks.
+
+lessons:
+  - id: 07-01
+    kind: reading
+    title: Who chose React?
+    source: overview.qmd
+    include:
+      - The question
+      - Learning objectives
+      - This module
+      - The lab deliverable
+
+  - id: 07-02
+    kind: reading
+    title: Three ways to build it
+    source: in-class/activity-01.qmd
+    include:
+      - The situation
+      - "Round 1: Static spike (25 minutes)"
+      - "Round 2: WordPress spike (25 minutes)"
+      - "Round 3: AI app builder or React spike (25 minutes)"
+      - "Round 4: Compare and decide (25 minutes)"
+      - "Round 5: Start the issue board (10 minutes)"
+
+  - id: 07-03
+    kind: checkpoint
+    title: "Checkpoint: the platform is your call"
+    questions:
+      - id: q1
+        prompt: What is a content management system?
+        options:
+          - A system where content is data that staff can edit without code
+          - A code editor with syntax highlighting
+          - A tool that compresses images
+          - A hosting company that manages servers
+        answer: 0
+        explanation: The CMS separates the content from the templates, so an office manager can update the menu.
+      - id: q2
+        prompt: In the cafe example, what is content and what is presentation?
+        options:
+          - The menu text is content; the layout and colours are presentation
+          - The layout is content; the menu text is presentation
+          - Both are content because they appear on the page
+          - Both are presentation because a browser renders them
+        answer: 0
+        explanation: Content is what the business says. Presentation is how it is shown.
+      - id: q3
+        prompt: What does total cost of ownership include?
+        options:
+          - Build, hosting, maintenance, updates and the cost of leaving
+          - Only the build
+          - Only the monthly hosting fee
+          - Only the developer's hourly rate
+        answer: 0
+        explanation: The cheapest build can be the most expensive platform over three years.
+      - id: q4
+        prompt: What is lock-in?
+        options:
+          - What it costs in money, time and risk to move to another platform
+          - A password that locks the admin account
+          - A plugin that stops updates
+          - A contract that forbids changes
+        answer: 0
+        explanation: Exit cost is part of the decision. A platform you cannot leave is a risk.
+      - id: q5
+        prompt: The agent chose Next.js with a headless CMS. What do you ask next?
+        options:
+          - Who maintains it on Monday, what it costs over three years, and how hard is it to leave?
+          - Which version of Next.js it used?
+          - Whether it can add animations?
+          - How many files it created?
+        answer: 0
+        explanation: The platform decision belongs to whoever owns the maintenance and the budget.
+      - id: q6
+        prompt: What is the point of a timeboxed spike?
+        options:
+          - To compare options with evidence, not to finish a build
+          - To produce the final application
+          - To test the client's internet connection
+          - To benchmark the laptop
+        answer: 0
+        explanation: A spike buys enough evidence to decide. Perfecting it defeats the timebox.
+      - id: q7
+        prompt: What belongs in a decision record?
+        options:
+          - Context, options, criteria, decision, consequences and a review trigger
+          - A feature list and a screenshot
+          - The agent's chat transcript
+          - The final code only
+        answer: 0
+        explanation: The record must let someone later see why the choice was made and when to revisit it.
+
+  - id: 07-04
+    kind: exercise
+    title: Write the decision record
+    language: text
+    brief: |
+      The business has grown. Dev must edit the menu every Monday, customers want
+      to book online, and Maria wants a staff page. The budget is small and there
+      is no in-house developer. The A1 site is static.
+
+      You have run three timeboxed spikes: a static build, WordPress, and a React
+      front end with a headless CMS. Write the decision record.
+    prompt: |
+      Fill every section.
+
+      - **Context:** who edits content, how often, with what skills, and what
+        constraints apply.
+      - **Options considered:** static, WordPress, and React or a headless CMS,
+        with what you tried in each spike.
+      - **Criteria:** a table or list covering staff editing, three-year cost,
+        and lock-in or exit cost.
+      - **Decision:** one sentence naming the platform and the main reason.
+      - **Consequences:** what becomes easier, what becomes harder, what you
+        accept.
+      - **Review trigger:** what would make you revisit the decision.
+      - **Migration:** migrate the A1 content or rebuild from the brief.
+
+      Ground the comparison in evidence from the spikes. Do not let the stack be
+      the agent's default.
+    starter: |
+      # Decision record: platform for Harbour & Hearth Northbridge
+
+      **Status:** proposed
+      **Date:** Module 07
+
+      ## Context
+
+      ## Options considered
+
+      ## Criteria
+
+      ## Decision
+
+      ## Consequences
+
+      ## Review trigger
+
+      ## Migration
+    tests:
+      - name: Required sections are present
+        script: |
+          const sections = ['Context', 'Options considered', 'Criteria', 'Decision', 'Consequences', 'Review trigger', 'Migration'];
+          for (const heading of sections) {
+            assert(new RegExp('##\\s*' + heading, 'i').test(text), 'Add the section: ' + heading + '.');
+          }
+      - name: Three options are compared
+        script: |
+          assert(/static/i.test(text), 'Include the static option.');
+          assert(/wordpress/i.test(text), 'Include WordPress.');
+          assert(/react|headless|app builder/i.test(text), 'Include React, a headless CMS, or an AI app builder.');
+      - name: The criteria cover the client
+        script: |
+          const match = text.match(/##\s*Criteria([\s\S]*?)(?=##\s|$)/i);
+          const section = match ? match[1] : '';
+          assert(/staff|edit/i.test(section), 'Add a staff-editing criterion.');
+          assert(/cost|three-year|tco/i.test(section), 'Add a three-year cost criterion.');
+          assert(/lock-in|exit|migrat/i.test(section), 'Add a lock-in or exit-cost criterion.');
+      - name: The decision names a platform and a reason
+        script: |
+          const match = text.match(/##\s*Decision([\s\S]*?)(?=##\s|$)/i);
+          const section = match ? match[1].trim() : '';
+          assert(/static|wordpress|react|headless|app builder/i.test(section), 'Name the platform you chose.');
+          assert(section.split(/\s+/).length >= 12, 'Give the main reason in one sentence, not just the platform name.');
+      - name: Consequences say what changes
+        script: |
+          const match = text.match(/##\s*Consequences([\s\S]*?)(?=##\s|$)/i);
+          const section = match ? match[1] : '';
+          assert(/easier/i.test(section), 'Say what becomes easier.');
+          assert(/harder/i.test(section), 'Say what becomes harder.');
+          assert(/accept/i.test(section), 'Say what you are accepting.');
+      - name: The review trigger is specific
+        script: |
+          const match = text.match(/##\s*Review trigger([\s\S]*?)(?=##\s|$)/i);
+          const section = match ? match[1].trim() : '';
+          assert(section.split(/\s+/).length >= 6, 'Name what would make you revisit the decision.');
+          assert(/if|when|revisit|trigger/i.test(section), 'Make the trigger conditional: if this happens, revisit.');
+      - name: The comparison uses spike evidence
+        script: |
+          assert(/spike|timebox|minutes|screenshot|evidence|tried/i.test(text), 'Ground the comparison in what you tried in the timebox.');
+      - name: Migration is decided
+        script: |
+          const match = text.match(/##\s*Migration([\s\S]*?)(?=##\s|$)/i);
+          const section = match ? match[1].trim() : '';
+          assert(/migrat|rebuild/i.test(section), 'Say whether you will migrate the A1 content or rebuild.');
+          assert(section.split(/\s+/).length >= 5, 'Say a little more than the single word.');
+    hints:
+      - "The decision belongs to whoever maintains the site and pays for it. Write the reason in their terms."
+      - 'A criterion needs a why: "Staff can edit the menu without the contractor" beats "easy to use".'
+      - The review trigger is the sentence that stops the decision becoming permanent by accident.
+      - Migration is part of the plan, not a later surprise.
