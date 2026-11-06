@@ -1,0 +1,58 @@
+# Interactive lessons appended to Part 4 of Build Web, Guide AI.
+lessons:
+  - kind: scenario
+    title: The handoff test
+    prompt: |
+      A cafe needs to change its menu every week. The manager is not
+      technical, the budget is modest, and there is no in-house React
+      team. Choose the architecture you would defend at handover.
+    options:
+      - id: wordpress
+        label: WordPress with an editor role, a documented update workflow and backups
+        outcome: |
+          The manager edits the menu without touching code. Roles limit what
+          can break, the workflow is written down, and backups make a mistake
+          recoverable. The handoff passes.
+        effects:
+          Client autonomy: High
+          Ongoing cost: Moderate
+          Risk: Manageable
+        recommended: true
+        feedback: "The handoff test asks whether the client can manage their own content. A traditional CMS is often the right tool."
+      - id: static
+        label: Build a custom static site and have the developer update it each week
+        outcome: |
+          The site is fast and bespoke, but every menu change becomes a
+          developer ticket. The client pays for a dependency they did not
+          ask for.
+        effects:
+          Client autonomy: Low
+          Ongoing cost: Recurring
+          Risk: Hidden dependency
+        feedback: "A beautiful site the client cannot update has failed the practical handoff."
+      - id: headless
+        label: Add a headless CMS and a custom React frontend
+        outcome: |
+          The architecture is flexible and modern. It also adds hosting,
+          deployment, API and frontend maintenance that this cafe cannot
+          staff. Capability arrives with a cost the brief did not justify.
+        effects:
+          Client autonomy: Medium
+          Ongoing cost: High
+          Risk: Operational
+        feedback: "Headless is a good fit for multi-channel content and frontend flexibility, not for every small business."
+      - id: ftp
+        label: Give the manager FTP access and let them edit the HTML
+        outcome: |
+          One stray tag breaks the layout. There is no review, no version
+          history and no safe rollback. The handoff transfers risk without
+          transferring capability.
+        effects:
+          Client autonomy: Apparent
+          Ongoing cost: Low
+          Risk: High
+        feedback: "Access is not capability. Give non-technical editors a safe interface, not the source files."
+    debrief: |
+      Choose the architecture from roles, content frequency, budget and
+      maintenance capacity. The handoff test is a business test before it is
+      a technical one.

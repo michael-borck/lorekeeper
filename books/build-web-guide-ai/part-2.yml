@@ -1,0 +1,68 @@
+# Interactive lessons appended to Part 2 of Build Web, Guide AI.
+lessons:
+  - kind: checkpoint
+    title: "Checkpoint: the practice spine"
+    questions:
+      - id: q1
+        prompt: What is the difference between a wish list and a specification?
+        options:
+          - A wish records what the client likes; a spec records what the build must do and what counts as done
+          - A wish is longer; a spec is shorter
+          - A spec is only for developers; a wish is for clients
+          - There is no difference
+        answer: 0
+        explanation: "A spec is a testable contract. A wish can only be discussed."
+      - id: q2
+        prompt: The client's brief has a gap. What should you do?
+        options:
+          - Write the question down and ask the person who knows
+          - Fill the gap with the most common assumption
+          - Let the agent decide
+          - Remove the requirement
+        answer: 0
+        explanation: "A guess in the spec becomes a defect in the build. 'I assumed' is not a requirement."
+      - id: q3
+        prompt: When is a check evidence?
+        options:
+          - When it can fail for the right reason and you have seen it fail
+          - When it is green
+          - When the agent says it passes
+          - When it is written in JavaScript
+        answer: 0
+        explanation: "A check that passes on a broken page is not testing what you care about. Break the page and watch the check fail."
+      - id: q4
+        prompt: What does an axe accessibility pass prove?
+        options:
+          - That the page has no detectable automated violations
+          - That the page is fully accessible to every person
+          - That the content is meaningful
+          - That the site is fast
+        answer: 0
+        explanation: "Tools catch a subset. They cannot judge whether alt text is meaningful or whether the page works for a real person."
+      - id: q5
+        prompt: What is AGENTS.md?
+        options:
+          - A standing, testable contract for how an agent works in the repository
+          - A one-off prompt pasted into a chat
+          - A list of the client's favourite websites
+          - A replacement for the specification
+        answer: 0
+        explanation: "It records the stack, rules, stop conditions and evidence required. It should improve after every failure."
+      - id: q6
+        prompt: Which file records what was chosen, why and what was rejected?
+        options:
+          - DECISIONS.md
+          - README.md
+          - AI-USE.md
+          - runbook.md
+        answer: 0
+        explanation: "DECISIONS.md is the decision record. README explains the project, AI-USE records tool use, and runbook explains recovery."
+      - id: q7
+        prompt: Why insist on one logical change per commit?
+        options:
+          - It keeps the diff reviewable, the reason clear and a rollback safe
+          - It makes the repository larger
+          - It hides unrelated changes
+          - It avoids writing checks
+        answer: 0
+        explanation: "Small diffs are easier to review, test and revert. Scope creep is easier to see."

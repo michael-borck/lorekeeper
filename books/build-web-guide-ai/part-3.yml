@@ -1,0 +1,56 @@
+# Interactive lessons appended to Part 3 of Build Web, Guide AI.
+lessons:
+  - kind: scenario
+    title: The 404 that looks fine
+    prompt: |
+      The page fetches a product list. The API returns 404, but the code
+      treats the response as success and renders an empty catalogue. The
+      console shows no exception. Choose the fix that makes the failure
+      visible and testable.
+    options:
+      - id: guard
+        label: Check response.ok, show an error state, and test 404 and 500
+        outcome: |
+          The page now distinguishes a successful empty list from a failed
+          request. A 404 or 500 shows a clear error and a retry action. The
+          new checks fail on the old code and pass on the fix.
+        effects:
+          Reliability: Restored
+          User feedback: Clear
+          Evidence: A failing test, then a passing one
+        recommended: true
+        feedback: "fetch resolves for HTTP errors. Check response.ok before parsing or rendering."
+      - id: spinner
+        label: Add a loading spinner and assume the request worked
+        outcome: |
+          The spinner runs, then disappears into an empty page. The user
+          still cannot tell whether the catalogue is empty or broken.
+        effects:
+          Reliability: Unchanged
+          User feedback: Ambiguous
+          Evidence: None
+        feedback: "A spinner covers waiting, not failure. The response status is the evidence."
+      - id: empty
+        label: Catch every error and show "No products found"
+        outcome: |
+          Failures look exactly like an empty catalogue. The site is quiet,
+          but the user and the developer are both misled.
+        effects:
+          Reliability: Hidden
+          User feedback: Misleading
+          Evidence: Weak
+        feedback: "Do not turn a failure into a normal empty state. Name the failure and give the user a next step."
+      - id: retry
+        label: Retry the request forever until it succeeds
+        outcome: |
+          A missing resource produces an endless request loop. The page
+          never settles, and the real error remains invisible.
+        effects:
+          Reliability: Worse
+          User feedback: Frozen
+          Evidence: None
+        feedback: "Retry needs a limit, a reason and a visible fallback. Infinite retry is not resilience."
+    debrief: |
+      Connection work is contract work. Check the status, validate the data,
+      render the failure and prove it with a test. "It rendered" is not the
+      same as "it worked."

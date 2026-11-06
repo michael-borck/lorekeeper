@@ -1,0 +1,68 @@
+# Interactive lessons appended to Part 5 of Build Web, Guide AI.
+lessons:
+  - kind: checkpoint
+    title: "Checkpoint: components and craft"
+    questions:
+      - id: q1
+        prompt: What is a component?
+        options:
+          - A self-contained piece of UI with its own logic, data and output that can be composed and reused
+          - A single HTML file with all styles inline
+          - A CSS framework
+          - A database table
+        answer: 0
+        explanation: "Components are the LEGO bricks of an interface: self-contained, composable and replaceable."
+      - id: q2
+        prompt: What is the difference between props and state?
+        options:
+          - Props are passed from a parent; state is data the component owns and can change
+          - Props are owned by the component; state is passed from a parent
+          - Props are CSS classes; state is JavaScript
+          - There is no difference
+        answer: 0
+        explanation: "Props flow in. State lives inside and changes over time. Both shape what the component renders."
+      - id: q3
+        prompt: Why can a CSS framework speed up development?
+        options:
+          - It supplies tested design decisions and productive constraints
+          - It removes the need to understand CSS
+          - It guarantees the site is accessible
+          - It makes every site look unique
+        answer: 0
+        explanation: "Frameworks reduce decision fatigue and provide consistency. They do not replace judgement or accessibility checks."
+      - id: q4
+        prompt: What is the main risk of putting untrusted content into dangerouslySetInnerHTML?
+        options:
+          - It can inject executable HTML and create a cross-site scripting vulnerability
+          - It makes the page load more slowly
+          - It removes all CSS
+          - It disables React state
+        answer: 0
+        explanation: "The name is a warning. Sanitise or avoid raw HTML injection, especially with user or CMS content."
+      - id: q5
+        prompt: What makes a practice professional rather than merely working?
+        options:
+          - It helps the system keep working and remain maintainable by someone else
+          - It uses the newest framework
+          - It has more lines of code
+          - It avoids documentation
+        answer: 0
+        explanation: "Professional practice is risk management for future you and the next maintainer."
+      - id: q6
+        prompt: Why do commit messages matter?
+        options:
+          - They record what changed and why, making review, debugging and rollback possible
+          - They make the repository larger
+          - They replace tests
+          - They are only for the client
+        answer: 0
+        explanation: "The history is operational memory. A good message explains intent, not just mechanics."
+      - id: q7
+        prompt: What should a production build include?
+        options:
+          - Reproducible install, environment configuration, tests, a build step and a deployment path
+          - Only the source files on a laptop
+          - A screenshot for the portfolio
+          - A promise that it works locally
+        answer: 0
+        explanation: "Production means someone else can install, test, build and deploy it without guessing."

@@ -1,0 +1,58 @@
+# Interactive lessons appended to Part 6 of Build Web, Guide AI.
+lessons:
+  - kind: scenario
+    title: The shiny framework
+    prompt: |
+      A client sees a new framework trending online and says: "Everyone is
+      using it. Rebuild our site in it." The current site works and the
+      client has no engineering team. Choose your response.
+    options:
+      - id: evaluate
+        label: Evaluate problem fit, maturity, ecosystem, migration cost and total cost of ownership
+        outcome: |
+          You compare the proposal with the actual problem. The evaluation
+          shows the current site meets the need, and a smaller improvement
+          delivers more value than a rebuild. The client keeps the option,
+          but decides with evidence.
+        effects:
+          Decision: Evidence-based
+          Cost: Controlled
+          Risk: Visible
+        recommended: true
+        feedback: "Technology adoption is an investment decision. Ask what problem it solves, at what cost, with what risk."
+      - id: adopt
+        label: Rebuild immediately because the framework is popular
+        outcome: |
+          The team inherits a migration, a new maintenance burden and a
+          stack nobody can hire for locally. The trend delivered novelty,
+          not value.
+        effects:
+          Decision: Fashion-led
+          Cost: High
+          Risk: Unmanaged
+        feedback: "Popularity is not fit. Hype is not a business case."
+      - id: ignore
+        label: Refuse to consider it because the current site works
+        outcome: |
+          The immediate risk is avoided, but the client's underlying problem
+          is never examined. A useful improvement may be missed.
+        effects:
+          Decision: Closed
+          Cost: Low
+          Risk: Stagnation
+        feedback: "Do not adopt by default, and do not reject by default. Evaluate."
+      - id: ai
+        label: Ask an AI which framework is best and follow its answer
+        outcome: |
+          The answer is a confident average of public opinion, without the
+          client's constraints, team or migration path. The decision sounds
+          informed but is not grounded.
+        effects:
+          Decision: Delegated
+          Cost: Unknown
+          Risk: Hidden
+        feedback: "AI can help list criteria and trade-offs. It cannot own the decision."
+    debrief: |
+      Evaluate technology as an investment: upfront cost, ongoing cost,
+      expected return, risk and fit. Then decide in the client's context, not
+      the trend's.

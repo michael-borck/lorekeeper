@@ -1,0 +1,68 @@
+# Interactive lessons appended to Part 1 of Build Web, Guide AI.
+lessons:
+  - kind: checkpoint
+    title: "Checkpoint: the AI development partnership"
+    questions:
+      - id: q1
+        prompt: What are the three learning strategies in this book?
+        options:
+          - Understand the concept before the code, use AI to explore rather than avoid learning, and build mental models
+          - Copy code quickly, skip the theory, and ship before testing
+          - Learn every framework, memorise syntax, and avoid AI
+          - Design first, code second, and never ask questions
+        answer: 0
+        explanation: "The strategies are: concept before code, exploration over avoidance, and mental models over working artefacts alone."
+      - id: q2
+        prompt: How does the book contrast AI thinking with developer thinking?
+        options:
+          - AI pattern-matches typical solutions; developers define the problem, user, simplest solution and risks
+          - AI understands the client's business; developers only type code
+          - AI is always correct; developers add decoration
+          - AI works in problems; developers work in patterns
+        answer: 0
+        explanation: "AI has seen many sites, but it does not know your context. Your job is to supply the problem and the judgement."
+      - id: q3
+        prompt: What is the best use of AI in the partnership?
+        options:
+          - Exploring approaches, explaining why code works, comparing options and debugging understanding
+          - Avoiding the need to learn how the web works
+          - Accepting the first answer without review
+          - Replacing the client's judgement
+        answer: 0
+        explanation: "AI is an exploration tool. It should improve your mental model, not replace it."
+      - id: q4
+        prompt: What does "architect, not typist" mean?
+        options:
+          - You decide what to build, why it matters and how it will be checked; AI produces much of the code
+          - You must type every line by hand
+          - You design the logo and let AI do the engineering
+          - You avoid all code and only write prompts
+        answer: 0
+        explanation: "The role is judgement, direction and verification. Typing is not the scarce skill."
+      - id: q5
+        prompt: What changes across the six parts of the book?
+        options:
+          - The AI role grows from partner to practice partner, concept explorer, implementation assistant, code producer and strategic advisor
+          - The client disappears after part one
+          - The checks become optional
+          - The work moves from business sites to only personal portfolios
+        answer: 0
+        explanation: "The partnership evolves, but your responsibility for the brief, checks and handover does not."
+      - id: q6
+        prompt: What should you ask for after the agent produces a solution?
+        options:
+          - An explanation of how it works, the assumptions it made and what you should check
+          - A longer version with more features
+          - A promise that it is correct
+          - A different framework
+        answer: 0
+        explanation: "Explanation turns generated code into understanding you can defend and maintain."
+      - id: q7
+        prompt: What is the risk of using AI to avoid learning?
+        options:
+          - You cannot judge, debug, explain or maintain the result when it fails
+          - The code will always be slower
+          - The client will see the prompt history
+          - You will run out of disk space
+        answer: 0
+        explanation: "A working page you cannot explain is a liability. The mental model is the durable asset."

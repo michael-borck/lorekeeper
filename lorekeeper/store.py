@@ -150,6 +150,22 @@ def _speak_software() -> dict:
     )
 
 
+def _build_web_guide_ai() -> dict:
+    root = engine_root().parents[2] / "books" / "build-web-guide-ai"
+    if not root.is_dir():
+        raise FileNotFoundError(f"build web guide ai source not found: {root}")
+    return build_book_pack(
+        root,
+        unit_id="build-web-guide-ai",
+        title="Build Web, Guide AI: Business Web Development with AI",
+        theme="pixel",
+        tags=["web", "html", "css", "javascript", "cms", "react"],
+        level="beginner",
+        pitch="Build business websites with an AI partner: specify, check, structure, connect and hand over.",
+        parts="1-6",
+    )
+
+
 def _write_pack(out: Path, pack: dict, key) -> dict:
     packs_dir = out / "packs"
     packs_dir.mkdir(parents=True, exist_ok=True)
@@ -196,6 +212,7 @@ def build_store(
         _audit_and_control(build_root),
         _assume_breach(),
         _speak_software(),
+        _build_web_guide_ai(),
     ]
     catalog_packs = [_write_pack(out, pack, key) for pack in packs]
     catalog = {
