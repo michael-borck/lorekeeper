@@ -54,3 +54,39 @@ lessons:
           - A list of every customer who complained
         answer: 0
         explanation: The ticket asks where the request stops. Capture that before changing anything.
+
+  - id: 04-03
+    kind: order
+    title: Encapsulate a request
+    prompt: |
+      A browser sends an HTTP request. Put the units in the order they are built
+      on the way down the stack.
+    items:
+      - HTTP request
+      - TCP segment
+      - IP packet
+      - Ethernet frame
+    explanation: |
+      The application data is wrapped by the transport header (ports), then the
+      network header (IP addresses), then the link header (MAC addresses). The
+      receiver unwraps them in the reverse order.
+
+  - id: 04-04
+    kind: fill
+    title: Name the unit
+    prompt: |
+      Complete the sentence with the unit each layer carries.
+    passage: |
+      The link layer carries a [[1]].
+      The network layer carries a [[2]].
+      The transport layer carries a [[3]].
+      ARP resolves an IP address to a [[4]].
+    blanks:
+      - answers: [frame]
+        hint: The link-layer unit on the local network.
+      - answers: [packet]
+        hint: It carries the source and destination IP addresses.
+      - answers: [segment]
+        hint: It carries the source and destination ports.
+      - answers: ["MAC address", "MAC"]
+        hint: The hardware address on the local link.

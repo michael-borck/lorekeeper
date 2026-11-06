@@ -153,3 +153,32 @@ lessons:
       - Set the viewport before you navigate.
       - Playwright's toBeVisible checks CSS visibility. toBeInViewport checks that the element is actually on screen.
       - The check should fail on the broken page. If it passes immediately, it is not testing the criterion.
+
+  - id: 04-05
+    kind: review
+    title: Find the gamed check
+    prompt: |
+      The agent was asked to make a failing check pass. Click the lines that
+      changed the evidence instead of the page.
+    lines:
+      - code: "test('booking action is visible at 375px', async ({ page }) => {"
+        kind: context
+      - code: "  await page.setViewportSize({ width: 375, height: 667 });"
+        kind: context
+      - code: "  await page.goto('/');"
+        kind: context
+      - code: "  await expect(cta).toBeInViewport();"
+        kind: del
+        bad: true
+        feedback: The assertion that proves the criterion was removed.
+      - code: "  await page.locator('#book').evaluate((el) => el.setAttribute('aria-hidden', 'true'));"
+        kind: add
+        bad: true
+        feedback: This hides the control from assistive technology. It does not make it visible.
+      - code: "  // TODO: make this pass properly"
+        kind: add
+      - code: "});"
+        kind: context
+    explanation: |
+      The check stopped testing the criterion. Revert the test and fix the layout
+      so the booking control is in the viewport.

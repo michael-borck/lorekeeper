@@ -68,8 +68,8 @@ tree before and after a build.
 
 | Course | Public path | Status |
 |---|---|---|
-| Ship It: Web Craft with an AI Partner | `?course=ship-it` | 12 chapters, 55 lessons |
-| Signal & Noise: An Enterprise Systems Field Guide | `?course=signal-and-noise` | 1 curated chapter, the rest derived |
+| Ship It: Web Craft with an AI Partner | `?course=ship-it` | 12 chapters, 56 lessons |
+| Signal & Noise: An Enterprise Systems Field Guide | `?course=signal-and-noise` | 12 chapters, 26 lessons |
 | Field Kit: The Lorekeeper Workbench | `?course=field-kit` | 10 lessons, one of every widget |
 
 A course can be as small as a set of readings and checkpoints. The engine does
