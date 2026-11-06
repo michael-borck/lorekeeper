@@ -1,0 +1,75 @@
+# Lorekeeper overlay for the enterprise systems course, Module 11.
+# Adds an incident-response story and a checkpoint to the derived reading.
+
+lessons:
+  - id: 11-01
+    kind: reading
+    title: Security, privacy and incident response
+    source: overview.qmd
+    include:
+      - Learning objectives
+      - The week's idea
+      - Key ideas
+      - The CloudCore ticket
+
+  - id: 11-02
+    kind: story
+    title: The 3AM page
+    story: stories/the-3am-page.json
+    intro: |
+      The portal is timing out for some customers. It is 03:12. Every choice
+      changes what you can prove later.
+    debrief: |
+      Which decision protected the evidence? Which one made the next failure
+      easier to explain? Write the one sentence you would add to the incident
+      record.
+
+  - id: 11-03
+    kind: checkpoint
+    title: "Checkpoint: evidence, containment, record"
+    questions:
+      - id: q1
+        prompt: What is the first move when an incident is still developing?
+        options:
+          - Establish impact and preserve evidence
+          - Restart the service to clear the alert
+          - Close the incident until a customer complains
+          - Change the firewall rules
+        answer: 0
+        explanation: You need to know who is affected and keep the evidence before you change the system.
+      - id: q2
+        prompt: Why is "restart it first" dangerous?
+        options:
+          - It can destroy the logs and state that explain the failure
+          - It always makes the outage longer
+          - It changes the customer's network
+          - It is slower than capturing evidence
+        answer: 0
+        explanation: A restart can remove the very evidence you need for the cause and the incident record.
+      - id: q3
+        prompt: What is containment?
+        options:
+          - Stopping the spread or the bleeding while you investigate
+          - Deleting the affected account
+          - Writing the final report
+          - Rebuilding the whole estate
+        answer: 0
+        explanation: Containment limits damage. It is not the same as finding and removing the cause.
+      - id: q4
+        prompt: What belongs in an incident record?
+        options:
+          - Impact, timeline, evidence, cause and the change that prevents a repeat
+          - Only the final status code
+          - The names of everyone on the team
+          - The vendor's marketing page
+        answer: 0
+        explanation: The record is for the next responder, not for the person who was there.
+      - id: q5
+        prompt: The service is stable but you do not know the cause. What should you do?
+        options:
+          - Record the gap, keep the evidence and keep investigating
+          - Declare the incident closed and forget it
+          - Restart the service again
+          - Remove the logs to save space
+        answer: 0
+        explanation: A stable service is not the same as a solved incident. Record what you do not know.

@@ -62,7 +62,8 @@ courses/*.yaml                registry: which course sources may be read
 content/<course>/modules/...  overlays: interactive lessons (you write these)
 demo-course/                  Field Kit source: the widget test bench
 lorekeeper/                   compiler and CLI (Python, PyYAML + Markdown)
-player/                       player, widgets and vendored sql.js
+player/                       player, widgets, art and vendored runtimes
+scripts/compile-ink.mjs       compile an Ink source into story JSON
 build/                        generated course JSON (gitignored)
 ```
 
@@ -231,8 +232,14 @@ the browser, so the learner can test a query instead of reading about one.
 The story widget vendors `inkjs` (MIT) in `player/vendor/`. Compiled Ink JSON
 lives under `content/<course>/stories/` and is copied into
 `build/<course>/stories/` at compile time. Keep the editable `.ink` source next
-to the JSON and recompile with `inklecate` after changes. The Ship It client
-interview is the first story.
+to the JSON and recompile it with:
+
+```bash
+node scripts/compile-ink.mjs content/<course>/stories/name.ink content/<course>/stories/name.json
+```
+
+The first stories are the Ship It client interview and launch week, and the
+Signal & Noise 3AM page.
 
 ## Achievements
 
@@ -262,6 +269,7 @@ progress also clears the badge case.
 | SQL sandbox (sql.js) | Working |
 | Scripted terminal | Working |
 | Ink story with `inkjs` | Working |
+| Three Ink stories | Working |
 | Authoring studio (`lorekeeper studio`) | Working |
 | Badges and streaks | Working |
 | XP, progress, localStorage | Working |
@@ -278,7 +286,7 @@ progress also clears the badge case.
 ## Roadmap
 
 1. Add more real course overlays for the widgets.
-2. Add more Ink stories for incident and stakeholder scenarios.
+2. Add Ink stories for the remaining courses and scenarios.
 3. Refine the skins with more custom art and course-specific scenes.
 4. Optional: a container runner for real shell exercises, behind a separate
    service.

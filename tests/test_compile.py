@@ -183,3 +183,15 @@ def test_index_includes_course_themes(tmp_path):
     assert themes["ship-it"] == "storybook"
     assert themes["signal-and-noise"] == "pixel"
     assert themes["field-kit"] == "pixel"
+
+
+def test_every_story_is_copied_into_its_course_build(tmp_path):
+    compile_all(tmp_path)
+    for path in sorted(tmp_path.glob("*/course.json")):
+        course = json.loads(path.read_text(encoding="utf-8"))
+        slug = course["unit"]["slug"]
+        for module in course["modules"]:
+            for lesson in module["lessons"]:
+                for block in lesson["blocks"]:
+                    if block["type"] == "story":
+                        assert (tmp_path / slug / block["src"]).is_file(), block["src"]

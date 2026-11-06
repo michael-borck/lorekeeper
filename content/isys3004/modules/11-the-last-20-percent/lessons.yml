@@ -272,3 +272,15 @@ lessons:
       - The backend is not on Netlify. Say where it lives and how it is exported.
       - Bookings are staff-only. The public site never reads the collection.
       - Triage in order: deploy log, endpoint, console.
+
+  - id: 11-06
+    kind: story
+    title: Launch week
+    story: stories/launch-week.json
+    intro: |
+      It is Wednesday. The launch is Friday. Maria wants the animation, Dev wants
+      the menu update, and Sam still cannot book on his phone.
+    debrief: |
+      Which promise did you protect, and which did you defer? Name the moment
+      where the last 20 percent became a customer decision rather than a coding
+      decision.
