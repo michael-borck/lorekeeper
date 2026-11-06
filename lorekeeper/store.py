@@ -278,6 +278,22 @@ def _prove_dont_persuade() -> dict:
     )
 
 
+def _build_ai_understand_ai() -> dict:
+    root = engine_root().parents[2] / "books" / "build-ai-understand-ai"
+    if not root.is_dir():
+        raise FileNotFoundError(f"build ai source not found: {root}")
+    return build_book_pack(
+        root,
+        unit_id="build-ai-understand-ai",
+        title="Build AI, Understand AI: How Today's LLM Systems Actually Work, in Small Readable Pieces",
+        theme="pixel",
+        tags=["ai", "llm", "python", "rag", "agents", "evaluation"],
+        level="intermediate",
+        pitch="Build tiny versions of chat, retrieval, agents and judges, and see what the systems you use are made of.",
+        parts="1-7",
+    )
+
+
 def _write_pack(out: Path, pack: dict, key) -> dict:
     packs_dir = out / "packs"
     packs_dir.mkdir(parents=True, exist_ok=True)
@@ -332,6 +348,7 @@ def build_store(
         _substantiate_dont_assume(),
         _conversation_not_delegation(),
         _prove_dont_persuade(),
+        _build_ai_understand_ai(),
     ]
     catalog_packs = [_write_pack(out, pack, key) for pack in packs]
     catalog = {

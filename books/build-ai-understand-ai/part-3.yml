@@ -1,0 +1,56 @@
+# Interactive lessons appended to Part 3 of Build AI, Understand AI.
+lessons:
+  - kind: scenario
+    title: The agent with hands
+    prompt: |
+      You give an agent two tools: search the shared drive and send email.
+      It proposes an action that emails a customer a promise based on a
+      document it found. The action looks plausible. Choose your next move.
+    options:
+      - id: gate
+        label: Keep send behind an approval gate, inspect the trace and check the source before anything leaves
+        outcome: |
+          The search can run freely. The email is drafted, the trace shows the
+          source, and a person approves the message before it is sent. The
+          tool list is the permission list, and the consequential action has a
+          named checkpoint.
+        effects:
+          Action: Bounded
+          Evidence: Inspected
+          Risk: Contained
+        recommended: true
+        feedback: The model proposes; the harness disposes. Put the checkpoint just before the output becomes load-bearing.
+      - id: auto
+        label: Let the agent send the email because the draft is fluent and the search looked relevant
+        outcome: |
+          The email goes out with a promise nobody approved. The source
+          passage supported a general statement, not the specific commitment.
+        effects:
+          Speed: Fast
+          Authority: Delegated
+          Risk: High
+        feedback: A plausible trace and a fluent draft are not authorisation. The action boundary is the control.
+      - id: read
+        label: Allow the send because the search tool is read-only
+        outcome: |
+          The search tool is read-only. The email tool is not. The risk lives
+          in the action the loop can take, not in the tool it used first.
+        effects:
+          Reasoning: Wrong boundary
+          Authority: Unchecked
+          Risk: Unchanged
+        feedback: Read-only search can still expose data, and the send is a separate permission.
+      - id: disable
+        label: Remove all tools so the agent cannot do anything
+        outcome: |
+          The risk drops and so does the usefulness. The task needed evidence
+          and an action; the design problem is the boundary, not the existence
+          of tools.
+        effects:
+          Safety: High
+          Utility: Low
+          Design: Avoided
+        feedback: Do not remove the capability to avoid designing the permission. Bound the action and name the reviewer.
+    debrief: |
+      Name every tool, classify the action, and place the human checkpoint
+      before the irreversible step. Inspect the trace, not only the final prose.

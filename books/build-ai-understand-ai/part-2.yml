@@ -1,0 +1,68 @@
+# Interactive lessons appended to Part 2 of Build AI, Understand AI.
+lessons:
+  - kind: checkpoint
+    title: "Checkpoint: grounding"
+    questions:
+      - id: q1
+        prompt: Why can a model not answer a question about your private documents from training alone?
+        options:
+          - The documents were not in its training data, and the model has no live access to them
+          - The model refuses private questions
+          - The documents are encrypted
+          - The context window is too small
+        answer: 0
+        explanation: "The model answers from the payload and its training. If the evidence is not in either, it cannot know it."
+      - id: q2
+        prompt: What is retrieval-augmented generation, in plain terms?
+        options:
+          - Search for relevant text, paste it into the prompt, then make the usual call
+          - Fine-tune the model on your documents
+          - Store the documents in the context window permanently
+          - Ask the model to browse the web
+        answer: 0
+        explanation: "RAG is search plus a prompt with the search results. The call itself has not changed."
+      - id: q3
+        prompt: What are the two phases of RAG?
+        options:
+          - Indexing once, then answering per question
+          - Training once, then fine-tuning per question
+          - Chunking once, then embedding once
+          - Searching once, then caching forever
+        answer: 0
+        explanation: "Indexing loads, chunks and embeds the documents. Answering embeds the question, fetches chunks and calls the model."
+      - id: q4
+        prompt: What is the trade-off in chunk size?
+        options:
+          - Small chunks make search precise but can cut an answer; large chunks keep context but spend tokens on irrelevant text
+          - Small chunks are always better
+          - Large chunks are always better
+          - Chunk size does not matter
+        answer: 0
+        explanation: "A mechanical cut can sever a rule from its number. Overlap and larger chunks reduce the risk at a cost."
+      - id: q5
+        prompt: What does an embedding represent?
+        options:
+          - A list of numbers capturing what a piece of text is about
+          - The exact words of the text
+          - The model's confidence in the answer
+          - The source document's date
+        answer: 0
+        explanation: "Similar texts produce similar vectors. Fetching compares the question's vector with the chunk vectors."
+      - id: q6
+        prompt: What does a source citation in a RAG answer prove?
+        options:
+          - That a source was attached, not that the cited passage actually supports the claim
+          - That the answer is correct
+          - That the document is current
+          - That the model read the whole document
+        answer: 0
+        explanation: "Check the supporting sentence. A citation label alone is not evidence."
+      - id: q7
+        prompt: What happens when the index goes stale?
+        options:
+          - The bot keeps returning the old rules until the documents are re-indexed
+          - The model automatically updates the index
+          - The bot refuses to answer
+          - The citations disappear
+        answer: 0
+        explanation: "A card written from last year's edition describes last year's rules. Indexing is a maintenance task."

@@ -1,0 +1,68 @@
+# Interactive lessons appended to Part 1 of Build AI, Understand AI.
+lessons:
+  - kind: checkpoint
+    title: "Checkpoint: the model"
+    questions:
+      - id: q1
+        prompt: What happens underneath a chat window when you send a message?
+        options:
+          - Text is sent to a model in a payload and text comes back
+          - The model opens a browser and searches the web
+          - The app stores the answer in a database before generating it
+          - The model runs a full operating system
+        answer: 0
+        explanation: "Every system in the book starts with one call. The window, typing indicator and scroll are presentation."
+      - id: q2
+        prompt: Why does a model appear to remember your name in a chat?
+        options:
+          - The app resends the transcript on every turn
+          - The model has permanent memory between calls
+          - The model stores your name on disk
+          - The server keeps your session open
+        answer: 0
+        explanation: "The call is stateless. Memory is a message list your code keeps and resends."
+      - id: q3
+        prompt: What is the context window?
+        options:
+          - The size limit on the payload the model can receive
+          - The time before a conversation expires
+          - The number of users allowed on a server
+          - The model's training data
+        answer: 0
+        explanation: "Long conversations get slower and dearer, and the earliest messages fall out when the payload reaches its limit."
+      - id: q4
+        prompt: What does the system prompt do?
+        options:
+          - It carries the builder's standing instructions before the user's message
+          - It stores the conversation between calls
+          - It selects the provider
+          - It encrypts the payload
+        answer: 0
+        explanation: "The system role holds the standing instructions. The user and assistant roles hold the exchange."
+      - id: q5
+        prompt: Which three settings point the same code at another provider?
+        options:
+          - Server address, model name and API key
+          - Prompt, temperature and token limit
+          - Username, password and database
+          - Screen, keyboard and network
+        answer: 0
+        explanation: "The code is the handset; the settings are the SIM. Swap providers without rewriting the script."
+      - id: q6
+        prompt: Why does a long conversation cost more than the sum of its questions?
+        options:
+          - Every turn resends the messages before it
+          - The model charges more for later questions
+          - The server stores the whole conversation
+          - The context window expands over time
+        answer: 0
+        explanation: "The transcript is resent at full price on each turn. Local models pay in waiting time, metered providers in money."
+      - id: q7
+        prompt: What should you print when you want to understand a request?
+        options:
+          - The payload you send, including the model, messages and settings
+          - Only the final answer
+          - The model's parameter count
+          - The provider's marketing page
+        answer: 0
+        explanation: "Printing the request makes the call inspectable. It is the first move in reading any AI system."

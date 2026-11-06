@@ -365,7 +365,8 @@ Judgement**, **Test the Claim, Rate the Control: A Tessera Audit Workbook**, and
 **Substantiate, Don't Assume: Why the Auditor's Opinion Matters More Than Ever
 in the Age of AI**, and **Conversation, Not Delegation: How to Think With AI,
 Not Just Use It**, and **Prove, Don't Persuade: Why Proof Beats the Demo in
-Applied AI**. The player fetches `store/catalog.json`,
+Applied AI**, and **Build AI, Understand AI: How Today's LLM Systems Actually
+Work, in Small Readable Pieces**. The player fetches `store/catalog.json`,
 checks the pack SHA-256 and Ed25519 signature, validates the pack and stores it
 locally.
 

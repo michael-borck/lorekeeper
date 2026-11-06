@@ -1,0 +1,68 @@
+# Interactive lessons appended to Part 4 of Build AI, Understand AI.
+lessons:
+  - kind: checkpoint
+    title: "Checkpoint: control"
+    questions:
+      - id: q1
+        prompt: What is a workflow as folders?
+        options:
+          - Numbered stage folders with instructions and outputs, run one stage at a time with review between
+          - A single prompt that does every stage at once
+          - A database of agent messages
+          - A model with larger context
+        answer: 0
+        explanation: "Each stage is a readable file and an output. The pause between stages is where judgement enters."
+      - id: q2
+        prompt: What is the difference between an agent loop and a workflow?
+        options:
+          - The agent decides its next step; the workflow lets a person decide whether the next stage runs
+          - The agent is always better
+          - The workflow cannot use a model
+          - There is no difference
+        answer: 0
+        explanation: "The ReAct loop optimises for a machine choosing quickly. The pipeline optimises for a person reviewing between stages."
+      - id: q3
+        prompt: What does a loop with a goal need before it can run safely?
+        options:
+          - A stated goal, an independent check, a budget and a stop condition
+          - Only a good prompt
+          - A larger model
+          - A human in the same building
+        answer: 0
+        explanation: "A keep-going-until-done instruction is not a plan. The test must sit outside the proposed answer."
+      - id: q4
+        prompt: What is an LLM judge?
+        options:
+          - A model asked to score output against stated criteria, calibrated against human marks
+          - A human reviewer
+          - A deterministic test suite
+          - A model that trains another model
+        answer: 0
+        explanation: "The judge is one call with a rubric. Its scores need calibration because it shares a model's failure modes."
+      - id: q5
+        prompt: What does a schema-constrained typed answer guarantee?
+        options:
+          - The shape of the answer, not whether the answer or its confidence is correct
+          - The truth of the answer
+          - The calibration of the confidence
+          - The source of the data
+        answer: 0
+        explanation: "Schema validation checks the container. Calibrate the content on cases you marked yourself."
+      - id: q6
+        prompt: When is a workflow a better fit than an agent?
+        options:
+          - When the job has distinct stages and the pause between them is valuable
+          - When the task needs no review
+          - When the model is small
+          - When nobody owns the output
+        answer: 0
+        explanation: "Use the smallest structure that makes the work inspectable. More autonomy is not automatically more useful."
+      - id: q7
+        prompt: What should you ask of any AI product after this book?
+        options:
+          - What did it add around the plain call, where is the evidence, who executes, where are the traces, and how was quality marked?
+          - Which model has the most parameters?
+          - Which vendor is the most popular?
+          - How fast is the demo?
+        answer: 0
+        explanation: "The wrappers change. The seam questions survive because they attach to evidence, authority, cost and proof."
