@@ -1,0 +1,318 @@
+# Lorekeeper overlay for the Field Kit demo course.
+# One lesson per interactive widget. Copy the patterns into real courses.
+
+lessons:
+  - id: 01-01
+    kind: order
+    title: "Order the incident response"
+    prompt: |
+      A customer reports that the booking page is down. Put the first response in
+      a safe order. Use the up and down buttons, then check.
+    items:
+      - Preserve the evidence
+      - Contain the spread
+      - Find and remove the cause
+      - Restore the service
+      - Review what happened
+    explanation: |
+      Evidence first, then contain, eradicate, recover and review. Restoring
+      before containing can destroy the evidence and repeat the outage.
+
+  - id: 01-02
+    kind: fill
+    title: Complete the accessible page
+    prompt: |
+      Fill the blanks with the viewport setting, a useful image description and
+      the right input type.
+    passage: |
+      <meta name="viewport" content="[[1]]">
+      <img src="hero.jpg" alt="[[2]]">
+      <label for="email">Email</label>
+      <input id="email" type="[[3]]">
+    blanks:
+      - answers:
+          - "width=device-width, initial-scale=1"
+          - "width=device-width,initial-scale=1"
+        hint: Start with width=device-width.
+      - answers:
+          - "The timber counter and display cabinet at the Northbridge store"
+          - "The counter and display cabinet at the Northbridge store"
+        hint: Describe what the image shows, not that it is an image.
+      - answers:
+          - email
+        hint: Use the input type made for email addresses.
+
+  - id: 01-03
+    kind: hotspot
+    title: Find the exposed things
+    prompt: |
+      Click the three things that should not be public on this small site.
+    markup: |
+      <div class="hotspot-board">
+        <button type="button" data-spot="users">/wp-json/wp/v2/users</button>
+        <button type="button" data-spot="menu">Current menu</button>
+        <button type="button" data-spot="admin">Old admin account</button>
+        <button type="button" data-spot="hours">Opening hours</button>
+        <button type="button" data-spot="pdf">Menu PDF</button>
+      </div>
+    targets:
+      - selector: "[data-spot=users]"
+        label: Public user endpoint
+        feedback: Account names help an attacker. Restrict or disable it.
+      - selector: "[data-spot=admin]"
+        label: Old administrator account
+        feedback: An unowned administrator is a way in. Remove it.
+      - selector: "[data-spot=pdf]"
+        label: Menu PDF
+        feedback: A PDF does not reflow on a phone. Replace it with HTML.
+
+  - id: 01-04
+    kind: review
+    title: Which lines weakened the check?
+    prompt: |
+      This commit made a failing check pass. Click the lines that hid the
+      problem instead of fixing the page.
+    lines:
+      - code: "test('booking action', async ({ page }) => {"
+        kind: context
+      - code: "  await page.goto('/');"
+        kind: context
+      - code: "  await expect(cta).toBeInViewport();"
+        kind: del
+        bad: true
+        feedback: Removing the assertion removes the evidence.
+      - code: "  // removed so the test passes"
+        kind: add
+        bad: true
+        feedback: A comment cannot make a broken page work.
+      - code: "});"
+        kind: context
+    explanation: |
+      The page was not fixed. The check was weakened. Revert the check and fix
+      the layout.
+
+  - id: 01-05
+    kind: scenario
+    title: Choose the platform
+    prompt: |
+      The client needs staff editing, online bookings and a small three-year
+      budget. Choose the path you would recommend.
+    options:
+      - id: agency
+        label: WordPress agency
+        outcome: |
+          Dev can edit the menu and hours. Hosting and updates cost money. The
+          exit cost is medium.
+        effects:
+          Build cost: Higher
+          Three-year cost: Medium
+          Who edits: Dev
+          Lock-in: Medium
+        recommended: true
+        feedback: This matches the staff-editing priority and keeps the exit cost moderate.
+      - id: builder
+        label: AI site builder
+        outcome: |
+          Fast to start. Dev cannot change the content model. Moving later means
+          rebuilding the site.
+        effects:
+          Build cost: Lower
+          Three-year cost: High
+          Who edits: The contractor
+          Lock-in: High
+        feedback: Cheap to build, expensive to leave.
+      - id: rebuild
+        label: Custom rebuild from scratch
+        outcome: |
+          Full control. The client pays for everything twice and needs a
+          developer on call.
+        effects:
+          Build cost: Highest
+          Three-year cost: Highest
+          Who edits: A developer
+          Lock-in: Low
+        feedback: The budget does not support a custom build and its maintenance.
+    debrief: |
+      The cheapest quote is not the lowest three-year cost. The board is buying
+      an outcome, not a build.
+
+  - id: 01-06
+    kind: calibration
+    title: Which critique is stronger?
+    prompt: |
+      Read both critiques of the same site, choose the stronger one, and write one
+      sentence about why.
+    a:
+      title: Critique A
+      body: |
+        The site has ten problems. The font is inconsistent, the footer is
+        crowded, the colours are uneven, the images are different sizes, the menu
+        is a PDF, the booking form is long, the about page is thin, the headings
+        skip a level, the alt text is poor, and the domain is owned by the old
+        developer.
+    b:
+      title: Critique B
+      body: |
+        I would not charge yet. The menu is a PDF, so the main customer task fails
+        on a phone. The booking form takes four taps, and the domain is still in
+        the previous developer's name. I would fix the menu, shorten the booking
+        flow and transfer the domain before launch.
+    better: b
+    rationale: |
+      Critique B chooses, prioritises and ties each point to a customer task.
+      Critique A lists everything and leaves the decision to the client.
+
+  - id: 01-07
+    kind: viva
+    title: Mock viva
+    context: |
+      You recommended WordPress over an AI site builder. The examiner is
+      non-technical but has read both proposals.
+    questions:
+      - prompt: Why not the AI builder? It is half the price.
+        strong_answer: |
+          It is half the build price, not half the three-year cost. Dev cannot
+          edit the content model, and leaving the platform would mean rebuilding
+          the site. The agency costs more now and less to leave.
+        signals:
+          - label: Names the three-year cost
+            pattern: "three[- ]year|3[- ]year|tco|total cost"
+          - label: Names lock-in or exit cost
+            pattern: "exit|lock|leave|migrat|rebuild"
+          - label: Names staff editing
+            pattern: "staff|dev|edit|content"
+      - prompt: The budget halves. What changes?
+        strong_answer: |
+          Keep WordPress and the content model. Drop the custom booking flow for
+          the first six months and use a form with a manual process. Protect the
+          handover and the editing experience before the automation.
+        signals:
+          - label: Keeps the priority
+            pattern: "content|edit|staff|wordpress"
+          - label: Drops or defers something
+            pattern: "drop|defer|delay|manual|cut|reduce"
+          - label: Names the trade-off
+            pattern: "risk|later|first|trade|cost"
+    rubric:
+      - Recommendation reasoning holds up under challenge.
+      - Trade-offs are named, not hidden.
+      - The answer adapts when the brief changes.
+      - The language works for a non-technical board.
+
+  - id: 01-08
+    kind: api
+    title: Inspect the endpoints
+    prompt: |
+      Send each request and read the response. Then answer the exposure
+      questions.
+    endpoints:
+      - id: users
+        method: GET
+        path: /wp-json/wp/v2/users
+        status: 200
+        body:
+          - id: 1
+            name: maria
+            roles: [administrator]
+          - id: 2
+            name: dev
+            roles: [editor]
+      - id: menu
+        method: GET
+        path: /wp-json/wp/v2/menu_item
+        status: 200
+        body:
+          - id: 10
+            title: {rendered: Sourdough}
+          - id: 11
+            title: {rendered: Croissant}
+      - id: bookings
+        method: GET
+        path: /wp-json/wp/v2/bookings
+        status: 200
+        body:
+          - id: 30
+            name: Sam
+            phone: "0400 000 000"
+    questions:
+      - prompt: Which endpoint exposes account names to an anonymous request?
+        options:
+          - /wp-json/wp/v2/users
+          - /wp-json/wp/v2/menu_item
+          - /wp-json/wp/v2/bookings
+        answer: 0
+        explanation: The users endpoint lists accounts. Restrict it.
+      - prompt: Which endpoint contains customer personal data?
+        options:
+          - /wp-json/wp/v2/users
+          - /wp-json/wp/v2/bookings
+          - /wp-json/wp/v2/menu_item
+        answer: 1
+        explanation: Names and phone numbers are personal data. Authenticate it or keep it server-only.
+      - prompt: What should happen to the users endpoint?
+        options:
+          - Restrict or disable it
+          - Keep it public for transparency
+          - Add more fields
+        answer: 0
+        explanation: Public account lists help enumeration. Close it unless there is a reason to keep it.
+
+  - id: 01-09
+    kind: sql
+    title: Query the menu
+    prompt: |
+      Run a query against the menu database. The result must match the task.
+    task: |
+      List the name and price of every available item, cheapest first.
+    schema: |
+      CREATE TABLE menu_items (
+        id INTEGER PRIMARY KEY,
+        name TEXT NOT NULL,
+        price REAL NOT NULL,
+        available INTEGER NOT NULL
+      );
+    seed: |
+      INSERT INTO menu_items (name, price, available) VALUES
+        ('Sourdough', 8.0, 1),
+        ('Croissant', 6.0, 1),
+        ('Flat white', 5.0, 0),
+        ('Rye loaf', 9.0, 1);
+    solution: |
+      SELECT name, price
+      FROM menu_items
+      WHERE available = 1
+      ORDER BY price ASC;
+
+  - id: 01-10
+    kind: terminal
+    title: Diagnose the proxy
+    prompt: |
+      The booking page is down. Inspect the estate, read the proxy log and start
+      the proxy. Type `help` if you are lost.
+    host: operator@workbench
+    cwd: ~
+    goals:
+      - id: list
+        label: List the containers
+      - id: logs
+        label: Read the proxy log
+      - id: start
+        label: Start the proxy
+    commands:
+      - pattern: "^docker ps$"
+        output: |
+          CONTAINER ID   IMAGE                  STATUS
+          a1b2c3d4e5f6   nginx:alpine           Exited (1) 4 minutes ago
+          d4e5f6a7b8c9   cloudcore/portal:1.0   Up 4 minutes
+        completes: [list]
+      - pattern: "^docker logs proxy$"
+        output: |
+          nginx: [emerg] bind() to 0.0.0.0:80 failed (98: Address already in use)
+          nginx: [emerg] still could not bind()
+        completes: [logs]
+      - pattern: "^docker compose up -d proxy$"
+        output: |
+          Container proxy  Started
+        completes: [start]
+    help: |
+      Try `docker ps`, `docker logs proxy` and `docker compose up -d proxy`.

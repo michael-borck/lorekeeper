@@ -1,0 +1,16 @@
+---
+title: "Workshop: Try every widget"
+subtitle: "Field Kit"
+format:
+  html:
+    toc: true
+---
+
+## The situation
+
+The workbench has one of everything. Try each lesson, then copy the overlay
+pattern into a real course.
+
+## Done when
+
+You can explain which widget suits which learning task.

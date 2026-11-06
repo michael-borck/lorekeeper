@@ -1,4 +1,4 @@
-"""Read-only discovery of modules inside a unit repo."""
+"""Read-only discovery of modules inside a course source."""
 
 from __future__ import annotations
 

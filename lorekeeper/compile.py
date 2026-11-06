@@ -11,9 +11,24 @@ import yaml
 from .discover import discover_modules
 from .parse import blocks_from_source, clean_markdown, read_frontmatter, render_markdown
 from .registry import Unit, content_dir, engine_root, slugify
+from .widgets import WIDGET_KINDS, normalise_question, normalise_widget
 
 SCHEMA_VERSION = 1
-XP = {"reading": 10, "checkpoint": 25, "exercise": 50}
+XP = {
+    "reading": 10,
+    "checkpoint": 25,
+    "order": 20,
+    "fill": 20,
+    "hotspot": 25,
+    "scenario": 25,
+    "calibration": 25,
+    "review": 30,
+    "api": 30,
+    "viva": 40,
+    "terminal": 40,
+    "exercise": 50,
+    "sql": 50,
+}
 
 
 def xp_for(kind: str) -> int:
@@ -62,42 +77,6 @@ def assert_outside_source(out_dir: Path, source_root: Path) -> None:
         )
 
 
-def _normalise_question(raw: dict, index: int) -> dict:
-    prompt = str(raw.get("prompt", "")).strip()
-    if not prompt:
-        raise ValueError(f"checkpoint question {index} has no prompt")
-
-    options_raw = raw.get("options") or []
-    options: list[str] = []
-    answer = -1
-
-    for position, option in enumerate(options_raw):
-        if isinstance(option, dict):
-            options.append(str(option.get("text", "")).strip())
-            if option.get("correct"):
-                answer = position
-        else:
-            text = str(option).strip()
-            options.append(text)
-            if raw.get("correct") is not None and text == str(raw["correct"]).strip():
-                answer = position
-
-    if "answer" in raw:
-        answer = int(raw["answer"])
-    if not options:
-        raise ValueError(f"checkpoint question {index} has no options")
-    if not 0 <= answer < len(options):
-        raise ValueError(f"checkpoint question {index} has no valid answer")
-
-    return {
-        "id": str(raw.get("id") or f"q{index + 1}"),
-        "prompt": prompt,
-        "options": options,
-        "answer": answer,
-        "explanation": str(raw.get("explanation", "")).strip(),
-    }
-
-
 def _normalise_tests(raw_tests: list, lesson_id: str) -> list[dict]:
     tests: list[dict] = []
     for position, test in enumerate(raw_tests or []):
@@ -140,7 +119,7 @@ def _lesson_from_spec(unit: Unit, module: dict, spec: dict, fallback_id: str) ->
                 {"type": "html", "html": render_markdown(clean_markdown(str(spec["brief"])))}
             )
         questions = [
-            _normalise_question(question, index)
+            normalise_question(question, index)
             for index, question in enumerate(spec.get("questions") or [])
         ]
         if not questions:
@@ -171,6 +150,9 @@ def _lesson_from_spec(unit: Unit, module: dict, spec: dict, fallback_id: str) ->
         if spec.get("mock"):
             exercise["mock"] = spec["mock"]
         lesson["blocks"].append(exercise)
+
+    elif kind in WIDGET_KINDS:
+        lesson["blocks"].extend(normalise_widget(kind, spec, lesson_id))
 
     else:
         raise ValueError(f"{lesson_id}: unknown lesson kind '{kind}'")

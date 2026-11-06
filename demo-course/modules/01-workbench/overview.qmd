@@ -1,0 +1,16 @@
+---
+title: "Module 01: The Workbench"
+subtitle: "Field Kit"
+format:
+  html:
+    toc: true
+---
+
+## The question
+
+What can a lesson do?
+
+## Learning objectives
+
+This module exists to exercise every Lorekeeper widget. It is a test bench, not a
+course. Use it to see what an overlay can build before you write real content.

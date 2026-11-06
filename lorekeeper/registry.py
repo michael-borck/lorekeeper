@@ -1,4 +1,4 @@
-"""Unit registry: which unit repos the engine may read."""
+"""Course registry: which source repos the engine may read."""
 
 from __future__ import annotations
 

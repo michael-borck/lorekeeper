@@ -7,6 +7,7 @@ import pytest
 from lorekeeper.compile import assert_outside_source, compile_all, compile_unit
 from lorekeeper.registry import get_unit, load_units
 from lorekeeper.validate import check_unit
+from lorekeeper.widgets import WIDGET_KINDS
 
 
 def tree_digest(root: Path) -> str:
@@ -141,3 +142,19 @@ def test_index_is_unbranded(tmp_path):
     for text in learner_strings(index):
         assert "ISYS" not in text.upper(), text
         assert "Curtin" not in text, text
+
+
+def test_field_kit_contains_every_widget(tmp_path):
+    course = compile_unit(get_unit("DEMO"), tmp_path)
+    kinds = {
+        lesson["kind"]
+        for module in course["modules"]
+        for lesson in module["lessons"]
+    }
+    assert WIDGET_KINDS <= kinds
+
+
+def test_sql_engine_is_vendored():
+    root = Path(__file__).resolve().parents[1]
+    assert (root / "player" / "vendor" / "sql-wasm.js").is_file()
+    assert (root / "player" / "vendor" / "sql-wasm.wasm").is_file()

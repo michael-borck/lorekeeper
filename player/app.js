@@ -14,7 +14,21 @@ const els = {
   toast: document.getElementById("toast"),
 };
 
-const KIND_LABEL = { reading: "read", checkpoint: "quiz", exercise: "code" };
+const KIND_LABEL = {
+  reading: "read",
+  checkpoint: "quiz",
+  exercise: "code",
+  order: "sort",
+  fill: "fill",
+  hotspot: "find",
+  review: "diff",
+  scenario: "choose",
+  calibration: "judge",
+  viva: "viva",
+  api: "api",
+  sql: "sql",
+  terminal: "sh",
+};
 
 init().catch((error) => fatal(error.message || String(error)));
 
@@ -221,8 +235,10 @@ function renderLesson(entry) {
   const previous = index > 0 ? entries[index - 1] : null;
   const next = index < entries.length - 1 ? entries[index + 1] : null;
 
-  const hasExercise = lesson.blocks.some((block) => block.type === "exercise");
-  els.content.className = hasExercise ? "content wide" : "content";
+  const wide = lesson.blocks.some((block) =>
+    ["exercise", "sql", "terminal", "api", "calibration"].includes(block.type)
+  );
+  els.content.className = wide ? "content wide" : "content";
   els.content.innerHTML = `
     <div class="crumbs">
       <span>Module ${String(module.number).padStart(2, "0")}</span>
@@ -269,6 +285,8 @@ function renderLesson(entry) {
       renderCheckpoint(blocksHost, block, lesson);
     } else if (block.type === "exercise") {
       renderExercise(blocksHost, block, lesson);
+    } else if (window.WIDGET_RENDERERS && window.WIDGET_RENDERERS[block.type]) {
+      window.WIDGET_RENDERERS[block.type](blocksHost, block, lesson);
     }
   }
 }
