@@ -1,0 +1,57 @@
+# Interactive lessons appended to Part 1 of Follow the Trace, Prove the Case.
+lessons:
+  - kind: scenario
+    title: The quick look
+    prompt: |
+      The USB device is on the desk. A colleague suggests mounting it on the
+      analysis laptop to see what is there. The image will be taken later.
+      You have ten minutes before the incident meeting. Choose your next move.
+    options:
+      - id: preserve
+        label: Stop, document the device, image it with a write blocker, verify hashes, then analyse the copy
+        outcome: |
+          The original stays untouched. The image is hashed and recorded. The
+          analysis proceeds on a copy, and the chain of custody can answer who
+          handled the device and when.
+        effects:
+          Integrity: Preserved
+          Custody: Recorded
+          Time: Slower now, defensible later
+        recommended: true
+        feedback: The quick look is how evidence changes before anyone records it.
+      - id: readonly
+        label: Mount it read-only and browse quickly, then image it
+        outcome: |
+          Read-only mounting is safer than read-write, but it still depends on
+          the operating system, the driver and the mount options. The device
+          has been handled before the image and custody record exist.
+        effects:
+          Integrity: Better, not proven
+          Custody: Incomplete
+          Time: Fast
+        feedback: A read-only mount is not a write blocker. Image first.
+      - id: copy
+        label: Copy the visible files to a folder and analyse those
+        outcome: |
+          The copy includes only the files the operating system can see. Deleted
+          files, unallocated space and file system metadata are lost. The copy
+          has no forensic image hash.
+        effects:
+          Evidence: Partial
+          Integrity: Unverified
+          Custody: Broken
+        feedback: Copying files is not imaging a device. You cannot analyse what you did not capture.
+      - id: ai
+        label: Ask an AI assistant to scan the device and tell you what matters
+        outcome: |
+          The assistant produces a summary from the visible files. It cannot
+          preserve the device, verify the image or account for deleted data.
+          The summary is a lead, not evidence.
+        effects:
+          Speed: Fast
+          Integrity: Unchanged
+          Custody: None
+        feedback: AI can help plan the examination. It cannot replace preservation.
+    debrief: |
+      Preserve first, analyse the copy. The order is not a ritual. It is what
+      makes the later finding defensible.

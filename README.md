@@ -358,8 +358,9 @@ Public submissions go through the review queue at
 **Information Security: A Field Guide**, **Audit and Control: A Field Guide**,
 **Assume Breach: A First Course in Defensive Security**, **Speak Software:
 Programming at the Natural-Language Layer**, **Build Web, Guide AI:
-Business Web Development with AI**, and **Frame the System, Guide the AI:
-Systems Analysis and Design in the AI Era**. The player fetches `store/catalog.json`,
+Business Web Development with AI**, **Frame the System, Guide the AI:
+Systems Analysis and Design in the AI Era**, and **Follow the Trace, Prove the
+Case: Digital Forensics in Practice**. The player fetches `store/catalog.json`,
 checks the pack SHA-256 and Ed25519 signature, validates the pack and stores it
 locally.
 

@@ -182,6 +182,22 @@ def _systems_analysis_and_design() -> dict:
     )
 
 
+def _follow_the_trace() -> dict:
+    root = engine_root().parents[2] / "books" / "follow-the-trace"
+    if not root.is_dir():
+        raise FileNotFoundError(f"follow the trace source not found: {root}")
+    return build_book_pack(
+        root,
+        unit_id="follow-the-trace",
+        title="Follow the Trace, Prove the Case: Digital Forensics in Practice",
+        theme="pixel",
+        tags=["forensics", "security", "evidence", "investigation"],
+        level="intermediate",
+        pitch="Preserve, examine and report digital evidence, with a companion Docker forensics lab.",
+        parts="1-3",
+    )
+
+
 def _write_pack(out: Path, pack: dict, key) -> dict:
     packs_dir = out / "packs"
     packs_dir.mkdir(parents=True, exist_ok=True)
@@ -230,6 +246,7 @@ def build_store(
         _speak_software(),
         _build_web_guide_ai(),
         _systems_analysis_and_design(),
+        _follow_the_trace(),
     ]
     catalog_packs = [_write_pack(out, pack, key) for pack in packs]
     catalog = {

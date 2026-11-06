@@ -21,4 +21,5 @@ def test_site_builds_with_player_build_and_cname(tmp_path: Path):
     assert (out / "store" / "packs" / "speak-software.json").is_file()
     assert (out / "store" / "packs" / "build-web-guide-ai.json").is_file()
     assert (out / "store" / "packs" / "systems-analysis-and-design.json").is_file()
+    assert (out / "store" / "packs" / "follow-the-trace.json").is_file()
     assert (out / "CNAME").read_text().strip() == "lorekeeper.borck.education"

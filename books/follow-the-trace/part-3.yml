@@ -1,0 +1,59 @@
+# Interactive lessons appended to Part 3 of Follow the Trace, Prove the Case.
+lessons:
+  - kind: scenario
+    title: The tidy story
+    prompt: |
+      Your timeline has a file copied at 21:32, a memory process starting at
+      02:11 and an email sent two days later. One log uses local time and the
+      others use UTC. A colleague wants a clean sequence for the report. Choose
+      your next move.
+    options:
+      - id: normalize
+        label: Normalize the clocks, keep the conflicts, test alternatives and report confidence
+        outcome: |
+          The timeline is rebuilt with a common time base. One event is marked
+          uncertain because the source clock is unverified. The report states
+          what is observed, correlated and inferred. The story is less tidy and
+          more defensible.
+        effects:
+          Accuracy: Higher
+          Attribution: Bounded
+          Report: Honest
+        recommended: true
+        feedback: A timeline with no gaps is usually a story with the evidence removed.
+      - id: force
+        label: Reorder the events so they fit the suspected sequence
+        outcome: |
+          The narrative reads well. The time zone conflict is hidden, and the
+          first reviewer who checks the source timestamps finds a sequence the
+          evidence does not support.
+        effects:
+          Narrative: Clean
+          Accuracy: Damaged
+          Risk: High
+        feedback: Do not make the evidence fit the story. Make the story fit the evidence.
+      - id: discard
+        label: Drop the memory event because it does not fit the timeline
+        outcome: |
+          The timeline becomes simpler and loses a relevant artefact. The report
+          cannot explain why the process was running or how it relates to the
+          other events.
+        effects:
+          Simplicity: Higher
+          Completeness: Lower
+          Risk: Hidden
+        feedback: A conflicting artefact is a question, not an inconvenience.
+      - id: attribute
+        label: Attribute all events to the suspect because the account was theirs
+        outcome: |
+          The report claims identity from account ownership. It cannot show who
+          was at the keyboard, whether the account was shared or whether the
+          workstation was compromised.
+        effects:
+          Attribution: Overstated
+          Evidence: Insufficient
+          Risk: Legal
+        feedback: Separate the action, the account, the device and the person.
+    debrief: |
+      Normalize time, keep the conflicts and separate observation from inference.
+      The report should survive a reader who checks the sources.

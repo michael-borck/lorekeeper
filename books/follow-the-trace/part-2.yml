@@ -1,0 +1,68 @@
+# Interactive lessons appended to Part 2 of Follow the Trace, Prove the Case.
+lessons:
+  - kind: checkpoint
+    title: "Checkpoint: examining the traces"
+    questions:
+      - id: q1
+        prompt: What does deleting a file usually do on a FAT file system?
+        options:
+          - Marks the directory entry as free and releases the clusters, while the data may remain
+          - Securely erases every sector immediately
+          - Encrypts the file content
+          - Copies the file to a backup
+        answer: 0
+        explanation: "Deletion is usually metadata bookkeeping. The content may survive until overwritten."
+      - id: q2
+        prompt: What is the difference between metadata recovery and file carving?
+        options:
+          - Metadata recovery uses file system records; carving searches raw data for file signatures
+          - Metadata recovery is for memory; carving is for email
+          - Carving uses the directory entry; metadata recovery ignores it
+          - There is no practical difference
+        answer: 0
+        explanation: "Metadata recovery follows the catalogue. Carving looks for content patterns when the catalogue is gone."
+      - id: q3
+        prompt: What does a matching SHA-256 hash prove?
+        options:
+          - The copy is byte-for-byte identical to the source at the time of hashing
+          - The source is complete and untampered from the beginning
+          - The file is relevant to the case
+          - The owner created the file
+        answer: 0
+        explanation: "A hash proves integrity of the copy against the source. It does not prove provenance, completeness or meaning."
+      - id: q4
+        prompt: Why is memory evidence time-sensitive?
+        options:
+          - It is lost when the system shuts down and changes while the system runs
+          - It is stored on the disk
+          - It cannot be hashed
+          - It is always encrypted
+        answer: 0
+        explanation: "RAM is volatile. Capture must happen before shutdown, and the state changes continuously."
+      - id: q5
+        prompt: A process has loaded internet libraries. What does that prove?
+        options:
+          - The process had the capability to use the network, not that it exfiltrated data
+          - The process definitely sent data
+          - The process is malware
+          - The user intended to steal data
+        answer: 0
+        explanation: "Capability is not action. Connections, logs or captures are needed to show communication."
+      - id: q6
+        prompt: What can an email header not prove?
+        options:
+          - That the recipient read the message
+          - The sender address
+          - The routing path
+          - The date recorded by the mail server
+        answer: 0
+        explanation: "Headers record transport and metadata, not the recipient's reading behaviour."
+      - id: q7
+        prompt: What does encrypted network traffic still reveal?
+        options:
+          - Endpoints, timing, ports and data volume, but not the content
+          - The full plaintext payload
+          - The user's intent
+          - The file names transferred
+        answer: 0
+        explanation: "TLS hides content, not the flow. Volume and timing can still support a finding."
