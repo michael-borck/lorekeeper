@@ -326,6 +326,22 @@ def _follow_the_packet() -> dict:
     )
 
 
+def _simplebot() -> dict:
+    root = engine_root().parents[2] / "books" / "simplebot"
+    if not root.is_dir():
+        raise FileNotFoundError(f"simplebot source not found: {root}")
+    return build_book_pack(
+        root,
+        unit_id="simplebot",
+        title="SimpleBot: A Small Wrapper, a Real Project",
+        theme="pixel",
+        tags=["python", "llm", "api", "testing", "teaching", "security"],
+        level="beginner",
+        pitch="Build a small Python wrapper around an LLM, then handle the edges: prompts, errors, secrets, tests and classroom use.",
+        parts="1-3",
+    )
+
+
 def _write_pack(out: Path, pack: dict, key) -> dict:
     packs_dir = out / "packs"
     packs_dir.mkdir(parents=True, exist_ok=True)
@@ -383,6 +399,7 @@ def build_store(
         _build_ai_understand_ai(),
         _break_with_permission(),
         _follow_the_packet(),
+        _simplebot(),
     ]
     catalog_packs = [_write_pack(out, pack, key) for pack in packs]
     catalog = {

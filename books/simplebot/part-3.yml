@@ -1,0 +1,68 @@
+# Interactive lessons appended to Part 3 of SimpleBot.
+lessons:
+  - kind: checkpoint
+    title: "Checkpoint: classroom and release"
+    questions:
+      - id: q1
+        prompt: What should a classroom bot activity start with?
+        options:
+          - A learning objective and a task the student still performs
+          - The longest possible prompt
+          - A model leaderboard
+          - The final answer
+        answer: 0
+        explanation: "A bot that does the learning for the student is not a teaching tool."
+      - id: q2
+        prompt: What limit should a teaching persona have?
+        options:
+          - It should not complete assessed work for the student
+          - It should answer every question instantly
+          - It should use the largest model
+          - It should hide its errors
+        answer: 0
+        explanation: "A tutor that does the homework is not a tutor."
+      - id: q3
+        prompt: What should a classroom activity disclose?
+        options:
+          - That a bot is used, where the data goes and how it is retained
+          - Only the model name
+          - Nothing
+          - The API key
+        answer: 0
+        explanation: "A classroom activity is also a data-processing decision."
+      - id: q4
+        prompt: What is the minimum front door for a Python package?
+        options:
+          - Install, quick start, API, configuration, licence, version and tests
+          - A logo and a slogan
+          - Only the source file
+          - A private message to the author
+        answer: 0
+        explanation: "Someone else has to be able to install, import and use it."
+      - id: q5
+        prompt: What is a clean-environment test?
+        options:
+          - Install and run the package in a fresh virtual environment
+          - Run the tests in the author's existing environment
+          - Read the README
+          - Push to main
+        answer: 0
+        explanation: "A package that only works on your machine is not shipped."
+      - id: q6
+        prompt: What does a deprecation path include?
+        options:
+          - A changelog entry, a warning and a period before removal
+          - Deleting the feature silently
+          - Changing the version without a note
+          - A new secret
+        answer: 0
+        explanation: "A breaking change without a path is a surprise."
+      - id: q7
+        prompt: What should a small package's CI check?
+        options:
+          - Tests, lint, a clean install and no secrets
+          - Only the version number
+          - The author's laptop
+          - The model's benchmark score
+        answer: 0
+        explanation: "A small package is easier to keep current while it is small."

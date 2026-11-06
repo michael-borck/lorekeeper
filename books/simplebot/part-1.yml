@@ -1,0 +1,68 @@
+# Interactive lessons appended to Part 1 of SimpleBot.
+lessons:
+  - kind: checkpoint
+    title: "Checkpoint: the wrapper"
+    questions:
+      - id: q1
+        prompt: What does a wrapper hide?
+        options:
+          - The transport details and repeated decisions behind one small interface
+          - The fact that a model was used
+          - The licence
+          - The tests
+        answer: 0
+        explanation: "A wrapper puts the URL, model, system prompt, timeout and error behaviour in one place."
+      - id: q2
+        prompt: What should a wrapper not hide?
+        options:
+          - Whether the call failed, which model answered, and an empty prompt
+          - The API URL
+          - The HTTP method
+          - The JSON shape
+        answer: 0
+        explanation: "A silent failure teaches the caller that the result cannot be trusted or diagnosed."
+      - id: q3
+        prompt: What is the role of the system prompt?
+        options:
+          - It sets a standing instruction that shapes tone, role and constraints
+          - It stores the conversation between calls
+          - It selects the provider
+          - It encrypts the request
+        answer: 0
+        explanation: "A personality is a system prompt with a name. It changes tone and framing, not knowledge."
+      - id: q4
+        prompt: What does a personality function usually add?
+        options:
+          - A system prompt and an optional model override
+          - A new HTTP client
+          - A database
+          - A secret key
+        answer: 0
+        explanation: "Each personality calls the same wrapper with a different system instruction."
+      - id: q5
+        prompt: What can you inspect to debug the first call?
+        options:
+          - The URL, model, request body and raw response
+          - Only the final answer
+          - The package version
+          - The model's parameter count
+        answer: 0
+        explanation: "You cannot debug a transport you cannot see."
+      - id: q6
+        prompt: What is the risk of a personality that overclaims expertise?
+        options:
+          - It creates trust the model has not earned
+          - It makes the model slower
+          - It uses more tokens
+          - It changes the API URL
+        answer: 0
+        explanation: "A costume changes tone, not knowledge. A teaching persona needs a limit and a test."
+      - id: q7
+        prompt: Why is duplication acceptable in the personality module?
+        options:
+          - At this size it keeps each personality readable and easy to change
+          - Because duplication is always good
+          - Because functions cannot call other functions
+          - Because it hides the system prompt
+        answer: 0
+        explanation: "The design is small on purpose. Refactor when the duplication becomes harder to read."

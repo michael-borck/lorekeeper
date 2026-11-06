@@ -1,0 +1,120 @@
+# Interactive lessons appended to Part 2 of SimpleBot.
+lessons:
+  - kind: checkpoint
+    title: "Checkpoint: the project edges"
+    questions:
+      - id: q1
+        prompt: Which failure belongs before the API call?
+        options:
+          - An empty or whitespace-only prompt
+          - A timeout
+          - A non-JSON response
+          - An HTTP 500
+        answer: 0
+        explanation: "Validate cheap inputs before spending a request."
+      - id: q2
+        prompt: Why is returning a normal-looking string for every failure a weak contract?
+        options:
+          - The caller cannot distinguish a model answer from an error by type
+          - It uses too much memory
+          - It breaks JSON
+          - It makes the model slower
+        answer: 0
+        explanation: "A result object or a custom exception makes the failure explicit."
+      - id: q3
+        prompt: Where should an API key live?
+        options:
+          - In an environment variable or secret manager, never in source
+          - In the README
+          - In the test fixture
+          - In a comment
+        answer: 0
+        explanation: "A secret in source is a leak waiting for a commit."
+      - id: q4
+        prompt: What should you do with a key that was committed and pushed?
+        options:
+          - Rotate it, remove it from history and move it to configuration
+          - Delete the file and hope
+          - Rename the variable
+          - Add a warning comment
+        answer: 0
+        explanation: "Deleting the current line does not remove it from history or from anyone who cloned it."
+      - id: q5
+        prompt: Why should tests mock the network?
+        options:
+          - The tests stay fast, repeatable and independent of a live service
+          - Mocks make the model more accurate
+          - Mocks are required by Python
+          - Mocks hide all errors
+        answer: 0
+        explanation: "A test that needs a live model is a demo. A controlled response is evidence."
+      - id: q6
+        prompt: What should a test for a missing response field check?
+        options:
+          - A clear error, not the string None
+          - A retry
+          - A new model call
+          - A secret
+        answer: 0
+        explanation: "The wrapper should name the format problem."
+      - id: q7
+        prompt: What should a failure message avoid?
+        options:
+          - Leaking the URL, key, stack trace or raw body
+          - Naming what failed
+          - Telling the user what to check
+          - Being specific
+        answer: 0
+        explanation: "The user message and the developer log are different texts."
+  - kind: scenario
+    title: The key in the source
+    prompt: |
+      You are reviewing SimpleBot. You find a bearer token written directly
+      in core.py, and the repository is public. The tests pass and the bot
+      works. Choose your next move.
+    options:
+      - id: rotate
+        label: Rotate the token, move it to an environment variable, remove it from history and add a secret check
+        outcome: |
+          The exposed token stops working. The wrapper reads the key from
+          configuration, the tests use a fake, and CI fails if a secret-shaped
+          value appears in source.
+        effects:
+          Secret: Rotated
+          Source: Clean
+          Future: Checked
+        recommended: true
+        feedback: A public key is compromised the moment it is pushed. Rotation comes before cleanup.
+      - id: delete
+        label: Delete the line and commit the change
+        outcome: |
+          The current file is clean. The token remains in git history and in
+          every clone. The exposed key still works.
+        effects:
+          Current file: Clean
+          History: Exposed
+          Key: Still valid
+        feedback: Deleting the line is not rotation. Remove it from history and replace the key.
+      - id: comment
+        label: Replace the token with a comment that says "add key here"
+        outcome: |
+          The code no longer sends a key. The hosted provider rejects the
+          request, and the exposed token is still in history.
+        effects:
+          Code: Broken
+          Secret: Exposed
+          Tests: Fail
+        feedback: The fix is configuration plus rotation, not a comment.
+      - id: ignore
+        label: Leave it because the repository is only a teaching example
+        outcome: |
+          The token remains public and spendable. A student copies it into
+          their own project, and the exposure spreads.
+        effects:
+          Risk: Ongoing
+          Teaching: Bad example
+          Trust: Lost
+        feedback: A teaching example is still a public repository. Secrets do not become safer because the code is small.
+    debrief: |
+      Rotate first, then remove the secret from history, move it to
+      configuration, add a test and a CI check, and teach the pattern.
