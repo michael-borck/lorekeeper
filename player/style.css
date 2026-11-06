@@ -1035,3 +1035,47 @@ html[data-theme="storybook"] .course-emblem,
 html[data-theme="storybook"] .course-card-emblem {
   filter: drop-shadow(0 6px 10px rgba(74, 52, 28, 0.16));
 }
+
+/* Progress dialog ---------------------------------------------------- */
+
+.progress-dialog {
+  width: min(620px, calc(100vw - 32px));
+  max-height: 84vh;
+}
+.progress-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 18px 0;
+}
+.progress-import-panel {
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+}
+.progress-import-panel select {
+  width: 100%;
+  margin: 6px 0 12px;
+  background: var(--panel-2);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 8px 10px;
+}
+.progress-dialog .hint {
+  color: var(--muted);
+  font-size: 0.82rem;
+  margin: 12px 0;
+}
+.progress-danger {
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+}
+html[data-theme="pixel"] .progress-dialog,
+html[data-theme="pixel"] .progress-import-panel select {
+  border-radius: 0;
+}
+html[data-theme="storybook"] .progress-dialog {
+  box-shadow: 0 24px 80px rgba(74, 52, 28, 0.25);
+}

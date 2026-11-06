@@ -4,6 +4,11 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Lorekeeper · field notes</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <meta name="theme-color" content="#0b1220">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Lorekeeper">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -27,6 +32,7 @@
           </select>
         </label>
         <button id="badges-button" class="ghost small" type="button">Achievements <span id="badge-count">0</span></button>
+        <button id="progress-button" class="ghost small" type="button">Progress</button>
         <button id="reset-progress" class="ghost small" type="button">Reset progress</button>
       </div>
     </aside>
@@ -54,9 +60,42 @@
     <div id="badge-list" class="badge-list"></div>
   </dialog>
 
+  <dialog id="progress-dialog" class="badge-dialog progress-dialog" aria-labelledby="progress-title">
+    <div class="badge-head">
+      <div>
+        <h2 id="progress-title">Your progress</h2>
+        <p id="progress-summary" class="badge-summary"></p>
+      </div>
+      <button id="progress-close" class="ghost small" type="button">Close</button>
+    </div>
+    <div class="progress-actions">
+      <button id="progress-export" class="btn primary" type="button">Export progress</button>
+      <button id="progress-import-button" class="btn" type="button">Import progress</button>
+      <input id="progress-import" type="file" accept=".json,application/json" hidden>
+    </div>
+    <div id="progress-import-panel" class="progress-import-panel" hidden>
+      <p id="progress-import-summary" class="widget-note"></p>
+      <label class="field-label" for="progress-import-mode">Import mode</label>
+      <select id="progress-import-mode">
+        <option value="merge">Merge with this device</option>
+        <option value="replace">Replace this device</option>
+      </select>
+      <div class="toolbar">
+        <button id="progress-apply" class="btn primary" type="button">Apply import</button>
+        <button id="progress-cancel" class="ghost" type="button">Cancel</button>
+      </div>
+    </div>
+    <p id="progress-storage" class="widget-note"></p>
+    <p class="hint">Progress is stored on this device. Export a backup before clearing browser data.</p>
+    <div class="progress-danger">
+      <button id="progress-clear" class="ghost small" type="button">Clear all local data</button>
+    </div>
+  </dialog>
+
   <script src="widgets.js"></script>
   <script src="badges.js"></script>
   <script src="art.js"></script>
+  <script src="progress-file.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

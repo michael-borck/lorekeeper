@@ -28,6 +28,17 @@ python3 -m http.server 8000
 # then open http://127.0.0.1:8000/player/
 ```
 
+## Install and offline
+
+Lorekeeper is a PWA. Open the player and use the browser's **Install** action if
+you want an app icon and a standalone window. The service worker caches the
+player shell, vendored runtimes and visited course content.
+
+Course JSON is network-first, so updates arrive when online and the last version
+works offline. The PWA adds no accounts, analytics, push notifications or
+permission prompts. See [`docs/distribution.md`](docs/distribution.md) for the
+Tauri and pack-store decisions.
+
 ## Design
 
 - A course is a story. Modules are chapters, lessons are scenes, exercises are
@@ -252,6 +263,17 @@ Badges are derived from the same progress record as the lessons. The dialog show
 locked badges with their progress, and each new badge raises a toast. Reset
 progress also clears the badge case.
 
+## Progress backup
+
+Progress, badges, drafts and the chosen skin live in `localStorage` on the
+device. The **Progress** dialog exports them to one JSON file and imports a file
+with **Merge** or **Replace**. Merge unions completed lessons, activity dates,
+badges and missing drafts; Replace restores the file exactly.
+
+Clearing browser storage erases the local copy. Lorekeeper asks the browser for
+persistent storage where the API exists, but a manual clear still wins. Export a
+backup before clearing site data or moving to another laptop.
+
 ## What is built
 
 | Area | Status |
@@ -278,20 +300,26 @@ progress also clears the badge case.
 | Field Kit demo | Complete |
 | Server-side sandbox | Not built |
 | LLM-backed Socratic tutor | Not built |
+| Pack format and static catalogue | Not built |
+| Tauri desktop shell | Deferred |
 | LMS grade export | Not built |
 | Ink, Pixel and Storybook skins | Working |
 | Theme illustrations and motion | Working |
 | Course-specific emblems | Working |
+| PWA install and offline shell | Working |
+| Progress export and import | Working |
 
 ## Roadmap
 
-1. Add more real course overlays for the widgets.
-2. Add Ink stories for the remaining courses and scenarios.
-3. Refine the skins with more custom art and course-specific scenes.
-4. Optional: a container runner for real shell exercises, behind a separate
-   service.
-5. Optional: an LLM-backed Socratic tutor for open viva answers.
-6. Optional: export completion to an LMS.
+1. Define the pack format and local pack import/export.
+2. Build a static pack catalogue modelled on `swipeverse-store`, with a CI
+   validator.
+3. Add more real course overlays and Ink stories.
+4. Refine the skins with more custom art and course-specific scenes.
+5. Optional: a Tauri shell if native labs or offline pack management need it.
+6. Optional: a container runner for real shell exercises.
+7. Optional: an LLM-backed Socratic tutor for open viva answers.
+8. Optional: export completion to an LMS.
 
 ## Tests
 

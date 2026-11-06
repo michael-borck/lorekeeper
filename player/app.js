@@ -65,6 +65,7 @@ async function init() {
   document.getElementById("theme-select").addEventListener("change", (event) => {
     applyTheme(event.target.value, true);
   });
+  window.LorekeeperProgress?.init();
 
   let index;
   try {
@@ -76,6 +77,7 @@ async function init() {
     return;
   }
   state.index = index;
+  warmOffline();
 
   const params = new URLSearchParams(location.search);
   const requested = params.get("course");
@@ -699,4 +701,52 @@ async function getJSON(url) {
   const response = await fetch(url, { cache: "no-store" });
   if (!response.ok) throw new Error(`${url}: ${response.status}`);
   return response.json();
+}
+
+async function serviceWorkerReady() {
+  if (!("serviceWorker" in navigator) || !location.protocol.startsWith("http")) return null;
+  try {
+    await navigator.serviceWorker.register("sw.js");
+    await navigator.serviceWorker.ready;
+  } catch {
+    return null;
+  }
+  if (navigator.serviceWorker.controller) return navigator.serviceWorker.controller;
+  return new Promise((resolve) => {
+    const timer = setTimeout(() => resolve(null), 2500);
+    navigator.serviceWorker.addEventListener(
+      "controllerchange",
+      () => {
+        clearTimeout(timer);
+        resolve(navigator.serviceWorker.controller);
+      },
+      { once: true }
+    );
+  });
+}
+
+async function warmOffline() {
+  if (!state.index || !navigator.onLine) return;
+  const controller = await serviceWorkerReady();
+  if (!controller) return;
+  fetch(new URL("../build/index.json", location.href)).catch(() => {});
+  for (const course of state.index.courses) {
+    const courseUrl = new URL(`../build/${course.slug}/course.json`, location.href);
+    fetch(courseUrl)
+      .then((response) => (response.ok ? response.json() : null))
+      .then((data) => {
+        if (!data) return;
+        const base = new URL(".", courseUrl);
+        for (const module of data.modules || []) {
+          for (const lesson of module.lessons || []) {
+            for (const block of lesson.blocks || []) {
+              if (block.type === "story" && block.src) {
+                fetch(new URL(block.src, base)).catch(() => {});
+              }
+            }
+          }
+        }
+      })
+      .catch(() => {});
+  }
 }
