@@ -1,6 +1,7 @@
 const state = {
   index: null,
   course: null,
+  courseBaseUrl: null,
   progress: { completed: {} },
   currentId: null,
 };
@@ -28,6 +29,7 @@ const KIND_LABEL = {
   api: "api",
   sql: "sql",
   terminal: "sh",
+  story: "story",
 };
 
 init().catch((error) => fatal(error.message || String(error)));
@@ -55,16 +57,17 @@ async function init() {
 
 async function loadCourse(slug) {
   const meta = state.index.courses.find((course) => course.slug === slug);
-  const url = meta ? `../build/${meta.slug}/course.json` : slug;
+  const courseUrl = new URL(meta ? `../build/${meta.slug}/course.json` : slug, location.href);
   let course;
   try {
-    course = await getJSON(url);
+    course = await getJSON(courseUrl.href);
   } catch {
     fatal(`Could not load course "${slug}".`);
     return;
   }
 
   state.course = course;
+  state.courseBaseUrl = new URL(".", courseUrl).href;
   loadProgress();
   document.title = `${course.unit.title} · Lorekeeper`;
   els.courseMeta.innerHTML = `

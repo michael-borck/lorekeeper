@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import shutil
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -25,6 +26,7 @@ XP = {
     "review": 30,
     "api": 30,
     "viva": 40,
+    "story": 30,
     "terminal": 40,
     "exercise": 50,
     "sql": 50,
@@ -99,7 +101,13 @@ def _reading_blocks(unit: Unit, module_dir: Path, spec: dict) -> list[dict]:
     return blocks_from_source(module_dir / source, include=include)
 
 
-def _lesson_from_spec(unit: Unit, module: dict, spec: dict, fallback_id: str) -> dict:
+def _lesson_from_spec(
+    unit: Unit,
+    module: dict,
+    spec: dict,
+    fallback_id: str,
+    out_dir: Path | None = None,
+) -> dict:
     kind = str(spec.get("kind", "reading"))
     lesson_id = str(spec.get("id") or fallback_id)
     lesson = {
@@ -151,6 +159,9 @@ def _lesson_from_spec(unit: Unit, module: dict, spec: dict, fallback_id: str) ->
             exercise["mock"] = spec["mock"]
         lesson["blocks"].append(exercise)
 
+    elif kind == "story":
+        lesson["blocks"].append(_normalise_story(unit, spec, lesson_id, out_dir))
+
     elif kind in WIDGET_KINDS:
         lesson["blocks"].extend(normalise_widget(kind, spec, lesson_id))
 
@@ -158,6 +169,42 @@ def _lesson_from_spec(unit: Unit, module: dict, spec: dict, fallback_id: str) ->
         raise ValueError(f"{lesson_id}: unknown lesson kind '{kind}'")
 
     return lesson
+
+
+def _normalise_story(
+    unit: Unit,
+    spec: dict,
+    lesson_id: str,
+    out_dir: Path | None,
+) -> dict:
+    raw = str(spec.get("story") or "").strip()
+    if not raw:
+        raise ValueError(f"{lesson_id}: story file is required")
+    story_root = (content_dir() / unit.key).resolve()
+    source = (story_root / raw).resolve()
+    if not source.is_relative_to(story_root):
+        raise ValueError(f"{lesson_id}: story path must stay inside {story_root}")
+    if not source.is_file():
+        raise ValueError(f"{lesson_id}: story file not found: {source}")
+    try:
+        data = json.loads(source.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        raise ValueError(f"{lesson_id}: story is not valid JSON: {exc}") from exc
+    if "inkVersion" not in data or "root" not in data:
+        raise ValueError(f"{lesson_id}: story must be compiled Ink JSON")
+
+    if out_dir is not None:
+        story_dir = out_dir / "stories"
+        story_dir.mkdir(parents=True, exist_ok=True)
+        shutil.copyfile(source, story_dir / source.name)
+
+    return {
+        "type": "story",
+        "src": f"stories/{source.name}",
+        "start": str(spec.get("start") or "").strip(),
+        "intro": render_markdown(clean_markdown(str(spec.get("intro", "")))),
+        "debrief": render_markdown(clean_markdown(str(spec.get("debrief", "")))),
+    }
 
 
 def _default_specs(module: dict) -> list[dict]:
@@ -192,7 +239,7 @@ def compile_unit(unit: Unit, out_root: Path) -> dict:
         for index, spec in enumerate(specs, start=1):
             fallback = f"{module['number']:02d}-{index:02d}"
             lesson = apply_replacements(
-                _lesson_from_spec(unit, module, spec, fallback),
+                _lesson_from_spec(unit, module, spec, fallback, out_dir),
                 unit.replacements,
             )
             if lesson["id"] in seen_lessons:

@@ -117,3 +117,15 @@ lessons:
       - The order is header, nav, main, footer. Only nav and main are checked.
       - Use a real heading inside the menu section so the test can find it.
       - The booking control can be a link to a contact section.
+
+  - id: 01-04
+    kind: story
+    title: The client engagement
+    story: stories/client-engagement.json
+    intro: |
+      Play the first client meeting. Maria, Dev and Sam each want something
+      different, and the technical inheritance is waiting in the background.
+      There are no wrong clicks, only consequences you have to live with.
+    debrief: |
+      Which choice changed the project most? Name the moment where you traded
+      trust for speed, or speed for quality, and what you would do differently.

@@ -158,3 +158,16 @@ def test_sql_engine_is_vendored():
     root = Path(__file__).resolve().parents[1]
     assert (root / "player" / "vendor" / "sql-wasm.js").is_file()
     assert (root / "player" / "vendor" / "sql-wasm.wasm").is_file()
+
+
+def test_story_is_copied_into_the_build(tmp_path):
+    course = compile_unit(get_unit("ISYS3004"), tmp_path)
+    story = next(
+        block
+        for module in course["modules"]
+        for lesson in module["lessons"]
+        for block in lesson["blocks"]
+        if block["type"] == "story"
+    )
+    assert story["src"] == "stories/client-engagement.json"
+    assert (tmp_path / "ship-it" / story["src"]).is_file()

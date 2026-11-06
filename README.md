@@ -169,6 +169,7 @@ Notes:
 | `api` | Endpoint explorer | Sends requests and reads JSON | REST shapes, exposure, data models |
 | `sql` | Real SQLite sandbox | Writes and runs a query | Data, joins, filtering, reporting |
 | `terminal` | Scripted terminal | Types commands to meet goals | Diagnostics, shell sequences, labs |
+| `story` | Ink interactive fiction | Plays a branching conversation | Client interviews, incidents, judgement |
 
 The Field Kit course is the living reference. It has one lesson per widget in
 `content/field-kit/modules/01-workbench/lessons.yml`.
@@ -187,6 +188,7 @@ Widget fields at a glance:
 | `api` | `prompt`, `endpoints`, `questions` |
 | `sql` | `prompt`, `task`, `schema`, `seed`, `solution` |
 | `terminal` | `prompt`, `goals`, `commands` with `pattern` and `completes` |
+| `story` | `story` path under `content/<course>/`, optional `start`, `intro`, `debrief` |
 
 The viva widget is deliberately deterministic. It does not call an LLM. It checks
 whether an answer contains the signals you define, shows a strong answer, and
@@ -197,6 +199,12 @@ Socratic chat can be added later as an optional service.
 
 The SQL widget vendors `sql.js` (MIT) in `player/vendor/`. It runs real SQLite in
 the browser, so the learner can test a query instead of reading about one.
+
+The story widget vendors `inkjs` (MIT) in `player/vendor/`. Compiled Ink JSON
+lives under `content/<course>/stories/` and is copied into
+`build/<course>/stories/` at compile time. Keep the editable `.ink` source next
+to the JSON and recompile with `inklecate` after changes. The Ship It client
+interview is the first story.
 
 ## What is built
 
@@ -214,11 +222,12 @@ the browser, so the learner can test a query instead of reading about one.
 | API explorer | Working |
 | SQL sandbox (sql.js) | Working |
 | Scripted terminal | Working |
+| Ink story with `inkjs` | Working |
+| Authoring studio (`lorekeeper studio`) | Working |
 | XP, progress, localStorage | Working |
 | Ship It course | Complete |
 | Signal & Noise course | In progress |
 | Field Kit demo | Complete |
-| Ink branching story | Not built |
 | Server-side sandbox | Not built |
 | LLM-backed Socratic tutor | Not built |
 | LMS grade export | Not built |
@@ -228,7 +237,7 @@ the browser, so the learner can test a query instead of reading about one.
 
 1. Add real course overlays for the new widgets, starting with the Module 04
    gaming diff and the Signal & Noise networking sequence.
-2. Add an Ink story block for branching client and incident scenarios.
+2. Add more Ink stories for incident and stakeholder scenarios.
 3. Add a badge layer for streaks, chapters and course completion.
 4. Choose the art direction and add a skin without touching lesson content.
 5. Optional: a container runner for real shell exercises, behind a separate

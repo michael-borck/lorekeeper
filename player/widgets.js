@@ -697,6 +697,148 @@
     wrap.append(editor, toolbar, status, output);
   };
 
+  /* Story ------------------------------------------------------------- */
+
+  let inkLoader = null;
+  function loadInk() {
+    if (window.inkjs) return Promise.resolve(window.inkjs);
+    if (!inkLoader) {
+      inkLoader = new Promise((resolve, reject) => {
+        const script = document.createElement("script");
+        script.src = "vendor/ink.min.js";
+        script.onload = () => resolve(window.inkjs);
+        script.onerror = () => reject(new Error("Could not load the Ink runtime."));
+        document.head.appendChild(script);
+      });
+    }
+    return inkLoader;
+  }
+
+  W.story = function (host, block, lesson) {
+    const wrap = shell(host, block);
+    if (block.intro) wrap.appendChild(prose(block.intro));
+
+    const panel = document.createElement("div");
+    panel.className = "story-panel";
+    const text = document.createElement("div");
+    text.className = "story-text";
+    text.setAttribute("aria-live", "polite");
+    const choices = document.createElement("div");
+    choices.className = "story-choices";
+    const toolbar = document.createElement("div");
+    toolbar.className = "story-toolbar";
+    const cont = button("Continue", "btn primary story-continue");
+    const restart = button("Restart story", "ghost-btn");
+    toolbar.append(cont, restart);
+    const status = note("widget-note");
+    status.textContent = "Loading story...";
+    panel.append(text, choices, toolbar);
+    wrap.append(panel, status);
+
+    let story = null;
+    let ended = false;
+    let ending = "";
+
+    function collectTags(tags) {
+      (tags || []).forEach((tag) => {
+        const match = String(tag).match(/^ENDING:\s*(.+)$/i);
+        if (match) ending = match[1].trim();
+      });
+    }
+
+    function addText(value) {
+      if (!value || !value.trim()) return;
+      const paragraph = document.createElement("p");
+      paragraph.textContent = value.trim();
+      text.appendChild(paragraph);
+      text.scrollTop = text.scrollHeight;
+    }
+
+    function paintChoices() {
+      choices.replaceChildren();
+      if (!story) return;
+      story.currentChoices.forEach((choice, index) => {
+        const option = button(choice.text, "story-choice");
+        option.addEventListener("click", () => {
+          if (!story) return;
+          story.ChooseChoiceIndex(index);
+          advance();
+        });
+        choices.appendChild(option);
+      });
+    }
+
+    function finishStory() {
+      if (ended) return;
+      ended = true;
+      cont.hidden = true;
+      const end = document.createElement("div");
+      end.className = "story-end";
+      end.textContent = ending ? `Ending: ${ending}` : "The end.";
+      panel.appendChild(end);
+      if (block.debrief) panel.appendChild(prose(block.debrief, "lesson-prose widget-explanation"));
+      finish(lesson);
+    }
+
+    function advance() {
+      if (!story) return;
+      status.className = "widget-note";
+      status.textContent = "";
+      let guard = 0;
+      let added = false;
+      while (story.canContinue && guard < 30) {
+        const value = story.Continue();
+        collectTags(story.currentTags);
+        if (value && value.trim()) {
+          addText(value);
+          added = true;
+          break;
+        }
+        guard += 1;
+      }
+      paintChoices();
+      const hasChoices = story.currentChoices.length > 0;
+      cont.hidden = !story.canContinue;
+      cont.disabled = !story.canContinue;
+      if (!story.canContinue && !hasChoices) {
+        finishStory();
+      } else if (!added && hasChoices) {
+        status.textContent = "Choose what happens next.";
+      }
+    }
+
+    async function start() {
+      text.replaceChildren();
+      choices.replaceChildren();
+      panel.querySelectorAll(".story-end, .widget-explanation").forEach((el) => el.remove());
+      cont.hidden = false;
+      cont.disabled = true;
+      restart.disabled = true;
+      ended = false;
+      ending = "";
+      status.className = "widget-note";
+      status.textContent = "Loading story...";
+      try {
+        const ink = await loadInk();
+        const response = await fetch(new URL(block.src, state.courseBaseUrl));
+        if (!response.ok) throw new Error(`Story not found (${response.status})`);
+        const data = await response.json();
+        story = new ink.Story(data);
+        if (block.start) story.ChoosePathString(block.start);
+        status.textContent = "";
+        restart.disabled = false;
+        advance();
+      } catch (error) {
+        status.className = "widget-note bad";
+        status.textContent = error.message || "The story could not start.";
+      }
+    }
+
+    cont.addEventListener("click", advance);
+    restart.addEventListener("click", start);
+    start();
+  };
+
   /* Terminal ---------------------------------------------------------- */
 
   W.terminal = function (host, block, lesson) {

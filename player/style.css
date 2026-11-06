@@ -609,3 +609,45 @@ textarea.code.short { min-height: 110px; }
   font-size: 0.84rem;
 }
 .terminal-input:focus { outline: 1px solid #2f5d45; border-color: #2f5d45; }
+
+/* Ink story ---------------------------------------------------------- */
+
+.story-panel {
+  margin-top: 16px;
+  background: #0a1220;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 18px;
+}
+.story-text {
+  max-height: 380px;
+  overflow-y: auto;
+  color: #d6e0ee;
+  font-size: 0.98rem;
+  line-height: 1.7;
+}
+.story-text p { margin: 0 0 14px; white-space: pre-wrap; }
+.story-text p:last-child { margin-bottom: 0; }
+.story-choices { display: grid; gap: 8px; margin-top: 16px; }
+.story-choice {
+  text-align: left;
+  background: #0d1626;
+  border: 1px solid var(--border);
+  color: var(--text);
+  border-radius: 8px;
+  padding: 11px 14px;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+.story-choice:hover { border-color: #3b4c6e; background: #121f36; }
+.story-toolbar { display: flex; gap: 10px; align-items: center; margin-top: 14px; }
+.story-end {
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+  color: var(--accent);
+  font-family: var(--mono);
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
