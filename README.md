@@ -50,7 +50,9 @@ python3 -m http.server 8000
 
 A course sets `theme` in `courses/<key>.yaml`. The learner can override it with
 the Skin selector in the sidebar; the choice is saved locally. All three skins are
-CSS only, so lesson content never changes.
+CSS only, so lesson content never changes. The course picker carries a small
+theme-specific illustration and the cards show their default skin. Motion is
+subtle and disabled under `prefers-reduced-motion`.
 
 ## How it works
 
@@ -269,12 +271,13 @@ progress also clears the badge case.
 | LLM-backed Socratic tutor | Not built |
 | LMS grade export | Not built |
 | Ink, Pixel and Storybook skins | Working |
+| Theme illustrations and motion | Working |
 
 ## Roadmap
 
 1. Add more real course overlays for the widgets.
 2. Add more Ink stories for incident and stakeholder scenarios.
-3. Refine the skins with illustration and motion once the content settles.
+3. Refine the skins with more custom art and course-specific scenes.
 4. Optional: a container runner for real shell exercises, behind a separate
    service.
 5. Optional: an LLM-backed Socratic tutor for open viva answers.

@@ -633,15 +633,23 @@ function assertEqual(actual, expected, message) {
 function renderPicker() {
   els.content.innerHTML = `
     <div class="placeholder">
-      <h1>Choose your path</h1>
-      <p>Story-driven courses for information systems. The source repos stay read-only.</p>
+      <div class="picker-hero">
+        ${window.LorekeeperArt ? window.LorekeeperArt.picker() : ""}
+        <div class="picker-intro">
+          <p class="eyebrow">Lorekeeper · field notes</p>
+          <h1>Choose your path</h1>
+          <p>Story-driven courses for information systems. The source repos stay read-only.</p>
+        </div>
+      </div>
       <div class="course-list">
         ${state.index.courses
           .map(
             (course) => `
           <a class="course-card" href="?course=${encodeURIComponent(course.slug)}">
             <div class="title">${escapeHtml(course.title)}</div>
-            <div class="meta">${course.modules} modules · ${course.lessons} lessons</div>
+            <div class="meta">${course.modules} modules · ${course.lessons} lessons
+              <span class="skin-tag">${escapeHtml(window.LorekeeperArt ? window.LorekeeperArt.skinName(course.theme) : (course.theme || "ink"))}</span>
+            </div>
           </a>`
           )
           .join("")}

@@ -286,6 +286,7 @@ def compile_all(out_root: Path | None = None) -> list[dict]:
             {
                 "slug": course["unit"]["slug"],
                 "title": course["unit"]["title"],
+                "theme": course["unit"]["theme"],
                 "url": f"{course['unit']['slug']}/course.json",
                 "modules": len(course["modules"]),
                 "lessons": sum(len(m["lessons"]) for m in course["modules"]),

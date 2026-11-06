@@ -174,3 +174,12 @@ def test_story_is_copied_into_the_build(tmp_path):
     )
     assert story["src"] == "stories/client-engagement.json"
     assert (tmp_path / "ship-it" / story["src"]).is_file()
+
+
+def test_index_includes_course_themes(tmp_path):
+    compile_all(tmp_path)
+    index = json.loads((tmp_path / "index.json").read_text(encoding="utf-8"))
+    themes = {course["slug"]: course["theme"] for course in index["courses"]}
+    assert themes["ship-it"] == "storybook"
+    assert themes["signal-and-noise"] == "pixel"
+    assert themes["field-kit"] == "pixel"
