@@ -24,6 +24,9 @@
     lorekeeper keygen [--private FILE] [--public FILE] [--trusted FILE]
         create an Ed25519 signing key
 
+    lorekeeper verify-store [--store DIR] [--trusted FILE]
+        verify the catalogue hashes and signatures with public keys
+
     lorekeeper studio [--port 8765]
         open the local authoring studio for course overlays
 """
@@ -117,6 +120,20 @@ def _cmd_store(args: argparse.Namespace) -> int:
     return 0
 
 
+def _cmd_verify_store(args: argparse.Namespace) -> int:
+    from .verify import verify_store
+
+    store = Path(args.store).resolve() if args.store else engine_root() / "store"
+    trusted = Path(args.trusted) if args.trusted else engine_root() / "player" / "trusted-keys.js"
+    problems = verify_store(store, trusted)
+    if problems:
+        for problem in problems:
+            print(f"✗ {problem}", file=sys.stderr)
+        return 1
+    print("✓ pack store: hashes and signatures verified")
+    return 0
+
+
 def _cmd_keygen(args: argparse.Namespace) -> int:
     from .signing import DEFAULT_PRIVATE, DEFAULT_PUBLIC, keygen
 
@@ -124,7 +141,7 @@ def _cmd_keygen(args: argparse.Namespace) -> int:
     public = Path(args.public).expanduser() if args.public else DEFAULT_PUBLIC
     trusted = Path(args.trusted) if args.trusted else None
     try:
-        kid = keygen(private, public, trusted, force=args.force)
+        kid = keygen(private, public, trusted, force=args.force, append=args.append)
     except (FileExistsError, ValueError, OSError) as exc:
         print(f"✗ {exc}", file=sys.stderr)
         return 1
@@ -245,7 +262,13 @@ def build_parser() -> argparse.ArgumentParser:
     keygen.add_argument("--public", help="public key path")
     keygen.add_argument("--trusted", help="write player/trusted-keys.js here")
     keygen.add_argument("--force", action="store_true", help="overwrite an existing key")
+    keygen.add_argument("--append", action="store_true", help="append the public key to --trusted")
     keygen.set_defaults(func=_cmd_keygen)
+
+    verify = sub.add_parser("verify-store", help="verify pack hashes and signatures")
+    verify.add_argument("--store", help="store directory (default: store/)")
+    verify.add_argument("--trusted", help="trusted keys file (default: player/trusted-keys.js)")
+    verify.set_defaults(func=_cmd_verify_store)
 
     return parser
 

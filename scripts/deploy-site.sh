@@ -16,6 +16,7 @@ fi
 
 rm -rf "$BUILD"
 python3 -m lorekeeper store --out store --key "$KEY"
+python3 -m lorekeeper verify-store --store store --trusted player/trusted-keys.js
 python3 -m lorekeeper site --out "$BUILD" --cname "$CNAME"
 
 mkdir -p _site

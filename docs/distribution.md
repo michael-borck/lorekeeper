@@ -74,15 +74,13 @@ justifies it.
 Exercise tests are JavaScript executed in the player page. That is acceptable
 for first-party packs and unacceptable for arbitrary third-party packs.
 
-Packs are now signed with Ed25519 and exercise tests run in a hidden sandboxed
-iframe with a nonce CSP. The sandbox has no parent access, no local storage and no
+Packs are signed with Ed25519 and exercise tests run in a hidden sandboxed iframe
+with a nonce CSP. The sandbox has no parent access, no local storage and no
 network. The preview is separate and blocks scripts.
 
-Before opening the catalogue to arbitrary submissions:
-
-- keep a content policy and a human review step;
-- document key rotation and a compromised-key procedure;
-- keep the signing key out of the repository and CI logs.
+Submissions are reviewed against [`store-policy.md`](store-policy.md), verified
+with `lorekeeper verify-store`, and signed before publication. Key rotation and
+takedown procedures live in that policy.
 
 ## Tauri trigger
 

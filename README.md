@@ -355,9 +355,16 @@ Build and sign the store with:
 python3 -m lorekeeper store --out store --key ~/.lorekeeper/lorekeeper-signing.pem
 ```
 
-The deploy script requires the key and signs every published pack. The
-signature proves authorship and integrity for a known key; it does not sandbox
-third-party test code.
+The deploy script requires the key and signs every published pack. Verify the
+published files without the private key:
+
+```bash
+python3 -m lorekeeper verify-store --store store --trusted player/trusted-keys.js
+```
+
+The signature proves authorship and integrity for a known key. Exercise tests
+are also sandboxed, but a public catalogue still needs review. The policy and
+key-rotation procedure are in [`docs/store-policy.md`](docs/store-policy.md).
 
 ## What is built
 
@@ -388,6 +395,7 @@ third-party test code.
 | Pack build and local import | Working |
 | Static pack catalogue and sample pack | Working |
 | Ed25519 pack signing | Working |
+| Store verification and key rotation | Working |
 | Sandboxed exercise tests | Working |
 | Tauri desktop shell | Deferred |
 | LMS grade export | Not built |
@@ -401,8 +409,7 @@ third-party test code.
 
 ## Roadmap
 
-1. Open the catalogue to reviewed submissions with key rotation and a content
-   policy.
+1. Open a public pack submission flow using the review policy.
 2. Add more real course overlays and Ink stories.
 3. Refine the skins with more custom art and course-specific scenes.
 4. Optional: a Tauri shell if native labs or offline pack management need it.
