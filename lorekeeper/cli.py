@@ -11,6 +11,9 @@
 
     lorekeeper serve [--port 8000] [--no-build]
         build if needed, then serve the player at http://localhost:PORT/player/
+
+    lorekeeper studio [--port 8765]
+        open the local authoring studio for course overlays
 """
 
 from __future__ import annotations
@@ -82,6 +85,12 @@ def _cmd_build(args: argparse.Namespace) -> int:
     return 0
 
 
+def _cmd_studio(args: argparse.Namespace) -> int:
+    from .studio import start_studio
+
+    return start_studio(port=args.port, open_browser=not args.no_open)
+
+
 def _cmd_serve(args: argparse.Namespace) -> int:
     root = engine_root()
     out_root = _build_dir(args.out)
@@ -133,6 +142,11 @@ def build_parser() -> argparse.ArgumentParser:
     serve.add_argument("--no-build", action="store_true", help="skip the rebuild")
     serve.add_argument("--no-open", action="store_true", help="do not open a browser")
     serve.set_defaults(func=_cmd_serve)
+
+    studio = sub.add_parser("studio", help="open the local authoring studio")
+    studio.add_argument("--port", type=int, default=8765)
+    studio.add_argument("--no-open", action="store_true", help="do not open a browser")
+    studio.set_defaults(func=_cmd_studio)
 
     return parser
 

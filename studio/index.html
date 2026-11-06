@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Lorekeeper Studio</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="app">
+    <header class="topbar">
+      <div class="brand">
+        <span class="mark">✦</span>
+        <span>Lorekeeper <strong>Studio</strong></span>
+      </div>
+      <div id="status" class="status" role="status" aria-live="polite">Starting...</div>
+      <div class="topbar-actions">
+        <button id="check" type="button" class="ghost">Check course</button>
+        <button id="build" type="button" class="primary">Build &amp; preview</button>
+      </div>
+    </header>
+
+    <aside class="sidebar">
+      <label class="field">
+        <span>Course</span>
+        <select id="course"></select>
+      </label>
+
+      <label class="field">
+        <span>Module</span>
+        <select id="module"></select>
+      </label>
+
+      <div class="section-head">
+        <span>Lessons</span>
+        <span id="lesson-count" class="muted"></span>
+      </div>
+      <ol id="lesson-list" class="lesson-list"></ol>
+
+      <div class="section-head">
+        <span>Add a lesson</span>
+      </div>
+      <div class="add-row">
+        <select id="kind" aria-label="Lesson kind"></select>
+        <button id="add" type="button" class="ghost">Add</button>
+      </div>
+      <p class="hint">Appends a starter block to the editor. Fill in the fields, then validate and save.</p>
+    </aside>
+
+    <main class="editor-pane">
+      <div class="toolbar">
+        <span id="path" class="path muted">No module loaded</span>
+        <div class="toolbar-actions">
+          <button id="validate" type="button" class="ghost">Validate</button>
+          <button id="save" type="button" class="primary">Save</button>
+          <label class="file-button ghost" for="file">Import</label>
+          <input id="file" type="file" accept=".yml,.yaml,text/yaml">
+          <button id="export" type="button" class="ghost">Export</button>
+        </div>
+      </div>
+
+      <textarea id="yaml" spellcheck="false" aria-label="Overlay YAML"></textarea>
+
+      <section class="problems" aria-labelledby="problems-title">
+        <div class="section-head">
+          <h2 id="problems-title">Validation</h2>
+          <span id="problem-count" class="muted"></span>
+        </div>
+        <ul id="problems-list"></ul>
+      </section>
+    </main>
+
+    <section class="preview-pane" aria-labelledby="preview-title">
+      <div class="section-head">
+        <h2 id="preview-title">Player preview</h2>
+        <a id="open-player" class="link" href="#" target="_blank" rel="noreferrer">Open in new tab</a>
+      </div>
+      <iframe id="player" title="Lorekeeper player preview"></iframe>
+      <p class="hint">Preview builds the current course first. Save before you preview if you want to keep the changes.</p>
+    </section>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

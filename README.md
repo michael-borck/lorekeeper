@@ -150,6 +150,19 @@ Notes:
   opt into scripts inside the same sandbox. Both are for staff-authored content.
 - Overlays only add lessons. To change teaching content, edit the source course.
 
+## Authoring studio
+
+For a browser-based editor, run:
+
+```bash
+python3 -m lorekeeper studio
+```
+
+It lists the courses and modules, edits the overlay YAML, validates with the
+same compiler, saves with a backup under `build/studio-backups/`, and previews
+through the real player. It is local-only, bound to `127.0.0.1`, and protected
+by a per-run token. See [`docs/authoring-studio.md`](docs/authoring-studio.md).
+
 ## Lesson types
 
 | Type | Preview | What the learner does | Good for |
