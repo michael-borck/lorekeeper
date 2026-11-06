@@ -317,8 +317,23 @@ Import it from the course picker. Local packs live in `localStorage`, appear wit
 a **Local pack** tag, and can be removed without touching the built-in courses.
 Progress and drafts stay separate from the pack file.
 
-Packs can contain exercise test code. Only import packs you trust. The static
-catalogue, signing and sandboxed test execution are the next step.
+Packs can contain exercise test code. Only import packs you trust.
+
+### Pack store
+
+`python3 -m lorekeeper store` builds a static catalogue in `store/`:
+
+```text
+store/catalog.json
+store/packs/pocket-incidents.json
+store/README.md
+```
+
+The sample pack is **Pocket Incidents: The 3AM Page**, a short incident-response
+course built from the existing story. The player fetches `store/catalog.json`,
+checks the pack SHA-256, validates the pack and stores it locally. Signing and
+sandboxed test execution are still to come; the hash proves integrity, not
+authorship.
 
 ## What is built
 
@@ -347,7 +362,8 @@ catalogue, signing and sandboxed test execution are the next step.
 | Server-side sandbox | Not built |
 | LLM-backed Socratic tutor | Not built |
 | Pack build and local import | Working |
-| Static pack catalogue, signing and sandboxing | Not built |
+| Static pack catalogue and sample pack | Working |
+| Pack signing and sandboxed tests | Not built |
 | Tauri desktop shell | Deferred |
 | LMS grade export | Not built |
 | Ink, Pixel and Storybook skins | Working |
@@ -360,8 +376,7 @@ catalogue, signing and sandboxed test execution are the next step.
 
 ## Roadmap
 
-1. Build a static pack catalogue modelled on `swipeverse-store`, with a CI
-   validator, signing and a trust warning.
+1. Add pack signing and sandboxed test execution before opening submissions.
 2. Add more real course overlays and Ink stories.
 3. Refine the skins with more custom art and course-specific scenes.
 4. Optional: a Tauri shell if native labs or offline pack management need it.

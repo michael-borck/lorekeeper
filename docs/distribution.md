@@ -39,7 +39,9 @@ GitHub issues the certificate.
 
 ## Packs
 
-A pack is inert content, not an app:
+A pack is inert content, not an app. `python3 -m lorekeeper store` builds the
+static catalogue and a sample pack; the player checks the catalogue SHA-256
+before storing a pack locally.
 
 ```text
 pack.json          id, version, title, theme, author, licence, compatibility

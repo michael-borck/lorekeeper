@@ -45,6 +45,8 @@ def build_site(out: Path, cname: str | None = None) -> Path:
 
     compile_all(out / "build")
     shutil.copytree(root / "player", out / "player", ignore=IGNORE)
+    if (root / "store").is_dir():
+        shutil.copytree(root / "store", out / "store", ignore=IGNORE)
 
     (out / "index.html").write_text(REDIRECT, encoding="utf-8")
     (out / ".nojekyll").write_text("", encoding="utf-8")

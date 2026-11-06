@@ -8,6 +8,7 @@ REPO="${SITE_REPO:-https://github.com/michael-borck/lorekeeper-site.git}"
 BUILD="_site.build"
 
 rm -rf "$BUILD"
+python3 -m lorekeeper store --out store
 python3 -m lorekeeper site --out "$BUILD" --cname "$CNAME"
 
 mkdir -p _site

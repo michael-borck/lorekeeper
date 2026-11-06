@@ -18,6 +18,9 @@
     lorekeeper pack COURSE [--out FILE]
         build a portable pack from a compiled course
 
+    lorekeeper store [--out DIR]
+        build the static pack catalogue and sample pack
+
     lorekeeper studio [--port 8765]
         open the local authoring studio for course overlays
 """
@@ -95,6 +98,19 @@ def _cmd_studio(args: argparse.Namespace) -> int:
     from .studio import start_studio
 
     return start_studio(port=args.port, open_browser=not args.no_open)
+
+
+def _cmd_store(args: argparse.Namespace) -> int:
+    from .store import build_store
+
+    out = Path(args.out).resolve() if args.out else engine_root() / "store"
+    try:
+        catalog = build_store(out)
+    except (ValueError, OSError, KeyError) as exc:
+        print(f"✗ {exc}", file=sys.stderr)
+        return 1
+    print(f"✓ pack store: {out} ({len(catalog['packs'])} pack)")
+    return 0
 
 
 def _cmd_pack(args: argparse.Namespace) -> int:
@@ -195,6 +211,10 @@ def build_parser() -> argparse.ArgumentParser:
     pack.add_argument("unit", help="course key, code or slug")
     pack.add_argument("--out", help="output file (default: build/packs/<slug>.json)")
     pack.set_defaults(func=_cmd_pack)
+
+    store = sub.add_parser("store", help="build the static pack catalogue")
+    store.add_argument("--out", help="output directory (default: store/)")
+    store.set_defaults(func=_cmd_store)
 
     return parser
 
