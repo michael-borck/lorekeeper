@@ -15,4 +15,5 @@ def test_site_builds_with_player_build_and_cname(tmp_path: Path):
     assert (out / "build" / "ship-it" / "stories" / "launch-week.json").is_file()
     assert (out / "store" / "catalog.json").is_file()
     assert (out / "store" / "packs" / "pocket-incidents.json").is_file()
+    assert (out / "store" / "packs" / "information-security.json").is_file()
     assert (out / "CNAME").read_text().strip() == "lorekeeper.borck.education"

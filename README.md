@@ -343,9 +343,10 @@ store/README.md
 ```
 
 Public submissions go through the review queue at
-<https://github.com/michael-borck/lorekeeper-packs>. The sample pack is
-**Pocket Incidents: The 3AM Page**, a short incident-response course built from
-the existing story. The player fetches `store/catalog.json`,
+<https://github.com/michael-borck/lorekeeper-packs>. The store ships
+**Pocket Incidents: The 3AM Page**, a short incident-response course, and
+**Information Security: A Field Guide**, packaged from the information security
+unit. The player fetches `store/catalog.json`,
 checks the pack SHA-256 and Ed25519 signature, validates the pack and stores it
 locally.
 
