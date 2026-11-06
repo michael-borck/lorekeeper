@@ -98,6 +98,23 @@ def _information_security(build_root: Path) -> dict:
     return build_pack(unit, build_root)
 
 
+def _audit_and_control(build_root: Path) -> dict:
+    root = engine_root().parent / "isys6018-information-security-audit-and-control"
+    if not root.is_dir():
+        raise FileNotFoundError(f"audit and control source not found: {root}")
+    unit = unit_from_root(
+        root,
+        unit_id="audit-and-control",
+        title="Audit and Control: A Field Guide",
+        theme="storybook",
+        tags=["audit", "risk", "controls", "compliance", "security"],
+        level="intermediate",
+        pitch="A field guide to audit evidence, risk, controls and professional judgement.",
+        start="01-01",
+    )
+    return build_pack(unit, build_root)
+
+
 def _write_pack(out: Path, pack: dict, key) -> dict:
     packs_dir = out / "packs"
     packs_dir.mkdir(parents=True, exist_ok=True)
@@ -138,7 +155,11 @@ def build_store(
     (out / "packs").mkdir(parents=True, exist_ok=True)
 
     key = load_private_key(key_path) if key_path else None
-    packs = [_pocket_incidents(build_root), _information_security(build_root)]
+    packs = [
+        _pocket_incidents(build_root),
+        _information_security(build_root),
+        _audit_and_control(build_root),
+    ]
     catalog_packs = [_write_pack(out, pack, key) for pack in packs]
     catalog = {
         "format": CATALOG_FORMAT,
