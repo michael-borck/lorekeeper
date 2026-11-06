@@ -1,0 +1,26 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e . pytest ruff
+      - name: Lint
+        run: ruff check lorekeeper tests
+      - name: Check the bundled demo course
+        run: python -m lorekeeper check field-kit
+      - name: Build the bundled demo course
+        run: python -m lorekeeper build field-kit
+      - name: Source-independent tests
+        run: pytest -q tests/test_parse.py tests/test_widgets.py tests/test_pwa.py tests/test_pack_root.py

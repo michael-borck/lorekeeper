@@ -18,6 +18,9 @@
     lorekeeper pack COURSE [--out FILE]
         build a portable pack from a compiled course
 
+    lorekeeper pack --root DIR --id SLUG --title TITLE
+        build a pack straight from a unit folder, without registering it
+
     lorekeeper store [--out DIR] [--key FILE]
         build the static pack catalogue and sample pack
 
@@ -154,11 +157,29 @@ def _cmd_keygen(args: argparse.Namespace) -> int:
 
 
 def _cmd_pack(args: argparse.Namespace) -> int:
-    from .pack import build_pack, write_pack
+    import tempfile
+
+    from .pack import build_pack, unit_from_root, write_pack
 
     try:
-        unit = get_unit(args.unit)
-        pack = build_pack(unit)
+        if args.root:
+            if args.unit:
+                raise ValueError("use either COURSE or --root, not both")
+            unit = unit_from_root(
+                Path(args.root),
+                unit_id=args.id,
+                title=args.title,
+                theme=args.theme,
+                tags=[tag.strip() for tag in args.tags.split(",") if tag.strip()],
+                level=args.level,
+                pitch=args.pitch or "",
+                start=args.start,
+            )
+            with tempfile.TemporaryDirectory(prefix="lorekeeper-pack-") as temp:
+                pack = build_pack(unit, Path(temp))
+        else:
+            unit = get_unit(args.unit)
+            pack = build_pack(unit)
         out = (
             Path(args.out).resolve()
             if args.out
@@ -248,7 +269,15 @@ def build_parser() -> argparse.ArgumentParser:
     site.set_defaults(func=_cmd_site)
 
     pack = sub.add_parser("pack", help="build a portable course pack")
-    pack.add_argument("unit", help="course key, code or slug")
+    pack.add_argument("unit", nargs="?", help="course key, code or slug")
+    pack.add_argument("--root", help="unit folder to package without registering it")
+    pack.add_argument("--id", help="pack/course slug for --root")
+    pack.add_argument("--title", help="learner-facing title for --root")
+    pack.add_argument("--theme", default="pixel", help="skin for --root (default: pixel)")
+    pack.add_argument("--tags", default="", help="comma-separated tags for --root")
+    pack.add_argument("--level", default="beginner", help="level for --root")
+    pack.add_argument("--pitch", help="one-line pitch for --root")
+    pack.add_argument("--start", default="01-01", help="starting lesson for --root")
     pack.add_argument("--out", help="output file (default: build/packs/<slug>.json)")
     pack.set_defaults(func=_cmd_pack)
 

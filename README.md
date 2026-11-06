@@ -318,6 +318,14 @@ python3 -m lorekeeper pack ship-it
 # build/packs/ship-it.json
 ```
 
+Package a unit folder directly, without registering it as a built-in course:
+
+```bash
+python3 -m lorekeeper pack --root ../isys2012-information-security \
+  --id information-security --title "Information Security: A Field Guide" \
+  --tags security,risk,operations --theme pixel
+```
+
 Import it from the course picker. Local packs live in `localStorage`, appear with
 a **Local pack** tag, and can be removed without touching the built-in courses.
 Progress and drafts stay separate from the pack file.
@@ -426,7 +434,10 @@ python3 -m pytest -q
 ruff check lorekeeper tests
 ```
 
-The suite compiles every registered course into a temporary directory, checks
-overlay validity, asserts the source files are byte-identical before and after
-the build, and scans learner-facing output for source codes or institutional
-names.
+The full suite compiles every registered course, checks overlay validity,
+asserts the source files are byte-identical before and after the build, and
+scans learner-facing output for source codes or institutional names.
+
+CI runs ruff, checks and builds the bundled Field Kit course, and runs the
+source-independent tests. The full suite and the site build need the sibling
+course repositories, so they stay a local check.
