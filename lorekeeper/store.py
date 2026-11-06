@@ -167,7 +167,7 @@ def _build_web_guide_ai() -> dict:
 
 
 def _systems_analysis_and_design() -> dict:
-    root = engine_root().parents[2] / "books" / "systems-analysis-and-design"
+    root = engine_root().parents[2] / "books" / "frame-the-system-guide-ai"
     if not root.is_dir():
         raise FileNotFoundError(f"systems analysis source not found: {root}")
     return build_book_pack(
