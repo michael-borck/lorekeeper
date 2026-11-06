@@ -1,0 +1,68 @@
+# Interactive lessons appended to Part 4 of Build It, Teach It.
+lessons:
+  - kind: checkpoint
+    title: "Checkpoint: teach and assess"
+    questions:
+      - id: q1
+        prompt: What should a lesson plan start with?
+        options:
+          - An observable learning objective
+          - A list of features
+          - The model leaderboard
+          - The final project
+        answer: 0
+        explanation: "The objective is the technique. The project is the recipe. The assessment is the tasting."
+      - id: q2
+        prompt: What is the 1-hour guided tour?
+        options:
+          - A demonstration, one hands-on modification and a discussion
+          - A full multi-week project
+          - A lecture with no computer
+          - A production deployment
+        answer: 0
+        explanation: "The guided tour introduces the shape without covering every module."
+      - id: q3
+        prompt: What should an assessment reward?
+        options:
+          - Understanding, evidence and responsible use, not polish
+          - The longest README
+          - The most features
+          - The most confident demo
+        answer: 0
+        explanation: "A student who can explain the model call has learned the module."
+      - id: q4
+        prompt: What should an AI-use disclosure include?
+        options:
+          - Which tools were used, what they helped with, what was checked and what the student wrote
+          - Only the model name
+          - Nothing
+          - The API key
+        answer: 0
+        explanation: "Disclosure is a habit, not a punishment."
+      - id: q5
+        prompt: What data question must a classroom answer?
+        options:
+          - What data goes to which provider, how long it is kept and who can see it
+          - Only the model size
+          - Only the price
+          - Only the licence
+        answer: 0
+        explanation: "A local model is easier to approve for sensitive material. A hosted model needs a contract and a review."
+      - id: q6
+        prompt: What is the best evidence of understanding?
+        options:
+          - A short demo and an explanation of the model call
+          - A polished slide deck
+          - A large codebase
+          - A high model score
+        answer: 0
+        explanation: "The demonstration and explanation show whether the student can run and justify the work."
+      - id: q7
+        prompt: What should happen after the lesson?
+        options:
+          - Record what failed, revise the plan and remove keys and student data
+          - Delete the repository
+          - Publish the keys
+          - Start a bigger project
+        answer: 0
+        explanation: "The after-class review is how the next run improves."

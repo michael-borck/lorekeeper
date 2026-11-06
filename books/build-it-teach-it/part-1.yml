@@ -1,0 +1,68 @@
+# Interactive lessons appended to Part 1 of Build It, Teach It.
+lessons:
+  - kind: checkpoint
+    title: "Checkpoint: the lab"
+    questions:
+      - id: q1
+        prompt: What is the shared shape behind every HandsOnAI module?
+        options:
+          - One model call wrapped in plain Python
+          - A separate framework for each module
+          - A database and a web server
+          - A fine-tuned model per task
+        answer: 0
+        explanation: "Chat, RAG, agents, workflows, loops, evaluation, vision and voice add wrappers around the call."
+      - id: q2
+        prompt: Why is the package small on purpose?
+        options:
+          - To make the concept visible and readable
+          - Because it is unfinished
+          - Because production code is unnecessary
+          - Because models cannot scale
+        answer: 0
+        explanation: "It is a learning lab, not a production framework. The gaps are the next lesson."
+      - id: q3
+        prompt: What are the three common classroom providers?
+        options:
+          - Local Ollama, a shared classroom server and a cloud provider
+          - Wi-Fi, Bluetooth and USB
+          - OpenAI, a spreadsheet and a database
+          - Docker, Podman and Kubernetes
+        answer: 0
+        explanation: "Each has different trade-offs for privacy, cost, bandwidth and support."
+      - id: q4
+        prompt: What does `handsonai doctor` do?
+        options:
+          - Checks the provider, model and key configuration
+          - Trains the model
+          - Grades the student
+          - Generates a project
+        answer: 0
+        explanation: "Run it before class. Most setup failures are a server that is not running or a model that was never downloaded."
+      - id: q5
+        prompt: Why does a chat model appear to remember?
+        options:
+          - The application resends the transcript on each turn
+          - The model has permanent memory
+          - The server stores your name
+          - The model is fine-tuned on the conversation
+        answer: 0
+        explanation: "The model is stateless. Memory is a message list your code keeps."
+      - id: q6
+        prompt: What grows with a long conversation?
+        options:
+          - Tokens, cost, latency and the risk of hitting the context window
+          - The model's parameter count
+          - The number of providers
+          - The licence
+        answer: 0
+        explanation: "Each turn resends the history. Summarise, retrieve or start fresh when needed."
+      - id: q7
+        prompt: What is a bot in HandsOnAI?
+        options:
+          - A function that calls the model with a fixed system prompt
+          - A new model
+          - A database
+          - A web server
+        answer: 0
+        explanation: "A personality is a system prompt with a name."

@@ -1,0 +1,55 @@
+# Interactive lessons appended to Part 3 of Build It, Teach It.
+lessons:
+  - kind: scenario
+    title: The project that grew
+    prompt: |
+      A student starts a quiz bot. By the second hour it has a database, a
+      leaderboard, a login system and three unfinished modules. The core
+      quiz does not run. The class ends in twenty minutes. Choose the next
+      move.
+    options:
+      - id: cut
+        label: Cut back to one quiz question, one score and one feedback message, then run the core check
+        outcome: |
+          The student finishes a small working project. The quiz asks a
+          question, checks the answer and gives feedback. The extensions are
+          listed as future work. The demo runs.
+        effects:
+          Scope: Small
+          Evidence: Running
+          Learning: Visible
+        recommended: true
+        feedback: The best project is the smallest one that teaches the objective.
+      - id: finish
+        label: Push on and finish the login system before the demo
+        outcome: |
+          The login system takes the remaining time. The quiz still does not
+          run, and the student cannot demonstrate the learning objective.
+        effects:
+          Scope: Larger
+          Evidence: Missing
+          Learning: Hidden
+        feedback: Finishing the wrong feature is not progress.
+      - id: demo
+        label: Demo the design and explain what it would do
+        outcome: |
+          The idea is clear and the code is not. The assessment cannot tell
+          whether the student can build the model call or test the result.
+        effects:
+          Story: Good
+          Evidence: None
+          Learning: Unproven
+        feedback: A design is not a working project. Show one real check.
+      - id: new
+        label: Start a simpler project from the gallery and abandon the quiz bot
+        outcome: |
+          The student starts again with twenty minutes left. The new project
+          is also unfinished, and the first attempt is lost.
+        effects:
+          Scope: Reset
+          Time: Wasted
+          Learning: Shallow
+        feedback: Cut the current project before replacing it.
+    debrief: |
+      Cut to the core check, run it, document the extension and show the
+      model call. A finished small project beats an unfinished large one.

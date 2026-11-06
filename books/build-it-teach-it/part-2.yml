@@ -1,0 +1,68 @@
+# Interactive lessons appended to Part 2 of Build It, Teach It.
+lessons:
+  - kind: checkpoint
+    title: "Checkpoint: the modules"
+    questions:
+      - id: q1
+        prompt: What does RAG add to the call?
+        options:
+          - A search for relevant text before the prompt
+          - A fine-tuned model
+          - A larger context window
+          - A voice interface
+        answer: 0
+        explanation: "Index once, then fetch and paste evidence into the prompt per question."
+      - id: q2
+        prompt: What does a citation in a RAG answer prove?
+        options:
+          - That a source was attached, not that it supports the claim
+          - That the answer is correct
+          - That the document is current
+          - That the model read the whole document
+        answer: 0
+        explanation: "Check the cited passage. The label is not evidence."
+      - id: q3
+        prompt: What is the tool contract in HandsOnAI?
+        options:
+          - A named function with a description, one string input and one string output
+          - A class with many methods
+          - A database schema
+          - A model checkpoint
+        answer: 0
+        explanation: "The model reads the description to decide when and how to use the tool."
+      - id: q4
+        prompt: What is the safety boundary for an agent?
+        options:
+          - The tool list the harness exposes
+          - The model's confidence
+          - The prompt length
+          - The provider
+        answer: 0
+        explanation: "The model proposes; the harness decides what can run. Treat each tool as a permission."
+      - id: q5
+        prompt: What is the difference between a workflow and a loop?
+        options:
+          - A workflow has stages and review gates; a loop repeats until a goal
+          - A workflow is automatic; a loop is manual
+          - A workflow uses tools; a loop does not
+          - There is no difference
+        answer: 0
+        explanation: "The workflow is the line. The loop is the repetition. The judge is the inspector."
+      - id: q6
+        prompt: What is an LLM judge?
+        options:
+          - A model asked to score output against criteria
+          - A human grader
+          - A deterministic test
+          - A model that trains another model
+        answer: 0
+        explanation: "A judge is useful but biased and inconsistent. Calibrate it against human marks."
+      - id: q7
+        prompt: What do vision and voice add?
+        options:
+          - Input and output converters around the same call
+          - A new kind of intelligence
+          - A larger model
+          - A database
+        answer: 0
+        explanation: "Images become tokens; speech becomes text and back. The chat shape remains."

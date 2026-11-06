@@ -342,6 +342,22 @@ def _simplebot() -> dict:
     )
 
 
+def _build_it_teach_it() -> dict:
+    root = engine_root().parents[2] / "books" / "build-it-teach-it"
+    if not root.is_dir():
+        raise FileNotFoundError(f"build it teach it source not found: {root}")
+    return build_book_pack(
+        root,
+        unit_id="build-it-teach-it",
+        title="Build It, Teach It: Hands-on AI Projects for the Classroom",
+        theme="storybook",
+        tags=["ai", "education", "projects", "teaching", "rag", "agents"],
+        level="beginner",
+        pitch="Build small AI systems and teach the ideas underneath them, with project and classroom tracks.",
+        parts="1-4",
+    )
+
+
 def _write_pack(out: Path, pack: dict, key) -> dict:
     packs_dir = out / "packs"
     packs_dir.mkdir(parents=True, exist_ok=True)
@@ -400,6 +416,7 @@ def build_store(
         _break_with_permission(),
         _follow_the_packet(),
         _simplebot(),
+        _build_it_teach_it(),
     ]
     catalog_packs = [_write_pack(out, pack, key) for pack in packs]
     catalog = {
