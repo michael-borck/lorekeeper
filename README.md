@@ -37,8 +37,20 @@ python3 -m http.server 8000
   writes into them.
 - Internal keys, codes and paths stay in metadata for provenance. They do not
   appear in the player.
-- Art direction is separate from content. The same lesson can later be skinned
-  as pixel art, animated illustration, or something else entirely.
+- Art direction is separate from content. Three skins ship today: Ink, Pixel and
+  Storybook. A course sets its default, and the learner can switch.
+
+## Skins
+
+| Skin | Feel | Default for |
+|---|---|---|
+| Ink | The quiet dark workbench | Fallback |
+| Pixel | 8-bit palette, hard edges, scanlines, mono type | Signal & Noise, Field Kit |
+| Storybook | Warm paper, serif headings, soft shadows, forest green | Ship It |
+
+A course sets `theme` in `courses/<key>.yaml`. The learner can override it with
+the Skin selector in the sidebar; the choice is saved locally. All three skins are
+CSS only, so lesson content never changes.
 
 ## How it works
 
@@ -256,13 +268,13 @@ progress also clears the badge case.
 | Server-side sandbox | Not built |
 | LLM-backed Socratic tutor | Not built |
 | LMS grade export | Not built |
-| Pixel-art or animated skin | Not built |
+| Ink, Pixel and Storybook skins | Working |
 
 ## Roadmap
 
 1. Add more real course overlays for the widgets.
 2. Add more Ink stories for incident and stakeholder scenarios.
-3. Choose the art direction and add a skin without touching lesson content.
+3. Refine the skins with illustration and motion once the content settles.
 4. Optional: a container runner for real shell exercises, behind a separate
    service.
 5. Optional: an LLM-backed Socratic tutor for open viva answers.

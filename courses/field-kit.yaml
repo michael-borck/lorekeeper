@@ -1,8 +1,10 @@
 # Lorekeeper course registry.
 # `key` and `code` are internal provenance. They never appear in the player.
 # `title` is the learner-facing course title.
+# `theme` is the default skin: ink, pixel or storybook.
 key: field-kit
 code: DEMO
 slug: field-kit
+theme: pixel
 title: "Field Kit: The Lorekeeper Workbench"
 root: ../demo-course

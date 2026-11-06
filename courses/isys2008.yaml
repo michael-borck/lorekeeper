@@ -1,9 +1,11 @@
 # Lorekeeper course registry.
 # `key` and `code` are internal provenance. They never appear in the player.
 # `title` is the learner-facing course title.
+# `theme` is the default skin: ink, pixel or storybook.
 key: isys2008
 code: ISYS2008
 slug: signal-and-noise
+theme: pixel
 title: "Signal & Noise: An Enterprise Systems Field Guide"
 root: ../../isys2008-enterprise-technologies
 replacements:

@@ -22,6 +22,7 @@ class Unit:
     slug: str
     title: str
     root: Path
+    theme: str = "ink"
     semester: str = ""
     replacements: dict[str, str] = field(default_factory=dict)
 
@@ -58,6 +59,7 @@ def load_units() -> list[Unit]:
                 slug=str(data.get("slug") or slugify(title) or key),
                 title=title,
                 root=root.resolve(),
+                theme=str(data.get("theme", "ink")),
                 semester=str(data.get("semester", "")),
                 replacements={
                     str(old): str(new) for old, new in raw_replacements.items()

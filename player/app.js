@@ -15,6 +15,31 @@ const els = {
   toast: document.getElementById("toast"),
 };
 
+const THEME_KEY = "lorekeeper:theme";
+const THEMES = ["ink", "pixel", "storybook"];
+
+function savedTheme() {
+  try {
+    return localStorage.getItem(THEME_KEY) || "";
+  } catch {
+    return "";
+  }
+}
+
+function applyTheme(name, persist = false) {
+  const theme = THEMES.includes(name) ? name : "ink";
+  document.documentElement.dataset.theme = theme;
+  const select = document.getElementById("theme-select");
+  if (select) select.value = theme;
+  if (persist) {
+    try {
+      localStorage.setItem(THEME_KEY, theme);
+    } catch {
+      /* storage disabled */
+    }
+  }
+}
+
 const KIND_LABEL = {
   reading: "read",
   checkpoint: "quiz",
@@ -36,6 +61,10 @@ init().catch((error) => fatal(error.message || String(error)));
 
 async function init() {
   document.getElementById("reset-progress").addEventListener("click", resetProgress);
+  applyTheme(savedTheme() || "pixel", false);
+  document.getElementById("theme-select").addEventListener("change", (event) => {
+    applyTheme(event.target.value, true);
+  });
 
   let index;
   try {
@@ -68,6 +97,7 @@ async function loadCourse(slug) {
 
   state.course = course;
   state.courseBaseUrl = new URL(".", courseUrl).href;
+  applyTheme(savedTheme() || course.unit.theme || "pixel", false);
   loadProgress();
   window.LorekeeperBadges?.init();
   document.title = `${course.unit.title} · Lorekeeper`;

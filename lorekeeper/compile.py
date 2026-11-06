@@ -262,6 +262,7 @@ def compile_unit(unit: Unit, out_root: Path) -> dict:
         "unit": {
             "slug": unit.slug,
             "title": unit.title,
+            "theme": unit.theme,
         },
         "modules": modules_out,
     }

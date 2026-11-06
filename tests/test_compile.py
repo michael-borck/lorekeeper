@@ -38,6 +38,7 @@ def test_compile_isys3004_keeps_unit_repo_unchanged(tmp_path):
     assert tree_digest(unit.root) == before
     assert course["unit"]["slug"] == "ship-it"
     assert course["unit"]["title"].startswith("Ship It")
+    assert course["unit"]["theme"] == "storybook"
     assert len(course["modules"]) == 12
 
     lesson_ids = [lesson["id"] for module in course["modules"] for lesson in module["lessons"]]
@@ -125,8 +126,10 @@ def test_course_titles_and_slugs_are_thematic():
     courses = {unit.code: unit for unit in load_units()}
     assert courses["ISYS3004"].title.startswith("Ship It")
     assert courses["ISYS3004"].slug == "ship-it"
+    assert courses["ISYS3004"].theme == "storybook"
     assert courses["ISYS2008"].title.startswith("Signal & Noise")
     assert courses["ISYS2008"].slug == "signal-and-noise"
+    assert courses["ISYS2008"].theme == "pixel"
 
 
 def test_course_code_replacements_apply_to_titles(tmp_path):
