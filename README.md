@@ -219,6 +219,17 @@ lives under `content/<course>/stories/` and is copied into
 to the JSON and recompile with `inklecate` after changes. The Ship It client
 interview is the first story.
 
+## Achievements
+
+The player keeps a local badge case. No account and no server are needed. The
+twelve achievements cover first steps, checkpoints, exercises, stories, five and
+ten different lesson formats, a completed chapter, a completed course, 100 and
+500 XP, and three- and seven-day streaks.
+
+Badges are derived from the same progress record as the lessons. The dialog shows
+locked badges with their progress, and each new badge raises a toast. Reset
+progress also clears the badge case.
+
 ## What is built
 
 | Area | Status |
@@ -237,6 +248,7 @@ interview is the first story.
 | Scripted terminal | Working |
 | Ink story with `inkjs` | Working |
 | Authoring studio (`lorekeeper studio`) | Working |
+| Badges and streaks | Working |
 | XP, progress, localStorage | Working |
 | Ship It course | Complete |
 | Signal & Noise course | In progress |
@@ -248,15 +260,13 @@ interview is the first story.
 
 ## Roadmap
 
-1. Add real course overlays for the new widgets, starting with the Module 04
-   gaming diff and the Signal & Noise networking sequence.
+1. Add more real course overlays for the widgets.
 2. Add more Ink stories for incident and stakeholder scenarios.
-3. Add a badge layer for streaks, chapters and course completion.
-4. Choose the art direction and add a skin without touching lesson content.
-5. Optional: a container runner for real shell exercises, behind a separate
+3. Choose the art direction and add a skin without touching lesson content.
+4. Optional: a container runner for real shell exercises, behind a separate
    service.
-6. Optional: an LLM-backed Socratic tutor for open viva answers.
-7. Optional: export completion to an LMS.
+5. Optional: an LLM-backed Socratic tutor for open viva answers.
+6. Optional: export completion to an LMS.
 
 ## Tests
 

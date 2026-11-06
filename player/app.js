@@ -69,6 +69,7 @@ async function loadCourse(slug) {
   state.course = course;
   state.courseBaseUrl = new URL(".", courseUrl).href;
   loadProgress();
+  window.LorekeeperBadges?.init();
   document.title = `${course.unit.title} · Lorekeeper`;
   els.courseMeta.innerHTML = `
     <div class="code">course</div>
@@ -163,24 +164,27 @@ function updateStats() {
 function completeLesson(lesson, { quiet = false } = {}) {
   if (isDone(lesson.id)) return;
   state.progress.completed[lesson.id] = true;
+  window.LorekeeperBadges?.record();
   saveProgress();
   renderSidebar();
   updateStats();
   syncCompleteControls(lesson);
   if (!quiet) toast(`Lesson complete +${lesson.xp} XP`);
   else toast(`Passed. +${lesson.xp} XP`);
+  window.LorekeeperBadges?.sync(true);
 }
 
 function resetProgress() {
   if (!state.course) return;
-  if (!confirm("Reset all progress for this unit?")) return;
+  if (!confirm("Reset all progress and achievements for this course?")) return;
   state.progress = { completed: {} };
   saveProgress();
   renderSidebar();
   updateStats();
   const entry = currentEntry();
   if (entry) renderLesson(entry);
-  toast("Progress reset");
+  window.LorekeeperBadges?.reset();
+  toast("Progress and achievements reset");
 }
 
 /* Sidebar */

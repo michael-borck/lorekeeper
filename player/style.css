@@ -651,3 +651,73 @@ textarea.code.short { min-height: 110px; }
   text-transform: uppercase;
   letter-spacing: 0.08em;
 }
+
+/* Achievements ------------------------------------------------------- */
+
+#badges-button {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+}
+#badge-count {
+  color: var(--accent);
+  font-family: var(--mono);
+  font-size: 0.72rem;
+}
+.badge-dialog {
+  width: min(760px, calc(100vw - 32px));
+  max-height: min(80vh, 720px);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--panel);
+  color: var(--text);
+  padding: 22px;
+}
+.badge-dialog::backdrop { background: rgba(3, 8, 18, 0.72); }
+.badge-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+.badge-head h2 { margin: 0 0 4px; font-size: 1.25rem; }
+.badge-summary { margin: 0; color: var(--muted); font-size: 0.84rem; }
+.badge-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 10px;
+  overflow-y: auto;
+  max-height: 58vh;
+  padding-right: 4px;
+}
+.badge-card {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: #0d1626;
+  padding: 12px;
+}
+.badge-card.earned { border-color: #1d4a33; background: #0f1d17; }
+.badge-card.locked { opacity: 0.55; }
+.badge-icon {
+  flex: 0 0 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  color: var(--muted);
+  background: #0a1220;
+}
+.badge-card.earned .badge-icon { color: var(--accent); border-color: var(--accent-strong); }
+.badge-body strong { display: block; font-size: 0.9rem; margin-bottom: 3px; }
+.badge-body p { margin: 0 0 6px; color: var(--muted); font-size: 0.8rem; line-height: 1.4; }
+.badge-progress { font-family: var(--mono); font-size: 0.7rem; color: var(--accent); }
+.badge-card.locked .badge-progress { color: var(--muted); }

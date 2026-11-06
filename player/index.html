@@ -18,6 +18,7 @@
       <div class="sidebar-footer">
         <div class="xp-row"><span>XP</span><strong id="xp">0</strong></div>
         <div class="progress"><div id="progress-bar" class="progress-bar"></div></div>
+        <button id="badges-button" class="ghost small" type="button">Achievements <span id="badge-count">0</span></button>
         <button id="reset-progress" class="ghost small" type="button">Reset progress</button>
       </div>
     </aside>
@@ -34,7 +35,19 @@
 
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
+  <dialog id="badge-dialog" class="badge-dialog" aria-labelledby="badge-title">
+    <div class="badge-head">
+      <div>
+        <h2 id="badge-title">Achievements</h2>
+        <p id="badge-summary" class="badge-summary"></p>
+      </div>
+      <button id="badges-close" class="ghost small" type="button">Close</button>
+    </div>
+    <div id="badge-list" class="badge-list"></div>
+  </dialog>
+
   <script src="widgets.js"></script>
+  <script src="badges.js"></script>
   <script src="app.js"></script>
 </body>
 </html>
