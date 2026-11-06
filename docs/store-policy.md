@@ -1,7 +1,7 @@
 # Pack store policy
 
-Status: first-party and reviewed packs only. The public submission flow is the
-next step.
+Status: first-party and reviewed packs. Public submissions are accepted through
+<https://github.com/michael-borck/lorekeeper-packs>.
 
 ## Scope
 
