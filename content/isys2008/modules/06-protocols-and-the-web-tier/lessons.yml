@@ -1,0 +1,105 @@
+# Lorekeeper overlay for the enterprise systems course, Module 06.
+
+lessons:
+  - id: 06-01
+    kind: reading
+    title: Protocols and the web tier
+    source: overview.qmd
+    include:
+      - Learning objectives
+      - The week's idea
+      - Key ideas
+      - The CloudCore ticket
+
+  - id: 06-02
+    kind: reading
+    title: Read the certificate and trace the request
+    source: in-class/activity-01.qmd
+    include:
+      - "Part 1: Read the certificate"
+      - "Part 2: Trace the request"
+      - "Part 3: Break it"
+
+  - id: 06-03
+    kind: checkpoint
+    title: "Checkpoint: from name to page"
+    questions:
+      - id: q1
+        prompt: Which order describes encapsulation on the way out?
+        options:
+          - HTTP inside TCP, TCP inside IP, IP inside Ethernet
+          - IP inside HTTP, HTTP inside TCP, TCP inside Ethernet
+          - Ethernet inside IP, IP inside TCP, TCP inside HTTP
+          - TCP inside HTTP, IP inside TCP, Ethernet inside IP
+        answer: 0
+        explanation: Each layer wraps the one above it. HTTP is application data, TCP adds ports, IP adds addresses, Ethernet adds link addresses.
+      - id: q2
+        prompt: What identifies one endpoint in a TCP connection?
+        options:
+          - An address and a port
+          - A hostname and a certificate
+          - A MAC address only
+          - A DNS TTL
+        answer: 0
+        explanation: A socket is an address plus a port, for example 10.0.0.5:443.
+      - id: q3
+        prompt: What are the three steps of the TCP handshake?
+        options:
+          - SYN, SYN-ACK, ACK
+          - HELLO, READY, GO
+          - GET, POST, PUT
+          - DNS, ARP, TLS
+        answer: 0
+        explanation: The client sends SYN, the server replies SYN-ACK, the client acknowledges with ACK.
+      - id: q4
+        prompt: Where does TLS terminate in the CloudCore estate?
+        options:
+          - At the reverse proxy, which forwards plain HTTP to web
+          - At the browser only
+          - At the database
+          - At the DNS server
+        answer: 0
+        explanation: The proxy holds the certificate and decrypts. The upstream sees plain HTTP unless re-encrypted.
+      - id: q5
+        prompt: The portal shows a certificate warning. Which check is most likely to fail for a local root?
+        options:
+          - Trust: the browser does not trust the issuer
+          - The TCP handshake
+          - The HTTP method
+          - The DNS TTL
+        answer: 0
+        explanation: A local root is not in the customer's trust store, so the chain cannot be verified.
+      - id: q6
+        prompt: The proxy upstream is changed to web:81. What does the customer see, and which log is silent?
+        options:
+          - A 502 from the proxy; the web log is silent because the request never arrives
+          - A 404 from web; the proxy log is silent
+          - A DNS error; both logs are silent
+          - A certificate warning; the web log shows the request
+        answer: 0
+        explanation: The proxy cannot get a valid upstream response and returns 502. The request never reaches web, so its log is silent.
+      - id: q7
+        prompt: Why is `curl -k` not a fix for the customer warning?
+        options:
+          - It ignores the trust check for one client; it does not fix the certificate chain
+          - It renews the certificate automatically
+          - It changes the DNS record
+          - It disables HTTP
+        answer: 0
+        explanation: It bypasses verification locally. Other customers still see the warning.
+
+  - id: 06-04
+    kind: order
+    title: Trace the request
+    prompt: |
+      Put the steps in the order a customer request takes from the browser to the web tier.
+    items:
+      - Resolve the name to an address
+      - Open a TCP connection to the proxy
+      - Complete the TLS handshake
+      - Send the HTTP request to the proxy
+      - Forward the request to the upstream web service
+      - Return the response to the browser
+    explanation: |
+      Name first, then TCP, then TLS, then HTTP. The proxy terminates TLS and sends a new
+      plain HTTP request to the upstream. The response travels back through the same path.

@@ -126,7 +126,7 @@ tree before and after a build.
 | Course | Public path | Status |
 |---|---|---|
 | Ship It: Web Craft with an AI Partner | `?course=ship-it` | 12 chapters, 56 lessons |
-| Signal & Noise: An Enterprise Systems Field Guide | `?course=signal-and-noise` | 12 chapters, 33 lessons |
+| Signal & Noise: An Enterprise Systems Field Guide | `?course=signal-and-noise` | 12 chapters, 39 lessons |
 | Field Kit: The Lorekeeper Workbench | `?course=field-kit` | 10 lessons, one of every widget |
 
 A course can be as small as a set of readings and checkpoints. The engine does
@@ -390,7 +390,7 @@ key-rotation procedure are in [`docs/store-policy.md`](docs/store-policy.md).
 | Badges and streaks | Working |
 | XP, progress, localStorage | Working |
 | Ship It course | Complete |
-| Signal & Noise course | In progress, 3 chapters curated |
+| Signal & Noise course | In progress, 8 chapters curated |
 | Field Kit demo | Complete |
 | Server-side sandbox | Not built |
 | LLM-backed Socratic tutor | Not built |

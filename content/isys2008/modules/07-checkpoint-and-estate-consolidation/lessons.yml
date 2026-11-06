@@ -1,0 +1,138 @@
+# Lorekeeper overlay for the enterprise systems course, Module 07.
+
+lessons:
+  - id: 07-01
+    kind: reading
+    title: The estate as one system
+    source: overview.qmd
+    include:
+      - Learning objectives
+      - The week's idea
+      - The estate as one system
+      - Key ideas
+      - The CloudCore ticket
+
+  - id: 07-02
+    kind: reading
+    title: Map, narrate, register, run
+    source: in-class/activity-01.qmd
+    include:
+      - "Part 1: Draw the dependency map"
+      - "Part 2: Narrate the request in 60 seconds"
+      - "Part 4: Build the known-fault register"
+      - "Part 5: Write the runbook"
+
+  - id: 07-03
+    kind: checkpoint
+    title: "Checkpoint: the pod as a system"
+    questions:
+      - id: q1
+        prompt: Why can a fault in a lower layer look like a fault in an upper one?
+        options:
+          - Each layer depends on the one below it, so a lower failure propagates upward
+          - The layers are independent
+          - Upper layers are always more reliable
+          - The diagram is only cosmetic
+        answer: 0
+        explanation: A dependency graph means a name failure can look like a web failure. Evidence is how you separate them.
+      - id: q2
+        prompt: What is the difference between a symptom and a cause?
+        options:
+          - The symptom is what is reported; the cause is the condition that produced it
+          - They are the same thing
+          - The cause is always in the browser
+          - The symptom is always in the database
+        answer: 0
+        explanation: "The customer reports the portal is down. The cause might be a DNS record, a proxy upstream or a stopped service."
+      - id: q3
+        prompt: Why is a missing log entry useful evidence?
+        options:
+          - It can prove a request never reached that service
+          - It proves the service is healthy
+          - It replaces the need for a diagram
+          - It shows the DNS TTL
+        answer: 0
+        explanation: Absence is evidence. If the web log has no request, the request stopped before web.
+      - id: q4
+        prompt: What is the smallest safe change?
+        options:
+          - One reversible change, verified before the next
+          - A batch of fixes applied together
+          - A restart of every service
+          - A rebuild of the host
+        answer: 0
+        explanation: One change at a time keeps the cause traceable and the rollback simple.
+      - id: q5
+        prompt: What belongs in a known-fault register?
+        options:
+          - The fault, symptom, detection, fix, verification and how to catch it sooner
+          - Only the final status code
+          - A list of every command you ran
+          - The customer's email address
+        answer: 0
+        explanation: The register is an operational memory. It should help the next person recognise and handle the fault.
+      - id: q6
+        prompt: What makes a runbook usable by someone who did not build the estate?
+        options:
+          - Explicit start, stop, backup, restore and fault steps with no assumed knowledge
+          - A list of service names
+          - A pointer to the slides
+          - A note to ask the builder
+        answer: 0
+        explanation: If a step depends on knowledge only in your head, the runbook is not finished.
+      - id: q7
+        prompt: In the 60-second narration, which step is most often skipped?
+        options:
+          - Name resolution or the proxy re-originating the request
+          - Opening the browser
+          - Reading the response body
+          - Closing the connection
+        answer: 0
+        explanation: People describe browser to page and forget DNS, TLS termination and the plain HTTP hop to the upstream.
+
+  - id: 07-04
+    kind: viva
+    title: Narrate and diagnose
+    context: |
+      The examiner asks you to explain the estate without notes, then diagnose a fault by
+      layer. Answer out loud first, then type the short version.
+    questions:
+      - prompt: Narrate a customer request from typing the portal address to the database response.
+        strong_answer: |
+          The browser resolves portal.estate.local to an address. It opens a TCP connection
+          to the proxy, completes a TLS handshake using the proxy certificate, and sends an
+          HTTP request. The proxy terminates TLS and sends a new plain HTTP request to web.
+          The web service queries the database and returns a response, which travels back
+          through the proxy and the encrypted connection to the browser.
+        signals:
+          - label: Names the DNS step
+            pattern: "dns|name|resolve|address"
+          - label: Names TCP and TLS
+            pattern: "tcp|tls|handshake|certificate"
+          - label: Names the proxy and upstream
+            pattern: "proxy|reverse proxy|caddy|upstream"
+          - label: Names the database step
+            pattern: "database|db|postgres|query"
+          - label: Names a failure and its evidence
+            pattern: "fail|log|metric|evidence|check"
+      - prompt: The portal returns 502 after a change. What do you check, and in what order?
+        strong_answer: |
+          A 502 means the proxy could not get a valid response from the upstream. I would
+          read the proxy log first, then check the upstream address and port in the config,
+          then the web container state and its log. If the web log is silent, the request
+          never arrived. I would make one reversible change, verify it, and record the
+          evidence before changing anything else.
+        signals:
+          - label: Explains the 502
+            pattern: "502|upstream|bad gateway"
+          - label: Reads the proxy log
+            pattern: "proxy|log"
+          - label: Checks the web service
+            pattern: "web|container|service|status"
+          - label: Uses a small reversible change
+            pattern: "one|small|revert|rollback|verify|change"
+    rubric:
+      - Names the layers and the protocol on each hop.
+      - Separates the symptom from the cause.
+      - Uses evidence from the right service.
+      - Proposes one smallest safe change and verifies it.

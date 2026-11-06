@@ -1,0 +1,103 @@
+# Lorekeeper overlay for the enterprise systems course, Module 05.
+
+lessons:
+  - id: 05-01
+    kind: reading
+    title: Addressing and naming
+    source: overview.qmd
+    include:
+      - Learning objectives
+      - The week's idea
+      - Key ideas
+      - Common traps
+
+  - id: 05-02
+    kind: reading
+    title: Two resolvers, one name
+    source: in-class/activity-01.qmd
+    include:
+      - "Part 1: Addresses, subnet and route"
+      - "Part 2: Two resolvers"
+      - "Part 4: Break and fix the record"
+
+  - id: 05-03
+    kind: checkpoint
+    title: "Checkpoint: addresses, resolvers, evidence"
+    questions:
+      - id: q1
+        prompt: In 172.28.0.0/24, what is the broadcast address?
+        options:
+          - 172.28.0.255
+          - 172.28.0.0
+          - 172.28.0.1
+          - 172.28.0.254
+        answer: 0
+        explanation: The broadcast is the last address in the subnet. The first is the network address.
+      - id: q2
+        prompt: Which command uses the name service switch, checking /etc/hosts before DNS?
+        options:
+          - getent hosts
+          - dig @dns
+          - curl -k
+          - ip route
+        answer: 0
+        explanation: getent goes through NSS, which checks local files first. dig asks a DNS server directly.
+      - id: q3
+        prompt: Why does `dig @dns web` return REFUSED while `getent hosts web` works?
+        options:
+          - The estate DNS serves estate.local; web is a Docker service name
+          - The DNS server is down
+          - The web service has no IP address
+          - getent bypasses DNS entirely
+        answer: 0
+        explanation: The Docker resolver knows the Compose service name. The estate DNS only owns the estate zone.
+      - id: q4
+        prompt: What does `curl --resolve portal.estate.local:80:172.28.0.10` change?
+        options:
+          - It maps that name to that address for this request, bypassing DNS
+          - It fixes the DNS record for every client
+          - It changes the web server's certificate
+          - It adds a route to the host
+        answer: 0
+        explanation: It is a local override for one request. It proves the web tier works without proving DNS is fixed.
+      - id: q5
+        prompt: A client cached the old record. What must happen before it uses the new answer?
+        options:
+          - The TTL expires or the cache is cleared
+          - The web service restarts
+          - The certificate is renewed
+          - The client reboots the DNS server
+        answer: 0
+        explanation: Caching honors the TTL. A correct record is not visible to a client with an old cached answer.
+      - id: q6
+        prompt: Which evidence best separates a wrong DNS record from a missing service?
+        options:
+          - Compare the name failure with a direct-address request and read the resolver answer
+          - Look only at the browser history
+          - Check the host's disk size
+          - Restart the proxy
+        answer: 0
+        explanation: A wrong record can reach the wrong host or refuse on the port. The resolver answer and a direct request show which layer is involved.
+
+  - id: 05-04
+    kind: fill
+    title: Read the subnet
+    prompt: |
+      Complete the subnet facts for the estate network. Use the smallest and largest usable
+      host addresses.
+    passage: |
+      For 172.28.0.0/24:
+
+      Network address: [[1]]
+      Broadcast address: [[2]]
+      First usable host: [[3]]
+      Last usable host: [[4]]
+    blanks:
+      - answers: [172.28.0.0]
+        hint: The first address in the block.
+      - answers: [172.28.0.255]
+        hint: The last address in the block.
+      - answers: [172.28.0.1]
+        hint: One above the network address.
+      - answers: [172.28.0.254]
+        hint: One below the broadcast address.
