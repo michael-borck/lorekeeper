@@ -1,0 +1,55 @@
+# Interactive lessons appended to Part 3 of Conversation, Not Delegation.
+lessons:
+  - kind: scenario
+    title: The complex task
+    prompt: |
+      You need a research brief with a question, a method, a risk section and
+      a plain-language summary. A colleague says: "Just ask for the whole
+      thing in one prompt. It is faster." Choose your next move.
+    options:
+      - id: chain
+        label: Break the work into stages, check each handover and keep the assumptions visible
+        outcome: |
+          Each stage produces a focused output. You catch a missing constraint
+          before it becomes a premise in the next stage. The final brief is
+          slower to produce and easier to defend.
+        effects:
+          Quality: Higher
+          Handover: Checked
+          Time: Slower
+        recommended: true
+        feedback: Complex work has stages. Check the handover, not just the final draft.
+      - id: one
+        label: Ask for everything in one prompt to save time
+        outcome: |
+          The answer is broad and plausible. The method section assumes a
+          constraint you never approved, and the summary inherits it.
+        effects:
+          Speed: Fast
+          Depth: Shallow
+          Risk: Hidden
+        feedback: A single prompt forces the model to guess the whole path. The guesses compound.
+      - id: chain_no_check
+        label: Chain the prompts but paste each output straight into the next without review
+        outcome: |
+          The chain is faster and the final document is coherent. An early
+          miscount becomes an assumption in the method and is never caught.
+        effects:
+          Speed: Fast
+          Coherence: High
+          Accuracy: Unknown
+        feedback: Chaining without a check is queuing requests and hoping. The pauses are where judgement enters.
+      - id: ai_chain
+        label: Ask the AI to design the chain and run every step itself
+        outcome: |
+          The process looks structured. The evaluation still comes from the
+          same system that produced the work, so the important assumptions are
+          not independently tested.
+        effects:
+          Structure: Apparent
+          Independence: Low
+          Risk: Unchecked
+        feedback: The test must sit outside the proposed answer. A model checking itself shares its blind spots.
+    debrief: |
+      Use the smallest chain that makes the work inspectable. Put a check where
+      the dependency is introduced, and recheck downstream results after a correction.

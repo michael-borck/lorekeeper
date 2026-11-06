@@ -1,0 +1,57 @@
+# Interactive lessons appended to Part 1 of Conversation, Not Delegation.
+lessons:
+  - kind: scenario
+    title: The proposal you cannot explain
+    prompt: |
+      You used a single prompt to produce a polished funding proposal. In the
+      meeting, someone asks why you rejected the cheaper option. You cannot
+      answer without reopening the chat. Choose your next move.
+    options:
+      - id: rebuild
+        label: Rebuild the reasoning with a first attempt, the conversation loop and a check you can explain
+        outcome: |
+          You reconstruct the options, compare their costs and constraints,
+          and identify the assumption the proposal depends on. The next
+          conversation is slower, and you can defend the decision without
+          reading a transcript.
+        effects:
+          Understanding: Built
+          Decision: Defensible
+          Time: Slower now
+        recommended: true
+        feedback: A conversation gives you understanding. A single prompt gives you an answer you may not be able to defend.
+      - id: regenerate
+        label: Ask the AI to explain why it chose the recommendation
+        outcome: |
+          The explanation is another confident output. It may help you find
+          the reasoning, but it does not give you the source costs, the
+          client's constraints or a comparison you can defend.
+        effects:
+          Understanding: Outsourced
+          Evidence: Missing
+          Risk: High
+        feedback: An explanation is another output. Check it against sources and your own reasoning.
+      - id: accept
+        label: Accept the proposal because it reads well and the meeting is tomorrow
+        outcome: |
+          The proposal goes forward. The first challenging question exposes
+          that the decision is not yours to explain, and the client loses
+          confidence in the work.
+        effects:
+          Speed: Fast
+          Ownership: Absent
+          Trust: At risk
+        feedback: Fluency is not understanding. The delegation trap is accepting a result you cannot defend.
+      - id: another
+        label: Ask a different AI for a second opinion and use that
+        outcome: |
+          A second model produces another plausible answer. You now have two
+          outputs and no more understanding of the trade-off than before.
+        effects:
+          Options: More
+          Understanding: Unchanged
+          Evidence: Still missing
+        feedback: More outputs are not more understanding. The missing work is the comparison and the source evidence.
+    debrief: |
+      Keep the question, the correction and the evidence visible. Rebuild the
+      reasoning until you can explain the decision and name what would change it.

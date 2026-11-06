@@ -246,6 +246,22 @@ def _substantiate_dont_assume() -> dict:
     )
 
 
+def _conversation_not_delegation() -> dict:
+    root = engine_root().parents[2] / "books" / "conversation-not-delegation"
+    if not root.is_dir():
+        raise FileNotFoundError(f"conversation source not found: {root}")
+    return build_book_pack(
+        root,
+        unit_id="conversation-not-delegation",
+        title="Conversation, Not Delegation: How to Think With AI, Not Just Use It",
+        theme="storybook",
+        tags=["conversation", "ai", "judgement", "prompting", "critical-thinking"],
+        level="beginner",
+        pitch="Think with AI rather than delegating to it: keep the question, the correction and the evidence visible.",
+        parts="1-4",
+    )
+
+
 def _write_pack(out: Path, pack: dict, key) -> dict:
     packs_dir = out / "packs"
     packs_dir.mkdir(parents=True, exist_ok=True)
@@ -298,6 +314,7 @@ def build_store(
         _the_human_edge(),
         _test_the_claim(),
         _substantiate_dont_assume(),
+        _conversation_not_delegation(),
     ]
     catalog_packs = [_write_pack(out, pack, key) for pack in packs]
     catalog = {

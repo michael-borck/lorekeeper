@@ -25,4 +25,5 @@ def test_site_builds_with_player_build_and_cname(tmp_path: Path):
     assert (out / "store" / "packs" / "the-human-edge.json").is_file()
     assert (out / "store" / "packs" / "test-the-claim.json").is_file()
     assert (out / "store" / "packs" / "substantiate-dont-assume.json").is_file()
+    assert (out / "store" / "packs" / "conversation-not-delegation.json").is_file()
     assert (out / "CNAME").read_text().strip() == "lorekeeper.borck.education"

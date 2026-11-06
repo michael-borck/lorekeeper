@@ -1,0 +1,68 @@
+# Interactive lessons appended to Part 2 of Conversation, Not Delegation.
+lessons:
+  - kind: checkpoint
+    title: "Checkpoint: the principles"
+    questions:
+      - id: q1
+        prompt: What does AI Last mean?
+        options:
+          - Do enough thinking to know what to ask, then bring AI in on the sticking point
+          - Never use AI until you have finished the whole task
+          - Always ask AI first and check later
+          - Use AI only for the final draft
+        answer: 0
+        explanation: "AI Last is a default for deliberate work, not a ban. It preserves the first attempt and the ability to evaluate the help."
+      - id: q2
+        prompt: What are the four stages of the Conversation Loop?
+        options:
+          - Brainstorm, Ideate, Iterate, Amplify
+          - Ask, Copy, Paste, Done
+          - Plan, Prompt, Publish, Repeat
+          - Read, Write, Check, Send
+        answer: 0
+        explanation: "The loop keeps the purpose, alternatives, corrections and owned result visible."
+      - id: q3
+        prompt: What is the genuine sticking point?
+        options:
+          - The specific part you cannot reason through after your own attempt and tools
+          - The whole task, described as hard
+          - The first thing the AI suggests
+          - The last sentence of the output
+        answer: 0
+        explanation: "Name the difficulty precisely. A vague request produces a vague answer."
+      - id: q4
+        prompt: What does VET stand for?
+        options:
+          - Verify, Explain, Test
+          - Value, Effort, Time
+          - Validate, Edit, Transmit
+          - View, Evaluate, Trust
+        answer: 0
+        explanation: "Verify the source, explain it in your own words and test whether it holds under changed conditions."
+      - id: q5
+        prompt: Which AI output is most dangerous?
+        options:
+          - The one that sounds right, fits your expectations and is subtly wrong
+          - The obvious hallucination
+          - The garbled sentence
+          - The answer that feels wrong
+        answer: 0
+        explanation: "Obvious errors trigger suspicion. Fluent, plausible errors get past an unchecked reader."
+      - id: q6
+        prompt: What should you do when a correction changes an early assumption?
+        options:
+          - Recheck the downstream work that depended on it
+          - Only edit the final sentence
+          - Ignore it if the final draft sounds good
+          - Ask the AI to confirm the old assumption
+        answer: 0
+        explanation: "An early error can become a later assumption. Check where the dependency was introduced."
+      - id: q7
+        prompt: What is the completion test for a conversation?
+        options:
+          - The task is satisfied, consequential claims are checked and you can explain the change
+          - The AI has produced five more suggestions
+          - The answer is longer than the first one
+          - You have used the maximum number of turns
+        answer: 0
+        explanation: "More turns are not inherently better. Stop when the useful work is done or the next step needs evidence or authority."
