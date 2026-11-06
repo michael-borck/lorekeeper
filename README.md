@@ -356,8 +356,9 @@ Public submissions go through the review queue at
 <https://github.com/michael-borck/lorekeeper-packs>. The store ships
 **Pocket Incidents: The 3AM Page**, a short incident-response course,
 **Information Security: A Field Guide**, **Audit and Control: A Field Guide**,
-and **Assume Breach: A First Course in Defensive Security**, built from the
-open-access book. The player fetches `store/catalog.json`,
+**Assume Breach: A First Course in Defensive Security**, and **Speak Software:
+Programming at the Natural-Language Layer**, built from the open-access books.
+The player fetches `store/catalog.json`,
 checks the pack SHA-256 and Ed25519 signature, validates the pack and stores it
 locally.
 

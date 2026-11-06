@@ -135,6 +135,21 @@ def _assume_breach() -> dict:
     )
 
 
+def _speak_software() -> dict:
+    root = engine_root().parents[2] / "books" / "speak-software"
+    if not root.is_dir():
+        raise FileNotFoundError(f"speak software source not found: {root}")
+    return build_book_pack(
+        root,
+        unit_id="speak-software",
+        title="Speak Software: Programming at the Natural-Language Layer",
+        theme="pixel",
+        tags=["ai", "programming", "agents", "testing"],
+        level="beginner",
+        pitch="Program at the natural-language layer: specify, verify, decompose and ship software with an AI agent.",
+    )
+
+
 def _write_pack(out: Path, pack: dict, key) -> dict:
     packs_dir = out / "packs"
     packs_dir.mkdir(parents=True, exist_ok=True)
@@ -180,6 +195,7 @@ def build_store(
         _information_security(build_root),
         _audit_and_control(build_root),
         _assume_breach(),
+        _speak_software(),
     ]
     catalog_packs = [_write_pack(out, pack, key) for pack in packs]
     catalog = {

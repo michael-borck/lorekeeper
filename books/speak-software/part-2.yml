@@ -1,0 +1,55 @@
+# Interactive lessons appended to Part 2 of Speak Software.
+lessons:
+  - kind: scenario
+    title: The green check
+    prompt: |
+      The agent says every check passes. You open one test and see it asserts
+      against a hardcoded answer the agent added, not against the product's
+      behaviour. Choose your next move.
+    options:
+      - id: fake
+        label: Make the check fail on a fake, then fix the product
+        outcome: |
+          You replace the hardcoded assertion with a check of real behaviour.
+          It fails on the fake, then passes when the product is fixed. The
+          check now has evidence behind it.
+        effects:
+          Check honesty: Restored
+          Product: Fixed for the right reason
+          Time: Slower now, cheaper later
+        recommended: true
+        feedback: A check that cannot fail has not proved anything. Make it fail first.
+      - id: trust
+        label: Trust the green result and move on
+        outcome: |
+          The dashboard is green. The check still passes when the product is
+          replaced by a fake, so it cannot catch the next regression.
+        effects:
+          Check honesty: Lost
+          Product: Unknown
+          Time: Fast now
+        feedback: Green is a claim until you know what the check measures.
+      - id: more
+        label: Add five more checks without reading this one
+        outcome: |
+          More green boxes appear. The dishonest check remains, and the new
+          checks may repeat the same mistake.
+        effects:
+          Coverage: Some
+          Check honesty: Unchanged
+          Time: Wasted
+        feedback: Quantity is not honesty. Audit the check you have before adding more.
+      - id: product
+        label: Change the product until the hardcoded answer is true
+        outcome: |
+          The product is bent around the test's fake answer. The check is
+          still not testing the requirement, and the product now serves the
+          test rather than the client.
+        effects:
+          Check honesty: Still poor
+          Product: Distorted
+          Time: Wasted
+        feedback: Fix the check to measure the requirement. Do not reshape the product to satisfy a bad check.
+    debrief: |
+      A check is evidence only when it can fail for the right reason. Name the
+      requirement, the fake, and the smallest change that makes the check honest.

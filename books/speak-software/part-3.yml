@@ -1,0 +1,59 @@
+# Interactive lessons appended to Part 3 of Speak Software.
+lessons:
+  - kind: checkpoint
+    title: "Checkpoint: taste, gaps and the supply chain"
+    questions:
+      - id: q1
+        prompt: What is the taste test in this book?
+        options:
+          - Judging the build against the client's brief and tasks, not your preferences
+          - Choosing the design you personally like best
+          - Scoring the code style
+          - Copying a competitor's site
+        answer: 0
+        explanation: The brief and the customer task are the standard. Taste is judgement with a reason.
+      - id: q2
+        prompt: What is the "last 20%"?
+        options:
+          - The integration, polish, checks and handover that turn a demo into a product
+          - The final 20 lines of code
+          - A discount for the client
+          - The last sprint before a holiday
+        answer: 0
+        explanation: The last 20% is the part that makes the work reliable and operable, not more features.
+      - id: q3
+        prompt: What makes a skill different from a one-off prompt?
+        options:
+          - It is durable, versioned and says when to use it, what it needs, and what done means
+          - It is longer
+          - It is hidden from the team
+          - It cannot be reused
+        answer: 0
+        explanation: A skill is a procedure kept in the repository, with inputs, steps, limits and a completion test.
+      - id: q4
+        prompt: Why does the supply chain matter when an agent adds dependencies?
+        options:
+          - Every dependency adds provenance, licensing, patching and failure risk
+          - Dependencies are always free
+          - More dependencies always mean better quality
+          - The agent guarantees every package is safe
+        answer: 0
+        explanation: The bill of materials is part of the product. Know what you ship and who maintains it.
+      - id: q5
+        prompt: What should you do when the build is technically working but the client would not pay for it?
+        options:
+          - Name the gap against the brief, choose the three fixes that matter, and verify them
+          - Add more features
+          - Rewrite it from scratch
+          - Ignore the client
+        answer: 0
+        explanation: The critique chooses and prioritises. More features do not close a taste or task gap.
+      - id: q6
+        prompt: What does "what would change my mind" add to a judgement?
+        options:
+          - A condition that would make the decision revisable
+          - A way to avoid deciding
+          - A list of personal preferences
+          - A promise that nothing will change
+        answer: 0
+        explanation: A good judgement names the evidence that would overturn it.

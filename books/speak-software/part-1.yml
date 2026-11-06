@@ -1,0 +1,68 @@
+# Interactive lessons appended to Part 1 of Speak Software.
+lessons:
+  - kind: checkpoint
+    title: "Checkpoint: the department of one"
+    questions:
+      - id: q1
+        prompt: What is the "department of one"?
+        options:
+          - One brilliant, tireless AI employee that you manage
+          - A team of ten junior developers
+          - A code editor with no AI
+          - A single computer with no network
+        answer: 0
+        explanation: "The agent is the employee. You are the manager: brief, check, record and decide."
+      - id: q2
+        prompt: What does "if it is not in the repository, it does not exist" mean?
+        options:
+          - The brief, decisions, checks and code must live in versioned files
+          - The chat is the only record you need
+          - You should never use a repository
+          - Only the final code matters
+        answer: 0
+        explanation: The chat is where you talk. The repository is where the work is kept, reviewed and recovered.
+      - id: q3
+        prompt: What does a good brief add that "make a website" does not?
+        options:
+          - Audience, purpose, constraints and a definition of done
+          - More adjectives
+          - A longer chat history
+          - A request to work faster
+        answer: 0
+        explanation: A brief gives the agent something to be measured against.
+      - id: q4
+        prompt: What is the demo illusion?
+        options:
+          - A polished demo can hide missing reliability, depth or checks
+          - A demo always proves production readiness
+          - A demo is more important than the code
+          - A demo cannot be shown to a client
+        answer: 0
+        explanation: A demo shows a path through the product. It does not show the unhappy paths, the checks or the maintenance.
+      - id: q5
+        prompt: What belongs in a first specification?
+        options:
+          - Purpose, users, top tasks, constraints and checkable acceptance criteria
+          - Only the colour palette
+          - A list of every library the agent likes
+          - The final marketing copy
+        answer: 0
+        explanation: The spec records what done means and what the work must satisfy.
+      - id: q6
+        prompt: Why keep the rejected version and the decision record?
+        options:
+          - So the next person can see what changed, why, and what was considered
+          - To make the repository larger
+          - To avoid writing checks
+          - To hide mistakes
+        answer: 0
+        explanation: The record is operational memory and audit evidence. It is also how you recover a good idea you rejected too early.
+      - id: q7
+        prompt: What is the manager's job in one sentence?
+        options:
+          - Brief the work, verify the result, keep the record and make the decision
+          - Type every line of code by hand
+          - Let the agent decide what the product is
+          - Ship without checking, then fix complaints
+        answer: 0
+        explanation: The agent builds features. You build the sequence, the checks and the judgement.

@@ -1,0 +1,53 @@
+# Interactive lessons appended to Part 4 of Speak Software.
+lessons:
+  - kind: scenario
+    title: The fog request
+    prompt: |
+      A client says: "We need the whole ordering thing." The scope is foggy,
+      the launch is close, and the agent is eager to build everything at once.
+      Choose the sequence you would defend.
+    options:
+      - id: stages
+        label: Interview, split into checkable stages, land one at a time
+        outcome: |
+          The fog becomes a sequence. Each stage is briefed, built, checked and
+          committed before the next. The client sees progress on real ground.
+        effects:
+          Delivery: Predictable
+          Quality: Verified per stage
+          Speed: Slower to start, faster to trust
+        recommended: true
+        feedback: The agent builds features; you build the sequence. Small verified stages beat one big prompt.
+      - id: big
+        label: Give the agent the whole request in one prompt
+        outcome: |
+          The agent produces a large, plausible system. The parts interlock in
+          ways nobody can inspect, and the first user finds the gaps.
+        effects:
+          Delivery: Fast demo
+          Quality: Unknown
+          Risk: High
+        feedback: A big prompt produces the confident average of a big thing.
+      - id: parallel
+        label: Build every stage in parallel to save time
+        outcome: |
+          Several agents work at once. The stages conflict, the checks assume
+          different foundations, and integration becomes the project.
+        effects:
+          Delivery: Looks fast
+          Quality: Hard to verify
+          Risk: Rework
+        feedback: Parallel work multiplies unverified assumptions. Sequence before speed.
+      - id: ship
+        label: Skip the audit and ship what works
+        outcome: |
+          The happy path ships. The known gaps and the failed checks go out with
+          it, and the client discovers them one customer at a time.
+        effects:
+          Delivery: Today
+          Quality: Unknown
+          Trust: At risk
+        feedback: A ship is not proof. Audit the evidence before the customer does.
+    debrief: |
+      Name the stages, the check that lands each one, and the evidence you would
+      show before shipping. The sequence is the management system.
