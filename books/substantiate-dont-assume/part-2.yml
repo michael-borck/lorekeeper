@@ -1,0 +1,121 @@
+# Interactive lessons appended to Act II of Substantiate, Don't Assume.
+lessons:
+  - kind: checkpoint
+    title: "Checkpoint: prove the opinion"
+    questions:
+      - id: q1
+        prompt: What is the difference between sufficiency and appropriateness of evidence?
+        options:
+          - Sufficiency is how much evidence is needed; appropriateness is its relevance and reliability
+          - Sufficiency is relevance; appropriateness is quantity
+          - They are the same
+          - Sufficiency is for documents; appropriateness is for interviews
+        answer: 0
+        explanation: "Evaluate both against the assertion, risk, period and intended reliance."
+      - id: q2
+        prompt: What does a census remove?
+        options:
+          - Selection-based sampling uncertainty for the recorded population
+          - Missing-population error
+          - Recording error
+          - Interpretation error
+        answer: 0
+        explanation: "A census tests every recorded item. It does not prove the population is complete or the records are correct."
+      - id: q3
+        prompt: What can a SHA-256 digest prove?
+        options:
+          - That the item matches the recorded digest, not that the original extract was complete or truthful
+          - That the evidence is complete
+          - That the collector was honest
+          - That the control is effective
+        answer: 0
+        explanation: "A digest detects change relative to the recorded digest. It does not establish provenance or completeness."
+      - id: q4
+        prompt: What is the difference between compliance and effectiveness?
+        options:
+          - Compliance is meeting the requirement; effectiveness is whether the control achieves its objective
+          - Compliance is technical; effectiveness is legal
+          - They are the same
+          - Compliance is optional; effectiveness is mandatory
+        answer: 0
+        explanation: "A policy can be followed and still fail to manage the risk. Audit both design and operation."
+      - id: q5
+        prompt: What does the 5C+R finding format add to the five Cs?
+        options:
+          - A recommendation and management response, separating correction from corrective action
+          - A sixth control
+          - A cost estimate
+          - A certification decision
+        answer: 0
+        explanation: "The R records proposed corrective action and management's response. Correction fixes the instance; corrective action addresses recurrence."
+      - id: q6
+        prompt: What should change a finding's status?
+        options:
+          - Evidence of the corrective action operating, such as a retest with sufficient evidence
+          - A management promise to fix it
+          - A new policy document
+          - The passage of time
+        answer: 0
+        explanation: "Show the retest before changing the status. A plan is not verified operation."
+      - id: q7
+        prompt: What is the difference between a readiness opinion and certification?
+        options:
+          - A readiness opinion helps management prepare; a certification body makes its own decision
+          - A readiness opinion is certification
+          - Certification is an internal audit
+          - There is no difference
+        answer: 0
+        explanation: "The auditor can recommend deferral or preparation. The certification body decides certification."
+  - kind: scenario
+    title: The board asks "are we ready?"
+    prompt: |
+      The board asks whether Tessera is ready for Stage 2 certification.
+      Findings remain open: access retest incomplete, privacy records missing,
+      recovery missed its targets and supplier reliance is incomplete. The CTO
+      says the fixes are planned. Choose the opinion.
+    options:
+      - id: defer
+        label: Recommend deferring Stage 2, naming the barriers and the evidence needed to reconsider
+        outcome: |
+          The opinion is clear and bounded. It separates closed issues from
+          open findings and names what would change the recommendation. The
+          board can decide whether to fund the remediation.
+        effects:
+          Opinion: Defensible
+          Board decision: Clear
+          Certification: Not implied
+        recommended: true
+        feedback: Not ready is useful when it names the barriers and the evidence needed to reconsider.
+      - id: ready
+        label: Say Tessera is ready because management has plans to fix the findings
+        outcome: |
+          The opinion relies on promises rather than verified operation. The
+          board hears assurance the evidence does not support.
+        effects:
+          Opinion: Unsupported
+          Board decision: Misled
+          Risk: High
+        feedback: A plan is not a retest. Status changes on evidence, not intention.
+      - id: notready
+        label: Say Tessera is not ready without naming the barriers
+        outcome: |
+          The board knows the answer but not what to do. The opinion is
+          defensible in direction and weak in use.
+        effects:
+          Opinion: Blunt
+          Board decision: Stalled
+          Action: Unclear
+        feedback: An opinion should name the barriers and the evidence needed to reconsider.
+      - id: cto
+        label: Accept the CTO's assurance and issue a clean readiness statement
+        outcome: |
+          The report repeats management's position and ignores the open
+          findings. It is no longer an independent opinion.
+        effects:
+          Independence: Compromised
+          Evidence: Ignored
+          Trust: Lost
+        feedback: The auditor's value is the willingness to deliver the inconvenient answer.
+    debrief: |
+      State the opinion plainly, bound it to the evidence and name what would
+      change it. Readiness is not certification, and a plan is not a retest.

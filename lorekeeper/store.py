@@ -230,6 +230,22 @@ def _test_the_claim() -> dict:
     )
 
 
+def _substantiate_dont_assume() -> dict:
+    root = engine_root().parents[2] / "books" / "substantiate-dont-assume"
+    if not root.is_dir():
+        raise FileNotFoundError(f"substantiate source not found: {root}")
+    return build_book_pack(
+        root,
+        unit_id="substantiate-dont-assume",
+        title="Substantiate, Don't Assume: Why the Auditor's Opinion Matters More Than Ever in the Age of AI",
+        theme="storybook",
+        tags=["audit", "assurance", "risk", "evidence", "ai"],
+        level="intermediate",
+        pitch="Test the claim, weigh the evidence and form a defensible audit opinion.",
+        parts="1-2",
+    )
+
+
 def _write_pack(out: Path, pack: dict, key) -> dict:
     packs_dir = out / "packs"
     packs_dir.mkdir(parents=True, exist_ok=True)
@@ -281,6 +297,7 @@ def build_store(
         _follow_the_trace(),
         _the_human_edge(),
         _test_the_claim(),
+        _substantiate_dont_assume(),
     ]
     catalog_packs = [_write_pack(out, pack, key) for pack in packs]
     catalog = {

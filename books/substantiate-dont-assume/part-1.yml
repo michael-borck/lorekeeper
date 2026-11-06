@@ -1,0 +1,121 @@
+# Interactive lessons appended to Act I of Substantiate, Don't Assume.
+lessons:
+  - kind: checkpoint
+    title: "Checkpoint: engage the audit"
+    questions:
+      - id: q1
+        prompt: What are the three parts of an audit mandate?
+        options:
+          - Who engaged you, the criteria you audit against, and the opinion you will deliver
+          - The fee, the deadline and the report template
+          - The tools, the sample and the finding
+          - The client, the vendor and the regulator
+        answer: 0
+        explanation: "The mandate is scoped to a party, a criteria set and an opinion. It does not license an unlimited search."
+      - id: q2
+        prompt: What is the difference between independence and objectivity?
+        options:
+          - Independence is the fact of being free from compromising interests; objectivity is the state of mind
+          - Independence is a feeling; objectivity is a rule
+          - Independence is about tools; objectivity is about evidence
+          - They are the same thing
+        answer: 0
+        explanation: "Independence can be checked from outside. Objectivity needs safeguards and review throughout the engagement."
+      - id: q3
+        prompt: Which control type stops something going wrong?
+        options:
+          - Preventive
+          - Detective
+          - Corrective
+          - Compensating
+        answer: 0
+        explanation: "Preventive controls stop an event. Detective controls notice it. Corrective controls recover from it."
+      - id: q4
+        prompt: What is residual risk?
+        options:
+          - The risk that remains after treatment
+          - The risk before any treatment
+          - The risk the auditor creates
+          - The risk in the audit fee
+        answer: 0
+        explanation: "Residual risk is what remains after avoidance, mitigation, transfer or acceptance."
+      - id: q5
+        prompt: What are the four planning primitives?
+        options:
+          - Objective, criteria, scope and materiality
+          - Budget, schedule, team and tools
+          - Policy, process, control and test
+          - Finding, rating, report and opinion
+        answer: 0
+        explanation: "The objective is the question, criteria define good, scope draws the fence and materiality decides what matters."
+      - id: q6
+        prompt: What is the difference between coverage and materiality?
+        options:
+          - Coverage asks whether required areas were addressed; materiality decides how results affect the conclusion and priorities
+          - Coverage is about money; materiality is about time
+          - Coverage is optional; materiality is mandatory
+          - They mean the same thing
+        answer: 0
+        explanation: "Maintain complete coverage of required areas, then use materiality to prioritise the report and decision."
+      - id: q7
+        prompt: Why should a vague "quick health check" be clarified before acceptance?
+        options:
+          - It has no boundary, criteria or definition of done, so it cannot support a defensible opinion
+          - It is too expensive
+          - It requires too many tools
+          - It is always a sign of fraud
+        answer: 0
+        explanation: "Replace the open-ended ask with an objective, criteria, scope, materiality and an engagement letter."
+  - kind: scenario
+    title: The quick health check
+    prompt: |
+      Tessera's CTO asks for "a quick health check" before a certification
+      push. The request has no boundary, criteria or definition of done. The
+      board wants an answer in four weeks. Choose your next move.
+    options:
+      - id: scope
+        label: Turn it into a scoped readiness audit with objective, criteria, scope, materiality and an engagement letter
+        outcome: |
+          The engagement has a boundary and a definition of done. Tessera
+          understands what will be assessed, what will not, and what evidence
+          is required. The opinion will be limited, but it will be defensible.
+        effects:
+          Scope: Bounded
+          Evidence: Planned
+          Opinion: Defensible
+        recommended: true
+        feedback: A quick health check is not an audit until it has an objective, criteria, scope and materiality.
+      - id: accept
+        label: Accept the open-ended request and start reviewing documents
+        outcome: |
+          The work expands as every document suggests another question. The
+          report arrives late, covers everything and answers nothing.
+        effects:
+          Scope: Unbounded
+          Time: Overrun
+          Opinion: Vague
+        feedback: Scope creep is not thoroughness. It is an engagement without a finish line.
+      - id: all
+        label: Put every ISO 27001 control in scope to look thorough
+        outcome: |
+          The scope looks ambitious. The team cannot test it in four weeks, so
+          the evidence thins and the report becomes a document review.
+        effects:
+          Coverage: Wide
+          Depth: Shallow
+          Risk: Hidden
+        feedback: A broad scope can still have priorities. A short deadline is not permission to omit required coverage.
+      - id: soa
+        label: Rely on Tessera's Statement of Applicability as the evidence
+        outcome: |
+          The SoA tells you what Tessera claims. It does not show whether the
+          controls operate. The report repeats management's position.
+        effects:
+          Speed: Fast
+          Evidence: Thin
+          Assurance: False
+        feedback: The SoA is an orientation tool, not the audit.
+    debrief: |
+      Fix the objective, criteria, scope and materiality before fieldwork.
+      Then put them in an engagement letter. The opinion follows the evidence,
+      not the deadline.

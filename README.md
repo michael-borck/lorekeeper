@@ -361,8 +361,9 @@ Programming at the Natural-Language Layer**, **Build Web, Guide AI:
 Business Web Development with AI**, **Frame the System, Guide the AI:
 Systems Analysis and Design in the AI Era**, and **Follow the Trace, Prove the
 Case: Digital Forensics in Practice**, and **The Human Edge: Using AI with
-Judgement**, and **Test the Claim, Rate the Control: A Tessera Audit Workbook**.
-The player fetches `store/catalog.json`,
+Judgement**, **Test the Claim, Rate the Control: A Tessera Audit Workbook**, and
+**Substantiate, Don't Assume: Why the Auditor's Opinion Matters More Than Ever
+in the Age of AI**. The player fetches `store/catalog.json`,
 checks the pack SHA-256 and Ed25519 signature, validates the pack and stores it
 locally.
 
