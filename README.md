@@ -357,9 +357,9 @@ Public submissions go through the review queue at
 **Pocket Incidents: The 3AM Page**, a short incident-response course,
 **Information Security: A Field Guide**, **Audit and Control: A Field Guide**,
 **Assume Breach: A First Course in Defensive Security**, **Speak Software:
-Programming at the Natural-Language Layer**, and **Build Web, Guide AI:
-Business Web Development with AI**, built from the open-access books.
-The player fetches `store/catalog.json`,
+Programming at the Natural-Language Layer**, **Build Web, Guide AI:
+Business Web Development with AI**, and **Frame the System, Guide the AI:
+Systems Analysis and Design in the AI Era**. The player fetches `store/catalog.json`,
 checks the pack SHA-256 and Ed25519 signature, validates the pack and stores it
 locally.
 

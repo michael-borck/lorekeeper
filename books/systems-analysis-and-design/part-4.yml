@@ -1,0 +1,68 @@
+# Interactive lessons appended to Part 4 of Frame the System, Guide the AI.
+lessons:
+  - kind: checkpoint
+    title: "Checkpoint: defend and hand over"
+    questions:
+      - id: q1
+        prompt: What is the traceability chain?
+        options:
+          - Goal, requirement, model, decision, check, evidence
+          - Screen, button, database, server, log
+          - Vendor, contract, invoice, renewal
+          - Idea, slide, meeting, launch
+        answer: 0
+        explanation: "The chain shows why the system exists and what evidence supports each decision."
+      - id: q2
+        prompt: What belongs in an AI register?
+        options:
+          - Model version, prompt version, evaluation set, threshold, review owner and incidents
+          - Only the model name
+          - The vendor's marketing page
+          - The full prompt history in the chat window
+        answer: 0
+        explanation: "The register answers which system produced an output and what evidence existed at the time."
+      - id: q3
+        prompt: Why is a monthly evaluation needed after launch?
+        options:
+          - The model, data, prompts and user behaviour can change after acceptance
+          - To justify the licence fee
+          - To replace the runbook
+          - Because dashboards are required
+        answer: 0
+        explanation: "A system tested at launch is not necessarily the system running six months later."
+      - id: q4
+        prompt: What must a handover fallback include?
+        options:
+          - Who does the task, what they use and how quickly when the model is unavailable or wrong
+          - A promise that the model will not fail
+          - A link to the vendor's status page
+          - A note to call the developer
+        answer: 0
+        explanation: "A fallback is a workable process with an owner, not an apology."
+      - id: q5
+        prompt: Which is an outcome measure for the tool library?
+        options:
+          - Double bookings per month and volunteer hours on availability calls
+          - Page views and login count
+          - Number of features shipped
+          - Model parameters
+        answer: 0
+        explanation: "Outcome measures come from the problem statement, not from usage vanity metrics."
+      - id: q6
+        prompt: What makes a monitoring metric a control?
+        options:
+          - A threshold, an owner and an action when it is crossed
+          - A colourful chart
+          - A daily email with no owner
+          - A number on a slide
+        answer: 0
+        explanation: "A metric without an action is a dashboard. A control has a decision attached."
+      - id: q7
+        prompt: What is the last 20%?
+        options:
+          - The operational work that makes the system runnable, supportable and recoverable
+          - The final 20 features
+          - The last sprint before launch
+          - The remaining code comments
+        answer: 0
+        explanation: "The last 20% turns a working build into a system someone else can operate."

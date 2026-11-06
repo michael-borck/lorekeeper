@@ -1,0 +1,59 @@
+# Interactive lessons appended to Part 1 of Frame the System, Guide the AI.
+lessons:
+  - kind: scenario
+    title: The synthetic stakeholder
+    prompt: |
+      The committee wants an AI assistant for the tool library. An agent has
+      produced a stakeholder map, a scope statement and a list of needs. The
+      document is clear, confident and complete-looking. Choose your next move.
+    options:
+      - id: evidence
+        label: Interview the volunteers, treasurer and an accessibility user, then test the boundary
+        outcome: |
+          The interviews contradict part of the generated map. Volunteers
+          do not want the assistant to confirm bookings, the treasurer needs
+          deposit status in the answer, and the accessibility user cannot
+          use the proposed chat widget. You revise the scope and the human
+          decision before design starts.
+        effects:
+          Evidence: Real work, not simulation
+          Scope: Revised before build
+          Risk: Visible
+        recommended: true
+        feedback: A generated stakeholder map is a rehearsal. The evidence comes from the people who do the work.
+      - id: accept
+        label: Accept the generated map because it covers the obvious roles
+        outcome: |
+          The build follows a plausible model of the work. The desk still
+          keeps the paper diary because the assistant confirms bookings
+          without the volunteer's authority.
+        effects:
+          Evidence: Synthetic
+          Scope: Plausible but wrong
+          Risk: Discovered at launch
+        feedback: Fluency is not evidence. The missing stakeholder is usually the one who keeps the current system alive.
+      - id: personas
+        label: Ask the agent to generate five more detailed personas
+        outcome: |
+          The document grows. The personas disagree in interesting ways, but
+          none of them is a real volunteer, and the conflicts remain invented.
+        effects:
+          Detail: Higher
+          Evidence: Still synthetic
+          Risk: Unchanged
+        feedback: More simulation is still simulation. Use it to prepare questions, then go and ask them.
+      - id: survey
+        label: Survey members only, because they are the largest group
+        outcome: |
+          The survey captures member preferences and misses the desk
+          workflow, the treasurer's reconciliation and the support burden.
+          The largest group is not the whole system.
+        effects:
+          Coverage: Partial
+          Evidence: Skewed
+          Risk: Operational
+        feedback: Stakeholder analysis includes the people who run and support the system, not only its largest user group.
+    debrief: |
+      Use AI to generate candidate stakeholders, questions and conflicts.
+      Then test the map against real work. The boundary decision belongs to
+      the people who will live with it.

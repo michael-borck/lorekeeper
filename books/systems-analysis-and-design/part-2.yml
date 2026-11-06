@@ -1,0 +1,68 @@
+# Interactive lessons appended to Part 2 of Frame the System, Guide the AI.
+lessons:
+  - kind: checkpoint
+    title: "Checkpoint: requirements as evidence"
+    questions:
+      - id: q1
+        prompt: What is the difference between a functional requirement and a business rule?
+        options:
+          - A functional requirement describes observable behaviour; a business rule constrains behaviour across use cases
+          - A functional requirement is technical; a business rule is a preference
+          - A business rule is a feature; a functional requirement is a policy
+          - There is no useful difference
+        answer: 0
+        explanation: "Keep behaviour and rules separate so each can be changed and tested without rewriting the other."
+      - id: q2
+        prompt: Which statement is a quality scenario rather than a vague quality?
+        options:
+          - On the desk laptop over library Wi-Fi, the booking view shows available tools within 3 seconds for 90% of requests
+          - The booking page must be fast
+          - The system must be user-friendly
+          - The assistant must be intelligent
+        answer: 0
+        explanation: "A quality scenario names the source, stimulus, environment, response and measure."
+      - id: q3
+        prompt: What does an AI accuracy requirement need before it can be checked?
+        options:
+          - A named evaluation set, metric, threshold and population
+          - A statement that the model is accurate
+          - A successful demonstration
+          - A larger model
+        answer: 0
+        explanation: "Accuracy is meaningless without the set it was measured on and the slice that matters."
+      - id: q4
+        prompt: Why keep a held-out portion of the evaluation set?
+        options:
+          - So the evidence tests the system on cases it was not tuned against
+          - To make the evaluation smaller
+          - To hide failures from the vendor
+          - To avoid writing acceptance criteria
+        answer: 0
+        explanation: "A set used to tune the prompt is a rehearsal. A held-out set is the exam."
+      - id: q5
+        prompt: Which evidence is strongest for a requirement that the assistant never promises an unavailable tool?
+        options:
+          - A held-out evaluation with false-availability cases and a recorded failure rate of zero
+          - The assistant answered correctly in a demo
+          - The vendor says the model is reliable
+          - The prompt tells the model not to lie
+        answer: 0
+        explanation: "Test the failure case directly. A prompt instruction is not evidence of behaviour."
+      - id: q6
+        prompt: What makes a requirement traceable?
+        options:
+          - It links to a source, a check, evidence and an owner
+          - It is written in a template
+          - It has an ID
+          - It appears in the slide deck
+        answer: 0
+        explanation: "Traceability is the chain from intent to evidence, not a numbering scheme."
+      - id: q7
+        prompt: What is the AI failure mode in requirements work?
+        options:
+          - Writing model hopes such as "the AI will understand" instead of observable behaviour and fallbacks
+          - Using too many test cases
+          - Involving users too early
+          - Writing requirements down
+        answer: 0
+        explanation: "A model is not an actor with judgement you can rely on. Write the behaviour, the input, the output and the fallback."

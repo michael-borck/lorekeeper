@@ -166,6 +166,22 @@ def _build_web_guide_ai() -> dict:
     )
 
 
+def _systems_analysis_and_design() -> dict:
+    root = engine_root().parents[2] / "books" / "systems-analysis-and-design"
+    if not root.is_dir():
+        raise FileNotFoundError(f"systems analysis source not found: {root}")
+    return build_book_pack(
+        root,
+        unit_id="systems-analysis-and-design",
+        title="Frame the System, Guide the AI: Systems Analysis and Design in the AI Era",
+        theme="storybook",
+        tags=["analysis", "design", "requirements", "systems", "ai", "governance"],
+        level="beginner",
+        pitch="Frame the problem, make requirements checkable, model the decisions and hand over a system that may contain AI.",
+        parts="1-4",
+    )
+
+
 def _write_pack(out: Path, pack: dict, key) -> dict:
     packs_dir = out / "packs"
     packs_dir.mkdir(parents=True, exist_ok=True)
@@ -213,6 +229,7 @@ def build_store(
         _assume_breach(),
         _speak_software(),
         _build_web_guide_ai(),
+        _systems_analysis_and_design(),
     ]
     catalog_packs = [_write_pack(out, pack, key) for pack in packs]
     catalog = {

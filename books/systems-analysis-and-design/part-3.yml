@@ -1,0 +1,59 @@
+# Interactive lessons appended to Part 3 of Frame the System, Guide the AI.
+lessons:
+  - kind: scenario
+    title: The option paper
+    prompt: |
+      The committee wants the AI assistant, a new booking system and a
+      member portal. A vendor demo looked excellent. A developer says AI
+      makes a custom build cheap. The treasurer wants the lowest annual
+      cost. You have one week to recommend an option.
+    options:
+      - id: evaluate
+        label: Compare buy, configure, build and AI service on fit, total cost, risk and exit
+        outcome: |
+          The option paper shows that a configured booking product covers
+          the core work, while a custom build creates a support burden the
+          library cannot carry. The AI assistant is scoped as a bounded
+          add-on with a fallback. The committee decides with evidence.
+        effects:
+          Decision: Defensible
+          Cost: Visible over three years
+          Risk: Named
+        recommended: true
+        feedback: A demo is not an option analysis. Compare total cost, support, data rights and exit, not just the feature list.
+      - id: demo
+        label: Choose the vendor with the best demo
+        outcome: |
+          The demo covered the happy path. The deposit reconciliation,
+          accessibility and provider-change costs appear after signing.
+        effects:
+          Decision: Demo-led
+          Cost: Underestimated
+          Risk: Hidden
+        feedback: Demos are designed to persuade. The requirements decide.
+      - id: custom
+        label: Build custom because AI makes development cheap
+        outcome: |
+          The first version arrives quickly. The library inherits hosting,
+          security, evaluation, prompt maintenance and a system nobody on
+          staff can support. The cheap build becomes an expensive dependency.
+        effects:
+          Speed: Fast start
+          Cost: Deferred
+          Support: Unfunded
+        feedback: AI lowers the cost of a first build, not the cost of ownership.
+      - id: cheapest
+        label: Pick the lowest annual licence because budget is tight
+        outcome: |
+          The licence is cheap. The migration, integration and staff time
+          are not. The three-year cost is higher than the option paper
+          would have shown.
+        effects:
+          Decision: Price-led
+          Cost: Misleading
+          Risk: Operational
+        feedback: Total cost includes integration, training, support, evaluation and exit.
+    debrief: |
+      Record the criteria and weights before scoring. Test whether the
+      decision changes when the most uncertain assumption moves. Write the
+      ADR, including the conditions that would reopen it.
