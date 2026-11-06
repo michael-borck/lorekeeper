@@ -101,9 +101,15 @@ async function loadCourse(slug) {
   loadProgress();
   window.LorekeeperBadges?.init();
   document.title = `${course.unit.title} · Lorekeeper`;
+  const emblem = window.LorekeeperArt
+    ? window.LorekeeperArt.courseEmblem(course.unit.slug)
+    : "";
   els.courseMeta.innerHTML = `
-    <div class="code">course</div>
-    <div class="title">${escapeHtml(course.unit.title)}</div>`;
+    <div class="course-emblem">${emblem}</div>
+    <div class="course-meta-text">
+      <div class="code">course</div>
+      <div class="title">${escapeHtml(course.unit.title)}</div>
+    </div>`;
 
   window.addEventListener("popstate", route);
   window.addEventListener("hashchange", route);
@@ -646,10 +652,15 @@ function renderPicker() {
           .map(
             (course) => `
           <a class="course-card" href="?course=${encodeURIComponent(course.slug)}">
-            <div class="title">${escapeHtml(course.title)}</div>
-            <div class="meta">${course.modules} modules · ${course.lessons} lessons
-              <span class="skin-tag">${escapeHtml(window.LorekeeperArt ? window.LorekeeperArt.skinName(course.theme) : (course.theme || "ink"))}</span>
-            </div>
+            <span class="course-card-emblem">${
+              window.LorekeeperArt ? window.LorekeeperArt.courseEmblem(course.slug) : ""
+            }</span>
+            <span class="course-card-body">
+              <span class="title">${escapeHtml(course.title)}</span>
+              <span class="meta">${course.modules} modules · ${course.lessons} lessons
+                <span class="skin-tag">${escapeHtml(window.LorekeeperArt ? window.LorekeeperArt.skinName(course.theme) : (course.theme || "ink"))}</span>
+              </span>
+            </span>
           </a>`
           )
           .join("")}

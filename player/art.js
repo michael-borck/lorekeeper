@@ -74,12 +74,61 @@
       </g>
     </svg>`;
 
+
+  const EMBLEMS = {
+    "ship-it": `
+      <svg class="emblem" data-course="ship-it" viewBox="0 0 64 64" aria-hidden="true" focusable="false">
+        <rect x="7" y="8" width="50" height="34" rx="3" fill="var(--panel)" stroke="var(--accent)" stroke-width="2"/>
+        <rect x="7" y="8" width="50" height="8" rx="3" fill="var(--panel-2)"/>
+        <circle cx="12" cy="12" r="1.5" fill="var(--red)"/>
+        <circle cx="17" cy="12" r="1.5" fill="var(--amber)"/>
+        <circle cx="22" cy="12" r="1.5" fill="var(--accent)"/>
+        <rect x="13" y="22" width="22" height="3" fill="var(--text-soft)"/>
+        <rect x="13" y="28" width="16" height="3" fill="var(--muted)"/>
+        <rect x="13" y="34" width="20" height="3" fill="var(--muted)"/>
+        <rect x="40" y="42" width="12" height="10" rx="2" fill="var(--amber)" opacity=".9"/>
+        <path d="M52 45 h3 v5 h-3" fill="none" stroke="var(--amber)" stroke-width="2"/>
+        <path d="M50 16 l2 5 5 2 -5 2 -2 5 -2 -5 -5 -2 5 -2 z" fill="var(--amber)"/>
+        <rect x="13" y="47" width="36" height="3" rx="1.5" fill="var(--border-strong)"/>
+      </svg>`,
+    "signal-and-noise": `
+      <svg class="emblem" data-course="signal-and-noise" viewBox="0 0 64 64" aria-hidden="true" focusable="false">
+        <path d="M32 32 L14 17 M32 32 L50 17 M32 32 L46 50 M32 32 L18 50" stroke="var(--accent-border)" stroke-width="2"/>
+        <circle cx="32" cy="32" r="7" fill="var(--accent-strong)" stroke="var(--accent)" stroke-width="2"/>
+        <circle cx="14" cy="17" r="4" fill="var(--panel)" stroke="var(--blue)" stroke-width="2"/>
+        <circle cx="50" cy="17" r="4" fill="var(--panel)" stroke="var(--blue)" stroke-width="2"/>
+        <circle cx="46" cy="50" r="4" fill="var(--panel)" stroke="var(--amber)" stroke-width="2"/>
+        <circle cx="18" cy="50" r="4" fill="var(--panel)" stroke="var(--amber)" stroke-width="2"/>
+        <path d="M22 32 h-7 M16 29 h-3 v6 h3" fill="none" stroke="var(--accent)" stroke-width="2"/>
+        <path d="M42 32 h7 M48 29 h3 v6 h-3" fill="none" stroke="var(--accent)" stroke-width="2"/>
+        <path d="M32 22 v4 M32 38 v4" stroke="var(--accent)" stroke-width="2"/>
+      </svg>`,
+    "field-kit": `
+      <svg class="emblem" data-course="field-kit" viewBox="0 0 64 64" aria-hidden="true" focusable="false">
+        <rect x="10" y="24" width="44" height="28" rx="3" fill="var(--panel)" stroke="var(--accent)" stroke-width="2"/>
+        <path d="M24 24 v-4 a4 4 0 0 1 4 -4 h8 a4 4 0 0 1 4 4 v4" fill="none" stroke="var(--accent)" stroke-width="2"/>
+        <rect x="10" y="34" width="44" height="3" fill="var(--panel-2)"/>
+        <circle cx="32" cy="44" r="6" fill="none" stroke="var(--amber)" stroke-width="2"/>
+        <path d="M32 40 l2 7 -2 -2 -2 2 z" fill="var(--amber)"/>
+        <path d="M50 13 l2 5 5 2 -5 2 -2 5 -2 -5 -5 -2 5 -2 z" fill="var(--accent)"/>
+      </svg>`,
+    default: `
+      <svg class="emblem" viewBox="0 0 64 64" aria-hidden="true" focusable="false">
+        <path d="M12 20 q20 -8 40 0 v24 q-20 -8 -40 0 z" fill="var(--panel)" stroke="var(--accent)" stroke-width="2"/>
+        <path d="M32 20 v24" stroke="var(--accent)" stroke-width="2"/>
+        <path d="M18 28 q10 -3 12 0 M18 34 q10 -3 12 0 M34 28 q10 -3 12 0 M34 34 q10 -3 12 0" fill="none" stroke="var(--muted)" stroke-width="2" stroke-linecap="round"/>
+      </svg>`,
+  };
+
   window.LorekeeperArt = {
     picker() {
       return `<div class="picker-art" aria-hidden="true">${PIXEL}${STORYBOOK}${INK}</div>`;
     },
     skinName(theme) {
       return { pixel: "Pixel", storybook: "Storybook", ink: "Ink" }[theme] || "Ink";
+    },
+    courseEmblem(slug) {
+      return EMBLEMS[slug] || EMBLEMS.default;
     },
   };
 })();

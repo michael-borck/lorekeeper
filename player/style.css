@@ -1008,3 +1008,30 @@ html[data-theme="pixel"] .skin-tag { border-radius: 0; }
     scroll-behavior: auto !important;
   }
 }
+
+/* Course emblems ----------------------------------------------------- */
+
+.course-meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.course-meta-text { min-width: 0; }
+.course-emblem { flex: 0 0 42px; width: 42px; height: 42px; }
+.course-emblem svg,
+.course-card-emblem svg { width: 100%; height: 100%; display: block; }
+.course-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.course-card-emblem { flex: 0 0 46px; width: 46px; height: 46px; }
+.course-card-body { min-width: 0; display: block; }
+.course-card .title { display: block; }
+.course-card .meta { display: block; }
+html[data-theme="pixel"] .course-emblem,
+html[data-theme="pixel"] .course-card-emblem { image-rendering: pixelated; }
+html[data-theme="storybook"] .course-emblem,
+html[data-theme="storybook"] .course-card-emblem {
+  filter: drop-shadow(0 6px 10px rgba(74, 52, 28, 0.16));
+}
