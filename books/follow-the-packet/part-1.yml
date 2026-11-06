@@ -1,0 +1,68 @@
+# Interactive lessons appended to Part 1 of Follow the Packet.
+lessons:
+  - kind: checkpoint
+    title: "Checkpoint: see the network"
+    questions:
+      - id: q1
+        prompt: What is the useful mental model of a network?
+        options:
+          - A set of decisions about addressing, routing, naming and policy
+          - A list of every cable and switch
+          - A single router that knows everything
+          - The vendor's diagram
+        answer: 0
+        explanation: "You do not memorise every subnet. You follow the decision points."
+      - id: q2
+        prompt: How does a host send traffic to a remote subnet?
+        options:
+          - It sends to its default gateway
+          - It broadcasts to every host
+          - It opens a direct connection to the destination switch
+          - It asks DNS for a route
+        answer: 0
+        explanation: "Local traffic goes directly. Remote traffic goes to the gateway."
+      - id: q3
+        prompt: What does a router use to choose the next hop?
+        options:
+          - Its routing table
+          - The MAC address of the destination
+          - The DNS record
+          - The application port
+        answer: 0
+        explanation: "Connected, static and dynamic routes populate the table. The router chooses a next hop and interface."
+      - id: q4
+        prompt: What does OSPF do in the lab?
+        options:
+          - It learns routes dynamically and reconverges after a link failure
+          - It assigns IP addresses
+          - It resolves names
+          - It filters packets
+        answer: 0
+        explanation: "OSPF is the routing protocol. It lets the network heal around a failed link."
+      - id: q5
+        prompt: Why is the first London DNS lookup slower than the second?
+        options:
+          - The first crosses the WAN to Perth; the second is cached
+          - The second uses a different resolver
+          - The first is encrypted
+          - DNS is random
+        answer: 0
+        explanation: "London forwards to Perth and caches the answer. Pilbara has no local resolver, so every lookup crosses the satellite."
+      - id: q6
+        prompt: What does a traceroute prove?
+        options:
+          - The forward path it observed, not necessarily the return path
+          - The complete route in both directions
+          - The application is healthy
+          - The firewall allowed the traffic
+        answer: 0
+        explanation: "Routing can be asymmetric. Check the other side before concluding."
+      - id: q7
+        prompt: Why does time matter in the enterprise lab?
+        options:
+          - Each office works its own hours, so normal traffic follows the sun
+          - The routers reboot every hour
+          - DNS expires every minute
+          - OSPF only runs at night
+        answer: 0
+        explanation: "A baseline by office and hour is how you tell normal from abnormal."

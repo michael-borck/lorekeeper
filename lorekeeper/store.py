@@ -310,6 +310,22 @@ def _break_with_permission() -> dict:
     )
 
 
+def _follow_the_packet() -> dict:
+    root = engine_root().parents[2] / "books" / "follow-the-packet"
+    if not root.is_dir():
+        raise FileNotFoundError(f"follow the packet source not found: {root}")
+    return build_book_pack(
+        root,
+        unit_id="follow-the-packet",
+        title="Follow the Packet: An Enterprise Network Field Guide",
+        theme="pixel",
+        tags=["networking", "routing", "dns", "firewall", "ids", "troubleshooting"],
+        level="intermediate",
+        pitch="Read a multi-site enterprise network one packet at a time: routing, DNS, policy, faults and baselines.",
+        parts="1-3",
+    )
+
+
 def _write_pack(out: Path, pack: dict, key) -> dict:
     packs_dir = out / "packs"
     packs_dir.mkdir(parents=True, exist_ok=True)
@@ -366,6 +382,7 @@ def build_store(
         _prove_dont_persuade(),
         _build_ai_understand_ai(),
         _break_with_permission(),
+        _follow_the_packet(),
     ]
     catalog_packs = [_write_pack(out, pack, key) for pack in packs]
     catalog = {
