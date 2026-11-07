@@ -1,6 +1,6 @@
 # Lorekeeper
 
-Story-driven courses for information systems.
+Story-driven courses for your personal learning path.
 
 Lorekeeper turns a course source tree into short readings, checkpoints and
 hands-on challenges, then serves them in a browser player with XP, progress and
@@ -58,6 +58,23 @@ The trail appears in the picker and the sidebar, updates as lessons are
 completed, and can be changed at any time. It is a recommendation, not a gate:
 every course remains visible. No account, server or model call is involved.
 
+## Library and store
+
+The library starts empty. Use **Browse packs** to install a signed pack, or
+**Manage library** to show or hide built-in courses, restore the starter kit,
+or remove a local pack and its progress. Pack data is stored in IndexedDB;
+legacy `localStorage` packs migrate on first load.
+
+The store supports search, category filters, level, installed-only and sort.
+Packs are hash- and signature-verified before install.
+
+## Journey and tutor
+
+**Journey** shows courses started and completed, recent lessons, achievements
+and a suggested next course. **AI tutor** is optional: configure a local Ollama
+server, a shared endpoint, or an OpenAI-compatible API in the tutor panel. The
+API key is kept for the current tab only. Nothing is sent until you press Send.
+
 ## Install and offline
 
 Lorekeeper is a PWA. Open the player and use the browser's **Install** action if
@@ -74,8 +91,8 @@ Tauri and pack-store decisions.
 - A course is a story. Modules are chapters, lessons are scenes, exercises are
   the things the learner actually does.
 - Learner-facing titles are thematic. They carry the theme, not the source code.
-- Source course repos are read-only. Lorekeeper compiles from them and never
-  writes into them.
+- Lorekeeper compiles from source course repos and never writes into them.
+  That is an engineering constraint, not learner-facing copy.
 - Internal keys, codes and paths stay in metadata for provenance. They do not
   appear in the player.
 - Art direction is separate from content. Three skins ship today: Ink, Pixel and

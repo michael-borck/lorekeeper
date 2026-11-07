@@ -9,6 +9,10 @@ def test_site_builds_with_player_build_and_cname(tmp_path: Path):
     assert (out / "nojekyll").is_file() is False
     assert (out / ".nojekyll").is_file()
     assert (out / "player" / "app.js").is_file()
+    assert (out / "player" / "storage.js").is_file()
+    assert (out / "player" / "manage.js").is_file()
+    assert (out / "player" / "journey.js").is_file()
+    assert (out / "player" / "tutor.js").is_file()
     assert (out / "player" / "manifest.webmanifest").is_file()
     assert (out / "build" / "index.json").is_file()
     assert (out / "build" / "ship-it" / "course.json").is_file()
