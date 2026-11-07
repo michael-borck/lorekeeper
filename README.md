@@ -62,8 +62,9 @@ every course remains visible. No account, server or model call is involved.
 
 The library starts empty. Use **Browse packs** to install a signed pack, or
 **Manage library** to show or hide built-in courses, restore the starter kit,
-or remove a local pack and its progress. Pack data is stored in IndexedDB;
-legacy `localStorage` packs migrate on first load.
+or remove a local pack and its progress. Pack and lesson progress are stored
+in IndexedDB; legacy `localStorage` packs and progress migrate on first load.
+Exercise drafts remain in `localStorage` and are included in progress export.
 
 The store supports search, category filters, level, installed-only and sort.
 Packs are hash- and signature-verified before install.
@@ -232,7 +233,8 @@ Notes:
 
 ## Authoring studio
 
-For a browser-based editor, run:
+The landing page has a short **Authors and teachers** path: clone the engine,
+install it with pip, and run the local studio. For a browser-based editor, run:
 
 ```bash
 python3 -m lorekeeper studio

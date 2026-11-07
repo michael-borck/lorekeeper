@@ -10,6 +10,9 @@ def test_site_builds_with_player_build_and_cname(tmp_path: Path):
     assert "Open Lorekeeper" in landing
     assert "Private by design" in landing
     assert "progressive web app" in landing
+    assert "Build packs on your own machine." in landing
+    assert "python3 -m lorekeeper studio" in landing
+    assert "https://github.com/michael-borck/lorekeeper-packs" in landing
     assert (out / "nojekyll").is_file() is False
     assert (out / ".nojekyll").is_file()
     assert (out / "player" / "app.js").is_file()
