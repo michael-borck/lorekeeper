@@ -14,7 +14,7 @@ def test_store_builds_catalog_and_pack(tmp_path: Path):
     catalog = build_store(tmp_path / "store")
     assert catalog["format"] == "lorekeeper.catalog"
     assert catalog["version"] == 1
-    assert len(catalog["packs"]) == 29
+    assert len(catalog["packs"]) == 30
     by_id = {entry["id"]: entry for entry in catalog["packs"]}
     entry = by_id["pocket-incidents"]
     assert entry["url"] == "packs/pocket-incidents.json"
@@ -101,6 +101,7 @@ def test_store_builds_catalog_and_pack(tmp_path: Path):
         "simulate-it": 8,
         "ai-toys": 7,
         "security-toys": 7,
+        "netsim-field-guide": 14,
     }
     for pack_id, lessons in expected.items():
         assert by_id[pack_id]["lessons"] == lessons

@@ -496,6 +496,18 @@ def _security_toys() -> dict:
     )
 
 
+def _netsim_field_guide() -> dict:
+    return build_book_pack(
+        engine_root().parents[2] / "books" / "netsim-field-guide",
+        unit_id="netsim-field-guide",
+        title="Build the Network, Watch It Run: A NetSim Field Guide",
+        theme="pixel",
+        tags=["networking", "simulation", "teaching", "firewall", "labs"],
+        level="intermediate",
+        pitch="Build topologies in NetSim, follow the packet, test the firewall and author auto-graded labs.",
+    )
+
+
 def _write_pack(out: Path, pack: dict, key) -> dict:
     packs_dir = out / "packs"
     packs_dir.mkdir(parents=True, exist_ok=True)
@@ -566,6 +578,7 @@ def build_store(
         _simulate_it(),
         _ai_toys(),
         _security_toys(),
+        _netsim_field_guide(),
     ]
     catalog_packs = [_write_pack(out, pack, key) for pack in packs]
     catalog = {

@@ -1,0 +1,119 @@
+lessons:
+  - kind: checkpoint
+    title: "Checkpoint: test and harden"
+    questions:
+      - id: q1
+        prompt: What is the difference between DROP and REJECT?
+        options:
+          - DROP is silent; REJECT sends a refusal or unreachable
+          - DROP sends a reset; REJECT is silent
+          - They are the same
+          - REJECT is only for NAT
+        answer: 0
+        explanation: "The client sees a timeout for DROP and a refusal for REJECT."
+      - id: q2
+        prompt: What does connection tracking enable?
+        options:
+          - Replies to established connections without a separate inbound rule
+          - DNS resolution
+          - Dynamic routing
+          - VLAN tagging
+        answer: 0
+        explanation: "Stateful rules allow the return path."
+      - id: q3,
+        prompt: What are the four DHCP packets?
+        options:
+          - DISCOVER, OFFER, REQUEST, ACK
+          - SYN, SYN-ACK, ACK, FIN
+          - QUERY, RESPONSE, ACK, CLOSE
+          - ARP, ICMP, TCP, UDP
+        answer: 0
+        explanation: "The client discovers, receives an offer, requests it and is acknowledged."
+      - id: q4,
+        prompt: What happens when UDP/53 is blocked?
+        options:
+          - DNS resolution fails; IP connectivity may still work
+          - All traffic stops
+          - DHCP fails
+          - The firewall reboots
+        answer: 0
+        explanation: "Service failures are specific, not a general network outage."
+      - id: q5,
+        prompt: What is an active lab check?
+        options:
+          - A check that sends a real packet and watches the result
+          - A check that reads an interface address
+          - A quiz question
+          - A screenshot
+        answer: 0
+        explanation: "Active checks produce behaviour evidence and animate the probe."
+      - id: q6,
+        prompt: Why does Lab 5 prove the exposure before the fix?
+        options:
+          - The first objective establishes the baseline the student is asked to change
+          - To make the lab longer
+          - To avoid grading
+          - To test the firewall twice
+        answer: 0
+        explanation: "Evidence of the problem comes before evidence of the fix."
+      - id: q7,
+        prompt: Why is auto-grading formative rather than proctored?
+        options:
+          - The attempt file is editable and can be changed
+          - The grader is always wrong
+          - The lab cannot be exported
+          - The checks are passive
+        answer: 0
+        explanation: "Use it for feedback and evidence, not high-stakes assessment."
+  - kind: scenario
+    title: The firewall that looks right
+    prompt: |
+      A firewall ruleset has a broad ACCEPT near the top and the correct
+      DROP rules below it. The test suite shows the allowed path working.
+      The student says the firewall is finished. Choose your next move.
+    options:
+      - id: order
+        label: Check which rules are reached, move the broad accept, and test the denied path
+        outcome: |
+          The broad accept was shadowing every later drop. After moving it,
+          the allowed path still works and the denied path is blocked. The
+          log names the rule for each verdict.
+        effects:
+          Policy: Enforced
+          Evidence: Denied path
+          Order: Fixed
+        recommended: true
+        feedback: A ruleset is a sequence. The first match wins, and a rule that is never reached does nothing.
+      - id: allowed
+        label: Accept the result because the allowed path works
+        outcome: |
+          The firewall passes the only test the student ran. The rules that
+          were supposed to block traffic are never reached.
+        effects:
+          Evidence: Partial
+          Policy: Broken
+          Risk: Hidden
+        feedback: Test the denied path. The allowed path proves the firewall is not blocking everything.
+      - id: more
+        label: Add more drop rules below the broad accept
+        outcome: |
+          The new rules are also shadowed. The ruleset grows and the policy
+          does not change.
+        effects:
+          Rules: More
+          Policy: Unchanged
+          Risk: Hidden
+        feedback: Fix the order before adding rules.
+      - id: default
+        label: Set the policy to drop and remove all rules
+        outcome: |
+          The allowed path stops working. The firewall is now secure and
+          useless. The policy needs both the default and the exceptions.
+        effects:
+          Policy: Deny all
+          Business: Broken
+          Evidence: Missing
+        feedback: Default deny is a starting point, not a complete policy.
+    debrief: |
+      Read the ruleset in order, find the shadowed rules, test both paths and
+      let the log explain the verdict.

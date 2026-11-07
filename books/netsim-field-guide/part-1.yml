@@ -1,0 +1,58 @@
+lessons:
+  - kind: checkpoint
+    title: "Checkpoint: build and follow"
+    questions:
+      - id: q1
+        prompt: Why can NetSim explain a packet drop that a real kernel cannot?
+        options:
+          - It is a deterministic discrete-event simulator with an inspectable rule model
+          - It uses a real kernel
+          - It captures packets from the host
+          - It guesses
+        answer: 0
+        explanation: "The simulation can name the event, the interface and the matching rule."
+      - id: q2
+        prompt: Which device type has four interfaces and forwards IPv4?
+        options:
+          - Router
+          - Host
+          - Switch
+          - Server
+        answer: 0
+        explanation: "A firewall is a router with nftables base chains declared."
+      - id: q3
+        prompt: What does NetSim do with unsupported syntax?
+        options:
+          - It errors loudly and names the command as unsupported
+          - It silently approximates it
+          - It runs a different command
+          - It ignores the line
+        answer: 0
+        explanation: "Real syntax is the promise. A loud error is better than a fake command."
+      - id: q4
+        prompt: Why is the first ping often slower than the second?
+        options:
+          - ARP must resolve the destination or gateway MAC first
+          - The router is cold
+          - DNS is slow
+          - TCP must handshake
+        answer: 0
+        explanation: "The neighbour table is warm after the first exchange."
+      - id: q5
+        prompt: What does the switch use to forward a frame?
+        options:
+          - Its MAC address table
+          - The IP routing table
+          - DNS
+          - The firewall log
+        answer: 0
+        explanation: "The switch learns source MACs and forwards by destination MAC."
+      - id: q6
+        prompt: What is the minimum useful topology for a two-host ping?
+        options:
+          - Two hosts and a switch
+          - Two routers and a firewall
+          - A server and a DNS
+          - A firewall only
+        answer: 0
+        explanation: "Start with the smallest topology that tests the question."

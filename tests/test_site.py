@@ -44,6 +44,7 @@ def test_site_builds_with_player_build_and_cname(tmp_path: Path):
         "simulate-it",
         "ai-toys",
         "security-toys",
+        "netsim-field-guide",
     ]:
         assert (out / "store" / "packs" / f"{pack_id}.json").is_file()
     assert (out / "CNAME").read_text().strip() == "lorekeeper.borck.education"

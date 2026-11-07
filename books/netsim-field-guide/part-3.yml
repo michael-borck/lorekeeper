@@ -1,0 +1,67 @@
+lessons:
+  - kind: checkpoint
+    title: "Checkpoint: author and export"
+    questions:
+      - id: q1
+        prompt: What is a lab objective?
+        options:
+          - A testable claim about the network with a stable ID and a check
+          - A paragraph of instructions
+          - A quiz answer
+          - A screenshot
+        answer: 0
+        explanation: "The check is passive or active and the ID keys saved progress."
+      - id: q2,
+        prompt: When should an author use an active check instead of a passive one?
+        options:
+          - When the claim is about behaviour, such as reachability or a filtered port
+          - When the claim is about an interface address
+          - When the answer is in the Inspector
+          - When the lab has no topology
+        answer: 0
+        explanation: "Active checks send packets and watch the result."
+      - id: q3,
+        prompt: Why keep objective IDs stable?
+        options:
+          - Saved progress and exported attempts are keyed by the ID
+          - It makes the JSON shorter
+          - The simulator requires unique titles
+          - The grader sorts by ID
+        answer: 0
+        explanation: "Renaming an ID resets the objective for every student."
+      - id: q4,
+        prompt: What is the recommended way to author a lab?
+        options:
+          - Build the topology in the app, export the JSON, add the lab block and import it back
+          - Write every device by hand from scratch
+          - Use a screenshot
+          - Edit the app source
+        answer: 0
+        explanation: "The visual path gets the cabling and addressing right, then you add prose and objectives."
+      - id: q5,
+        prompt: What does the attempt export contain?
+        options:
+          - The topology, the lab definition and the student's progress
+          - Only a screenshot
+          - Only the final answer
+          - The API key
+        answer: 0
+        explanation: "The teacher can import it, land in the network and regrade."
+      - id: q6,
+        prompt: What does the containerlab export provide?
+        options:
+          - A topology file that can run the design on real kernels
+          - A faster simulator
+          - A cloud account
+          - A firewall only
+        answer: 0
+        explanation: "It is the bridge from the design to a real lab, not a promise of identical behaviour."
+      - id: q7,
+        prompt: What must you do before applying a generated config to a real host?
+        options:
+          - Review interfaces, addresses, policy, rule order, NAT and rollback
+          - Run it immediately
+          - Delete the simulation
+          - Disable the firewall
+        answer: 0
+        explanation: "The export removes typing, not thinking."
