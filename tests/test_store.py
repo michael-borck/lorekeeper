@@ -19,6 +19,8 @@ def test_store_builds_catalog_and_pack(tmp_path: Path):
     entry = by_id["pocket-incidents"]
     assert entry["url"] == "packs/pocket-incidents.json"
     assert entry["lessons"] == 3
+    assert entry["artSet"] == "cybersecurity"
+    assert entry["artScene"] == "crisis"
     info = by_id["information-security"]
     assert info["title"] == "Information Security: A Field Guide"
     assert info["lessons"] == 24

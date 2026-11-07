@@ -68,6 +68,12 @@ legacy `localStorage` packs migrate on first load.
 The store supports search, category filters, level, installed-only and sort.
 Packs are hash- and signature-verified before install.
 
+## Artwork
+
+Pack thumbnails and course covers use a curated subset of the SwipeVerse art
+library. The artwork is independent of the Ink/Pixel/Storybook UI skins: skins
+change the interface, while artwork identifies the pack or topic.
+
 ## Journey and tutor
 
 **Journey** shows courses started and completed, recent lessons, achievements

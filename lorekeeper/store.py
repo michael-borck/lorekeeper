@@ -18,6 +18,39 @@ CATALOG_FORMAT = "lorekeeper.catalog"
 CATALOG_VERSION = 1
 STORE_PACK = "pocket-incidents"
 
+PACK_ART = {
+    "pocket-incidents": ("cybersecurity", "crisis"),
+    "information-security": ("cybersecurity", "advisor"),
+    "audit-and-control": ("business", "judgement"),
+    "assume-breach": ("cybersecurity", "crisis"),
+    "speak-software": ("cyberpunk", "advisor"),
+    "build-web-guide-ai": ("cyberpunk", "chain"),
+    "systems-analysis-and-design": ("business", "judgement"),
+    "follow-the-trace": ("noir", "chain"),
+    "the-human-edge": ("business", "advisor"),
+    "test-the-claim": ("business", "judgement"),
+    "substantiate-dont-assume": ("business", "advisor"),
+    "conversation-not-delegation": ("university", "advisor"),
+    "prove-dont-persuade": ("business", "gamble"),
+    "build-ai-understand-ai": ("cyberpunk", "chain"),
+    "break-with-permission": ("cybersecurity", "crisis"),
+    "follow-the-packet": ("cyberpunk", "chain"),
+    "simplebot": ("cyberpunk", "opportunity"),
+    "build-it-teach-it": ("university", "advisor"),
+    "think-python-direct-ai": ("science", "advisor"),
+    "code-python-consult-ai": ("science", "petitioner"),
+    "ship-python-orchestrate-ai": ("cyberpunk", "chain"),
+    "converse-python-partner-ai": ("cyberpunk", "advisor"),
+    "partner-dont-police": ("university", "advisor"),
+    "the-absolute-minimum-you-must-know": ("base", "advisor"),
+    "the-great-silence": ("space", "crisis"),
+    "programming-paradigms": ("cyberpunk", "judgement"),
+    "simulate-it": ("science", "gamble"),
+    "ai-toys": ("cyberpunk", "opportunity"),
+    "security-toys": ("cybersecurity", "advisor"),
+    "netsim-field-guide": ("cyberpunk", "chain"),
+}
+
 
 def _now() -> str:
     return datetime.now(timezone.utc).isoformat(timespec="seconds")
@@ -527,6 +560,8 @@ def _write_pack(out: Path, pack: dict, key) -> dict:
         "theme": entry["theme"],
         "tags": entry["tags"],
         "level": entry["level"],
+        "artSet": PACK_ART.get(pack["id"], ("base", "advisor"))[0],
+        "artScene": PACK_ART.get(pack["id"], ("base", "advisor"))[1],
         "courses": len(pack["courses"]),
         "lessons": sum(len(module["lessons"]) for module in entry["course"]["modules"]),
         "size": pack_path.stat().st_size,
