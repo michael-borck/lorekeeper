@@ -14,7 +14,7 @@ def test_store_builds_catalog_and_pack(tmp_path: Path):
     catalog = build_store(tmp_path / "store")
     assert catalog["format"] == "lorekeeper.catalog"
     assert catalog["version"] == 1
-    assert len(catalog["packs"]) == 18
+    assert len(catalog["packs"]) == 29
     by_id = {entry["id"]: entry for entry in catalog["packs"]}
     entry = by_id["pocket-incidents"]
     assert entry["url"] == "packs/pocket-incidents.json"
@@ -89,6 +89,22 @@ def test_store_builds_catalog_and_pack(tmp_path: Path):
     assert build_it["lessons"] == 16
     assert build_it["theme"] == "storybook"
     assert build_it["licence"] == "CC BY 4.0 International"
+    expected = {
+        "think-python-direct-ai": 29,
+        "code-python-consult-ai": 21,
+        "ship-python-orchestrate-ai": 11,
+        "converse-python-partner-ai": 18,
+        "partner-dont-police": 17,
+        "the-absolute-minimum-you-must-know": 31,
+        "the-great-silence": 9,
+        "programming-paradigms": 6,
+        "simulate-it": 8,
+        "ai-toys": 7,
+        "security-toys": 7,
+    }
+    for pack_id, lessons in expected.items():
+        assert by_id[pack_id]["lessons"] == lessons
+        assert by_id[pack_id]["theme"] in {"pixel", "storybook"}
     pack_path = tmp_path / "store" / "packs" / "pocket-incidents.json"
     assert pack_path.is_file()
     digest = hashlib.sha256(pack_path.read_bytes()).hexdigest()

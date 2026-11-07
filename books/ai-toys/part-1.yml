@@ -1,0 +1,58 @@
+lessons:
+  - kind: checkpoint
+    title: "Checkpoint: break the belief"
+    questions:
+      - id: q1
+        prompt: Why can a 95% accurate detector be useless?
+        options:
+          - The base rate means it may miss most faults while flagging many healthy cases
+          - Accuracy is always wrong
+          - It is too slow
+          - It uses too much memory
+        answer: 0
+        explanation: "Overall accuracy hides the class and base-rate trade-off."
+      - id: q2
+        prompt: What does the Data or Command toy show?
+        options:
+          - Retrieved text can carry instructions that compete with the system prompt
+          - Documents cannot contain code
+          - A system prompt is a complete security boundary
+          - AI never reads documents
+        answer: 0
+        explanation: "A command can be phrased as a fact. Retrieved material is untrusted input."
+      - id: q3
+        prompt: Why is a name-free table not automatically anonymous?
+        options:
+          - Quasi-identifiers and free text can re-identify a person
+          - Names are the only identifier
+          - The table is encrypted
+          - The data is synthetic
+        answer: 0
+        explanation: "Anonymity is a property of the whole release, not the absence of a name column."
+      - id: q4
+        prompt: What does the Next Token toy show?
+        options:
+          - The model weighs possible continuations; it does not look up facts
+          - The model has a database
+          - The model always gives the same answer
+          - Confidence proves correctness
+        answer: 0
+        explanation: "A fluent answer is a sampled distribution, not a truth signal."
+      - id: q5
+        prompt: What does the Overfit toy show?
+        options:
+          - Training accuracy can rise while test accuracy falls
+          - Training and test always agree
+          - More flexibility always helps
+          - A high training score proves generalisation
+        answer: 0
+        explanation: "A flexible model can memorise noise. The held-out result is the evidence."
+      - id: q6
+        prompt: Why does a 12-step pipeline at 95% per step fail so often?
+        options:
+          - Reliability multiplies across steps, so the pipeline success rate is much lower
+          - Each step gets less accurate over time
+          - The model is tired
+          - The pipeline uses too much memory
+        answer: 0
+        explanation: "Checkpoints and placement are the design surface."

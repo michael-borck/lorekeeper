@@ -1,0 +1,58 @@
+lessons:
+  - kind: checkpoint
+    title: "Checkpoint: break the belief"
+    questions:
+      - id: q1
+        prompt: What determines password time-to-crack?
+        options:
+          - Length, algorithm and work factor
+          - Complexity alone
+          - The colour of the login page
+          - The username
+        answer: 0
+        explanation: "Two of the three belong to the site, not the user."
+      - id: q2
+        prompt: What is the difference between hashing and encryption?
+        options:
+          - Encryption is reversible with a key; a hash is a one-way fingerprint
+          - Hashing is reversible; encryption is not
+          - They are the same
+          - A hash is a locked message
+        answer: 0
+        explanation: "A site that can show you your old password is storing it wrongly."
+      - id: q3
+        prompt: Why can a good detector still produce an unmanageable alert queue?
+        options:
+          - The base rate means false positives dominate at a useful threshold
+          - The detector is broken
+          - The logs are encrypted
+          - The attacks are too fast
+        answer: 0
+        explanation: "Detection is a budget decision, not only a model decision."
+      - id: q4
+        prompt: What can photo metadata reveal?
+        options:
+          - Camera, time, serial number and often location
+          - Only the image pixels
+          - Nothing beyond the file size
+          - The photographer's password
+        answer: 0
+        explanation: "A photo is a file with a hidden appendix."
+      - id: q5
+        prompt: What is the root-cause fix for SQL injection?
+        options:
+          - Parameterised queries that separate code from data
+          - Blocking the word OR
+          - Escaping quotes only
+          - Hiding error messages
+        answer: 0
+        explanation: "The query is finished before the input arrives."
+      - id: q6
+        prompt: Why is a firewall ruleset a sequence, not a set?
+        options:
+          - The firewall stops at the first match, so order decides meaning
+          - Every rule is always evaluated
+          - Rules are alphabetical
+          - The last rule always wins
+        answer: 0
+        explanation: "A rule that is never reached has no effect."

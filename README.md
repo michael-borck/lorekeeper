@@ -369,7 +369,9 @@ Applied AI**, and **Build AI, Understand AI: How Today's LLM Systems Actually
 Work, in Small Readable Pieces**, and **Break with Permission: Ethical Hacking
 in Practice**, and **Follow the Packet: An Enterprise Network Field Guide**.
 **SimpleBot: A Small Wrapper, a Real Project**, and **Build It, Teach It:
-Hands-on AI Projects for the Classroom**. The player fetches `store/catalog.json`,
+Hands-on AI Projects for the Classroom**. The store also includes the full Python track, *The Great Silence*,
+*One Calculator, Three Paradigms* and *Simulate It, Understand It*.
+The player fetches `store/catalog.json`,
 checks the pack SHA-256 and Ed25519 signature, validates the pack and stores it
 locally.
 

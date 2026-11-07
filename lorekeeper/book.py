@@ -19,6 +19,7 @@ H1 = re.compile(r"^#\s+(.+?)\s*$", re.MULTILINE)
 ANCHOR = re.compile(r"\s*\{#[^}]+\}\s*$")
 IMAGE_BLOCK = re.compile(r"!\[[^\]]*\]\([^)]+\)\{[^}]*\}")
 IMAGE_PLAIN = re.compile(r"!\[[^\]]*\]\([^)]+\)")
+COURSE_CODE = re.compile(r"\b(ISYS|COMP)(\d{4})\b")
 
 
 def _now() -> str:
@@ -27,6 +28,13 @@ def _now() -> str:
 
 def _strip_images(text: str) -> str:
     return IMAGE_PLAIN.sub("", IMAGE_BLOCK.sub("", text))
+
+
+def _sanitize_codes(text: str) -> str:
+    def replacement(match: re.Match) -> str:
+        prefix = "UNIT" if match.group(1) == "ISYS" else "COURSE"
+        return f"{prefix}-{match.group(2)}"
+    return COURSE_CODE.sub(replacement, text)
 
 
 def _title_of(markdown: str, fallback: str) -> tuple[str, str]:
@@ -38,9 +46,11 @@ def _title_of(markdown: str, fallback: str) -> tuple[str, str]:
     return title, body
 
 
-def chapter_blocks(path: Path) -> tuple[str, list[dict]]:
+def chapter_blocks(path: Path, sanitize: bool = False) -> tuple[str, list[dict]]:
     _, raw = split_frontmatter(path.read_text(encoding="utf-8", errors="ignore"))
     markdown = _strip_images(raw)
+    if sanitize:
+        markdown = _sanitize_codes(markdown)
     title, body = _title_of(markdown, path.stem)
     body = clean_markdown(body)
     blocks: list[dict] = []
@@ -135,6 +145,7 @@ def build_book_pack(
     level: str = "beginner",
     pitch: str = "",
     parts: str | None = None,
+    sanitize: bool = False,
 ) -> dict:
     root = Path(root).expanduser().resolve()
     config_path = root / "_quarto.yml"
@@ -150,6 +161,16 @@ def build_book_pack(
         display_title = unit_id
     book_parts = _selected_parts(list(book.get("chapters") or []), parts)
     if not book_parts:
+        # Books without explicit parts still need a module. Use the top-level
+        # chapter files, excluding front matter and back matter.
+        chapter_paths = [
+            str(chapter)
+            for chapter in (book.get("chapters") or [])
+            if isinstance(chapter, str) and str(chapter).startswith("chapters/")
+        ]
+        if chapter_paths:
+            book_parts = [(1, {"part": "Chapters", "chapters": chapter_paths})]
+    if not book_parts:
         raise ValueError(f"{unit_id}: no matching book parts")
 
     modules = []
@@ -161,7 +182,7 @@ def build_book_pack(
             chapter_path = (root / str(chapter)).resolve()
             if not chapter_path.is_file():
                 raise FileNotFoundError(f"chapter not found: {chapter_path}")
-            chapter_title, blocks = chapter_blocks(chapter_path)
+            chapter_title, blocks = chapter_blocks(chapter_path, sanitize=sanitize)
             lessons.append(
                 {
                     "id": f"{module_number:02d}-{chapter_index:02d}",

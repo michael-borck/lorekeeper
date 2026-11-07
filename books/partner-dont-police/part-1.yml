@@ -1,0 +1,58 @@
+lessons:
+  - kind: checkpoint
+    title: "Checkpoint: teach as a partner"
+    questions:
+      - id: q1
+        prompt: What does "partner, don't police" mean in the classroom?
+        options:
+          - Teach students to use AI with judgement rather than trying to ban or catch it
+          - Ignore AI completely
+          - Let AI do the assessment
+          - Police every prompt
+        answer: 0
+        explanation: "The book is about designing learning that keeps the student in the thinking loop."
+      - id: q2
+        prompt: What does the CRAFT framework cover?
+        options:
+          - Context, role, audience, format and task
+          - Copy, revise, accept, forget and test
+          - Code, run, assess, fix and transmit
+          - Concept, rule, action, feedback and test
+        answer: 0
+        explanation: "CRAFT turns a vague request into a brief that can be reviewed."
+      - id: q3
+        prompt: Why is one-shot prompting a weak teaching pattern?
+        options:
+          - It hides the assumptions and the checking; a conversation can expose them
+          - It is too slow
+          - It uses too many tokens
+          - It is always inaccurate
+        answer: 0
+        explanation: "Conversation keeps the question, correction and evidence visible."
+      - id: q4
+        prompt: What should a critique of an AI response check?
+        options:
+          - Comprehension, practicality, obligations and risk, context and stakeholders
+          - Only the grammar
+          - Only the word count
+          - Only whether it sounds confident
+        answer: 0
+        explanation: "A useful critique tests the claim against the task and the constraints."
+      - id: q5
+        prompt: What should assessment prioritise in an AI-assisted task?
+        options:
+          - Capability, process evidence and individual understanding
+          - The longest final answer
+          - The most confident demo
+          - The number of prompts used
+        answer: 0
+        explanation: "Process evidence and explanation are harder to outsource than a final artefact."
+      - id: q6
+        prompt: What is the first ethics question before using student material?
+        options:
+          - What data may leave the room, and who has approved that use?
+          - Which model is the largest?
+          - How long is the prompt?
+          - Which student has the fastest laptop?
+        answer: 0
+        explanation: "A data gate comes before the first prompt."

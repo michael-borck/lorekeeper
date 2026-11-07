@@ -358,6 +358,144 @@ def _build_it_teach_it() -> dict:
     )
 
 
+
+
+def _think_python() -> dict:
+    return build_book_pack(
+        engine_root().parents[2] / "books" / "think-python-direct-ai",
+        unit_id="think-python-direct-ai",
+        title="Think Python, Direct AI: Computational Thinking for Beginners",
+        theme="pixel",
+        tags=["python", "computational-thinking", "ai", "beginners"],
+        level="beginner",
+        pitch="Learn computational thinking with an AI partner, then direct the code.",
+        parts="1-5",
+    )
+
+
+def _code_python() -> dict:
+    return build_book_pack(
+        engine_root().parents[2] / "books" / "code-python-consult-ai",
+        unit_id="code-python-consult-ai",
+        title="Code Python, Consult AI: Python Fundamentals for the AI Era",
+        theme="pixel",
+        tags=["python", "ai", "fundamentals"],
+        level="beginner",
+        pitch="Build Python fundamentals by consulting AI and verifying the result.",
+    )
+
+
+def _ship_python() -> dict:
+    return build_book_pack(
+        engine_root().parents[2] / "books" / "ship-python-orchestrate-ai",
+        unit_id="ship-python-orchestrate-ai",
+        title="Ship Python, Orchestrate AI: Professional Python in the AI Era",
+        theme="pixel",
+        tags=["python", "professional", "workflow", "testing"],
+        level="intermediate",
+        pitch="Take a Python project from a folder to a tested, documented, installable release.",
+    )
+
+
+def _converse_python() -> dict:
+    return build_book_pack(
+        engine_root().parents[2] / "books" / "converse-python-partner-ai",
+        unit_id="converse-python-partner-ai",
+        title="Converse Python, Partner AI: The Intentional Prompting Methodology",
+        theme="pixel",
+        tags=["python", "prompting", "ai", "methodology"],
+        level="intermediate",
+        pitch="Use intentional prompting to design, test and ship Python with an AI partner.",
+        parts="1-5",
+    )
+
+
+def _partner_dont_police() -> dict:
+    return build_book_pack(
+        engine_root().parents[2] / "books" / "partner-dont-police",
+        unit_id="partner-dont-police",
+        title="Partner, Don't Police: AI in the Business Classroom",
+        theme="storybook",
+        tags=["education", "ai", "teaching", "assessment"],
+        level="intermediate",
+        pitch="Design business education that treats AI as a partner rather than a policing problem.",
+    )
+
+
+def _absolute_minimum() -> dict:
+    return build_book_pack(
+        engine_root().parents[2] / "books" / "the-absolute-minimum-you-must-know",
+        unit_id="the-absolute-minimum-you-must-know",
+        title="The Absolute Minimum You Must Know",
+        theme="pixel",
+        tags=["reference", "python", "thinking", "verification"],
+        level="beginner",
+        pitch="The smallest useful reference for thinking, Python, verification, data and directing AI.",
+        parts="1-7",
+        sanitize=True,
+    )
+
+
+def _great_silence() -> dict:
+    return build_book_pack(
+        engine_root().parents[2] / "books" / "the-great-silence",
+        unit_id="the-great-silence",
+        title="The Great Silence: Six Frames for Thinking About AI at Civilisational Scale",
+        theme="storybook",
+        tags=["ai", "risk", "civilisation", "essays"],
+        level="intermediate",
+        pitch="Six frames from the search for aliens, applied to AI at civilisational scale.",
+    )
+
+
+def _programming_paradigms() -> dict:
+    return build_book_pack(
+        engine_root().parents[2] / "books" / "programming-paradigms",
+        unit_id="programming-paradigms",
+        title="One Calculator, Three Paradigms: Imperative, Functional and Object-Oriented Python",
+        theme="pixel",
+        tags=["python", "paradigms", "teaching"],
+        level="beginner",
+        pitch="The same calculator built three ways, to make programming paradigms visible.",
+    )
+
+
+def _simulate_it() -> dict:
+    return build_book_pack(
+        engine_root().parents[2] / "books" / "simulate-it",
+        unit_id="simulate-it",
+        title="Simulate It, Understand It: A Practical Guide to Modelling with SimLab",
+        theme="pixel",
+        tags=["simulation", "modelling", "teaching", "python"],
+        level="intermediate",
+        pitch="Turn a system question into a reproducible, validated simulation.",
+    )
+
+
+def _ai_toys() -> dict:
+    return build_book_pack(
+        engine_root().parents[2] / "books" / "ai-toys-book",
+        unit_id="ai-toys",
+        title="AI Toys: Six Misconceptions You Can Break",
+        theme="pixel",
+        tags=["ai", "misconceptions", "teaching", "interactive"],
+        level="beginner",
+        pitch="Six small interactive toys, each built to break one belief about AI.",
+    )
+
+
+def _security_toys() -> dict:
+    return build_book_pack(
+        engine_root().parents[2] / "books" / "security-toys-book",
+        unit_id="security-toys",
+        title="Security Toys: Six Beliefs a Demonstration Can Break",
+        theme="pixel",
+        tags=["security", "misconceptions", "teaching", "interactive"],
+        level="beginner",
+        pitch="Six small interactive toys, each built to break one security belief.",
+    )
+
+
 def _write_pack(out: Path, pack: dict, key) -> dict:
     packs_dir = out / "packs"
     packs_dir.mkdir(parents=True, exist_ok=True)
@@ -417,6 +555,17 @@ def build_store(
         _follow_the_packet(),
         _simplebot(),
         _build_it_teach_it(),
+        _think_python(),
+        _code_python(),
+        _ship_python(),
+        _converse_python(),
+        _partner_dont_police(),
+        _absolute_minimum(),
+        _great_silence(),
+        _programming_paradigms(),
+        _simulate_it(),
+        _ai_toys(),
+        _security_toys(),
     ]
     catalog_packs = [_write_pack(out, pack, key) for pack in packs]
     catalog = {

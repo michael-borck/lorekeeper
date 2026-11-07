@@ -1,0 +1,58 @@
+lessons:
+  - kind: checkpoint
+    title: "Checkpoint: code with a partner"
+    questions:
+      - id: q1
+        prompt: Why does the book use a thinking session before the building session?
+        options:
+          - To define the problem and the gap before asking AI for code
+          - To make the chapter longer
+          - To avoid running Python
+          - To memorise syntax
+        answer: 0
+        explanation: "The thinking session names the problem; the building session implements it."
+      - id: q2
+        prompt: What is the difference between a list and a dictionary?
+        options:
+          - A list is ordered by position; a dictionary looks up values by key
+          - A list stores only numbers; a dictionary stores only text
+          - A dictionary is ordered by position; a list uses keys
+          - There is no practical difference
+        answer: 0
+        explanation: "Choose the structure by how you need to retrieve the data."
+      - id: q3
+        prompt: What does a function return if it has no return statement?
+        options:
+          - None
+          - An empty string
+          - 0
+          - The last printed value
+        answer: 0
+        explanation: "The None return is a common source of confusion and a good debugging question."
+      - id: q4
+        prompt: What is the point of a loop?
+        options:
+          - Repeat work without duplicating the code
+          - Store data permanently
+          - Define a class
+          - Import a module
+        answer: 0
+        explanation: "Loops make repetition explicit and testable."
+      - id: q5
+        prompt: What should you do when an exception appears?
+        options:
+          - Read the error, find the failing line and fix the cause
+          - Ignore it if the program continues
+          - Catch every exception and hide it
+          - Rewrite the program
+        answer: 0
+        explanation: "An exception is information. Handle the case you understand."
+      - id: q6
+        prompt: How should you use AI while learning Python?
+        options:
+          - Ask it to explain and test, then write and verify the code yourself
+          - Accept the first answer
+          - Use it only to generate comments
+          - Avoid it entirely
+        answer: 0
+        explanation: "The book is about consultation, not delegation."

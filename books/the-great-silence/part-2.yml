@@ -1,0 +1,54 @@
+lessons:
+  - kind: scenario
+    title: The loud server
+    prompt: |
+      You run a small Linux server. It responds to ping, exposes SSH and a web
+      service, and advertises a long banner. A scan from the internet finds
+      all of it. The Dark Forest frame says broadcasting is a decision. Choose
+      your next move.
+    options:
+      - id: reduce
+        label: Reduce the exposed surface, restrict access to the known ally and verify from outside
+        outcome: |
+          The server still serves its ally. The public scan sees fewer ports,
+          a shorter banner and no unnecessary response. The change is tested
+          from outside, not assumed from the configuration.
+        effects:
+          Surface: Reduced
+          Ally: Served
+          Evidence: External scan
+        recommended: true
+        feedback: Harden what you expose, then verify from the hunter's side.
+      - id: hide
+        label: Disable logging and hope nobody notices
+        outcome: |
+          The services still answer. The defender has less evidence, and the
+          scanner still sees the server.
+        effects:
+          Visibility: Lower
+          Security: Unchanged
+          Evidence: Lost
+        feedback: Hiding the log is not hiding the server.
+      - id: block
+        label: Block all traffic, including the ally
+        outcome: |
+          The scan sees nothing because the service is gone. The ally cannot
+          work either. The design has confused silence with availability.
+        effects:
+          Surface: Zero
+          Ally: Broken
+          Availability: Lost
+        feedback: The goal is controlled exposure, not the absence of service.
+      - id: banner
+        label: Change the banner to say "nothing to see here"
+        outcome: |
+          The ports are still open and the service still announces itself.
+          The message changes, not the exposure.
+        effects:
+          Surface: Unchanged
+          Evidence: Still loud
+          Risk: Unchanged
+        feedback: A friendlier banner is not a smaller attack surface.
+    debrief: |
+      Reduce the surface, restrict access, verify from outside and keep the
+      evidence. Silence is a design outcome, not a message.

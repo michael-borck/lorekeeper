@@ -1,0 +1,58 @@
+lessons:
+  - kind: checkpoint
+    title: "Checkpoint: the minimum"
+    questions:
+      - id: q1
+        prompt: What are the four computational thinking moves?
+        options:
+          - Decomposition, pattern recognition, abstraction and algorithm design
+          - Install, import, run and delete
+          - Read, write, copy and paste
+          - Plan, build, ship and sell
+        answer: 0
+        explanation: "These moves turn a fuzzy problem into a precise one."
+      - id: q2
+        prompt: When would you use a dictionary instead of a list?
+        options:
+          - When you need to look up values by key
+          - When you need an ordered sequence by position
+          - When you need a fixed record
+          - When you need a unique set
+        answer: 0
+        explanation: "Choose the data structure by the retrieval you need."
+      - id: q3
+        prompt: What does a function return if it has no return statement?
+        options:
+          - None
+          - 0
+          - An empty string
+          - The last expression
+        answer: 0
+        explanation: "The None return is a common source of bugs."
+      - id: q4
+        prompt: What is the difference between a class and an instance?
+        options:
+          - A class is the blueprint; an instance is an object built from it
+          - A class is an object; an instance is a blueprint
+          - A class is a function; an instance is a variable
+          - They are the same
+        answer: 0
+        explanation: "The class defines the shape; the instance holds the data."
+      - id: q5
+        prompt: What is the point of a doctest?
+        options:
+          - It turns an example in the documentation into a runnable test
+          - It replaces all other tests
+          - It formats the code
+          - It installs dependencies
+        answer: 0
+        explanation: "Examples that cannot rot are better than examples that are never run."
+      - id: q6
+        prompt: What should you do before trusting an AI agent's change?
+        options:
+          - Commit, inspect the diff and run the verification loop
+          - Accept it because the agent says it passed
+          - Delete the repository
+          - Ask the same agent to confirm
+        answer: 0
+        explanation: "Commit, inspect and verify. The model's assurance is not evidence."

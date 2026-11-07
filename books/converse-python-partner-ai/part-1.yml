@@ -1,0 +1,58 @@
+lessons:
+  - kind: checkpoint
+    title: "Checkpoint: intentional prompting"
+    questions:
+      - id: q1
+        prompt: What is the difference between intentional prompting and vibe coding?
+        options:
+          - Intentional prompting keeps the human in the reasoning loop; vibe coding accepts generated output without that discipline
+          - Intentional prompting is longer
+          - Vibe coding uses Python
+          - There is no difference
+        answer: 0
+        explanation: "The method is about understanding and steering, not just producing code."
+      - id: q2
+        prompt: Why restate the problem before asking for code?
+        options:
+          - It exposes assumptions and makes the requirement inspectable
+          - It makes the prompt longer
+          - It avoids testing
+          - It hides the goal
+        answer: 0
+        explanation: "A clear restatement is a filter for vague or conflicting requirements."
+      - id: q3
+        prompt: Why work by hand before delegating?
+        options:
+          - It reveals the assumptions and edge cases the model may miss
+          - It is always faster
+          - It replaces the AI
+          - It avoids pseudocode
+        answer: 0
+        explanation: "A manual example gives you something concrete to check the AI against."
+      - id: q4
+        prompt: What is the role of pseudocode?
+        options:
+          - It describes the algorithm in a form a person can review before code
+          - It is a programming language
+          - It replaces tests
+          - It hides the logic
+        answer: 0
+        explanation: "Pseudocode is a thinking artefact, not a syntax exercise."
+      - id: q5
+        prompt: Why test with data?
+        options:
+          - Data exposes edge cases and assumptions that prose cannot
+          - It makes the model faster
+          - It replaces the prompt
+          - It avoids debugging
+        answer: 0
+        explanation: "A test case is a concrete claim about behaviour."
+      - id: q6
+        prompt: What happens when the system scales?
+        options:
+          - Architecture and context management become human decisions, not model guesses
+          - The model automatically knows the architecture
+          - Tests become unnecessary
+          - Prompting becomes irrelevant
+        answer: 0
+        explanation: "At scale, the human owns the structure and the handoffs."

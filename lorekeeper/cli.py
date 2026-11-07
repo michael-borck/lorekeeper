@@ -173,6 +173,7 @@ def _cmd_pack_book(args: argparse.Namespace) -> int:
             level=args.level,
             pitch=args.pitch or "",
             parts=args.part,
+            sanitize=args.sanitize,
         )
         out = (
             Path(args.out).resolve()
@@ -321,6 +322,7 @@ def build_parser() -> argparse.ArgumentParser:
     book.add_argument("--level", default="beginner", help="level")
     book.add_argument("--pitch", help="one-line pitch")
     book.add_argument("--part", help="book part number, range or list (default: all)")
+    book.add_argument("--sanitize", action="store_true", help="replace course codes in learner content")
     book.add_argument("--out", help="output file")
     book.set_defaults(func=_cmd_pack_book)
 

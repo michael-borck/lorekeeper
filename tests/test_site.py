@@ -32,4 +32,18 @@ def test_site_builds_with_player_build_and_cname(tmp_path: Path):
     assert (out / "store" / "packs" / "follow-the-packet.json").is_file()
     assert (out / "store" / "packs" / "simplebot.json").is_file()
     assert (out / "store" / "packs" / "build-it-teach-it.json").is_file()
+    for pack_id in [
+        "think-python-direct-ai",
+        "code-python-consult-ai",
+        "ship-python-orchestrate-ai",
+        "converse-python-partner-ai",
+        "partner-dont-police",
+        "the-absolute-minimum-you-must-know",
+        "the-great-silence",
+        "programming-paradigms",
+        "simulate-it",
+        "ai-toys",
+        "security-toys",
+    ]:
+        assert (out / "store" / "packs" / f"{pack_id}.json").is_file()
     assert (out / "CNAME").read_text().strip() == "lorekeeper.borck.education"

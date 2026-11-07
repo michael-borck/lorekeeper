@@ -1,0 +1,58 @@
+lessons:
+  - kind: checkpoint
+    title: "Checkpoint: three paradigms"
+    questions:
+      - id: q1
+        prompt: What is the main unit of design in the imperative calculator?
+        options:
+          - The step and the control flow
+          - The pure function
+          - The class
+          - The database
+        answer: 0
+        explanation: "The imperative version describes what to do, in order."
+      - id: q2
+        prompt: What is the main unit of design in the functional calculator?
+        options:
+          - The pure function and the composition of functions
+          - The loop
+          - The object
+          - The menu
+        answer: 0
+        explanation: "Functions are values; the operations are composed."
+      - id: q3
+        prompt: What is the main unit of design in the object-oriented calculator?
+        options:
+          - The object and its responsibility boundary
+          - The pure function
+          - The global variable
+          - The database
+        answer: 0
+        explanation: "Classes bundle state and behaviour and separate responsibilities."
+      - id: q4
+        prompt: Where does the object-oriented calculator keep its history?
+        options:
+          - In an attribute on the Calculator object
+          - In a global list
+          - In a returned tuple
+          - In the menu
+        answer: 0
+        explanation: "The history is object state, mutated by each operation."
+      - id: q5
+        prompt: Why is the functional arithmetic easiest to test?
+        options:
+          - The functions are pure and need no input, output or running program
+          - It uses classes
+          - It has a menu
+          - It stores history
+        answer: 0
+        explanation: "Pure functions produce the same output for the same input."
+      - id: q6
+        prompt: What is the useful question when choosing a paradigm?
+        options:
+          - What kind of change will this code face?
+          - Which paradigm is newest?
+          - Which has the most keywords?
+          - Which is shortest?
+        answer: 0
+        explanation: "The paradigm makes a kind of change cheap. Choose for the change you expect."

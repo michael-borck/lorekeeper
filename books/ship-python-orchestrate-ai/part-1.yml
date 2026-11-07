@@ -1,0 +1,58 @@
+lessons:
+  - kind: checkpoint
+    title: "Checkpoint: ship the project"
+    questions:
+      - id: q1
+        prompt: Why does a professional Python project use a clear structure?
+        options:
+          - It makes the package installable, testable and understandable to someone else
+          - It makes the code longer
+          - It avoids using Git
+          - It removes the need for tests
+        answer: 0
+        explanation: "Structure is how a project survives a change of maintainer."
+      - id: q2
+        prompt: What does a virtual environment isolate?
+        options:
+          - The project's Python dependencies from other projects
+          - The source code from Git
+          - The tests from the package
+          - The documentation from the build
+        answer: 0
+        explanation: "A virtual environment keeps dependency versions predictable."
+      - id: q3
+        prompt: What does a test suite give you?
+        options:
+          - Evidence that the code still works after a change
+          - A guarantee that there are no bugs
+          - A replacement for documentation
+          - A faster model
+        answer: 0
+        explanation: "Tests catch regressions; they do not prove correctness."
+      - id: q4
+        prompt: Why use a linter and a type checker?
+        options:
+          - To catch mechanical problems before a reviewer or a user does
+          - To make the code run faster
+          - To replace tests
+          - To sign the package
+        answer: 0
+        explanation: "Lint and types are cheap checks for a class of mistakes."
+      - id: q5
+        prompt: What makes a package distributable?
+        options:
+          - Metadata, a build, a version, a licence and an installable artefact
+          - A folder on your laptop
+          - A screenshot of the app
+          - A README only
+        answer: 0
+        explanation: "Someone else has to be able to install and use it."
+      - id: q6
+        prompt: When are notebooks a good fit?
+        options:
+          - Exploration, teaching and narrative computation with visible state
+          - Every production service
+          - Replacing tests
+          - Hiding code from review
+        answer: 0
+        explanation: "Notebooks are powerful for exploration and teaching; production needs different constraints."

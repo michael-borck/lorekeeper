@@ -1,0 +1,58 @@
+lessons:
+  - kind: checkpoint
+    title: "Checkpoint: modelling choices"
+    questions:
+      - id: q1
+        prompt: What comes first in a simulation?
+        options:
+          - A question about the system
+          - The plotting library
+          - The model class
+          - The random seed
+        answer: 0
+        explanation: "A simulation without a question is a toy. The question decides the model, the horizon and the output."
+      - id: q2
+        prompt: What is the difference between discrete-time and discrete-event simulation?
+        options:
+          - Discrete time moves in fixed steps; discrete event jumps between scheduled events
+          - Discrete time is random; discrete event is deterministic
+          - Discrete event has no state
+          - They are the same
+        answer: 0
+        explanation: "The paradigm is often a decision about how time advances."
+      - id: q3
+        prompt: Why does a random simulation need a seed?
+        options:
+          - To make the run reproducible for another person
+          - To make the model more accurate
+          - To remove randomness
+          - To choose the distribution
+        answer: 0
+        explanation: "A seed fixes the sequence. Reproducibility is part of the evidence."
+      - id: q4
+        prompt: What is emergence?
+        options:
+          - A system-level pattern produced by local rules
+          - A random error
+          - A parameter value
+          - A plotting style
+        answer: 0
+        explanation: "The pattern is not contained in any single rule; it appears when the rules interact."
+      - id: q5
+        prompt: Why does network structure matter?
+        options:
+          - The same process can spread differently on a grid, random graph or hub-and-spoke network
+          - Networks make the model faster
+          - The average rate is enough
+          - Structure only affects the plot
+        answer: 0
+        explanation: "The structure is part of the explanation, not a detail."
+      - id: q6
+        prompt: What makes a simulation result useful?
+        options:
+          - Reproducibility, validation and interpretation
+          - A long plot
+          - A single lucky run
+          - The largest model
+        answer: 0
+        explanation: "A seed is necessary but not sufficient. Compare with theory, a qualitative law or data."

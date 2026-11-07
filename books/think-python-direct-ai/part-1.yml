@@ -1,0 +1,58 @@
+lessons:
+  - kind: checkpoint
+    title: "Checkpoint: think first"
+    questions:
+      - id: q1
+        prompt: What are the three learning strategies in this book?
+        options:
+          - Understand the concept before the code, use AI to explore rather than avoid learning, and build mental models
+          - Copy code quickly, skip theory, and ship before testing
+          - Memorise every framework and avoid AI
+          - Design first, code second, and never ask questions
+        answer: 0
+        explanation: "Concept before code, exploration over avoidance, and mental models over working artefacts alone."
+      - id: q2
+        prompt: How does the book contrast AI thinking with programmer thinking?
+        options:
+          - AI pattern-matches typical solutions; programmers define the problem, user, simplest solution and risks
+          - AI understands the client's business; programmers only type
+          - AI is always correct; programmers add decoration
+          - AI works in problems; programmers work in patterns
+        answer: 0
+        explanation: "Your job is to supply the problem and the judgement."
+      - id: q3
+        prompt: Which set names the computational thinking moves?
+        options:
+          - Decomposition, pattern recognition, abstraction and algorithm design
+          - Install, import, run and delete
+          - Copy, paste, format and submit
+          - Design, deploy, market and sell
+        answer: 0
+        explanation: "These four moves turn a fuzzy problem into something precise enough to build."
+      - id: q4
+        prompt: What should you do when the AI writes code you will use?
+        options:
+          - Read it, explain it, test it and take ownership of the result
+          - Paste it without reading
+          - Assume it works because it looks professional
+          - Rename the variables and move on
+        answer: 0
+        explanation: "A working artefact you cannot explain is a liability."
+      - id: q5
+        prompt: What is a good debugging habit?
+        options:
+          - Reproduce the problem, read the error, change one thing and test again
+          - Change several things at once
+          - Rewrite the whole program
+          - Ask the AI to guess
+        answer: 0
+        explanation: "One change at a time keeps cause and effect visible."
+      - id: q6
+        prompt: How do you keep the skill while using AI?
+        options:
+          - Make a first attempt, ask for help on the sticking point, then explain and test the result
+          - Let the AI do everything and read the answer
+          - Avoid AI completely
+          - Only use AI after the project is finished
+        answer: 0
+        explanation: "The first attempt and the explanation preserve the learning."

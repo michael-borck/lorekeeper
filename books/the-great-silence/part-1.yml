@@ -1,0 +1,58 @@
+lessons:
+  - kind: checkpoint
+    title: "Checkpoint: six frames"
+    questions:
+      - id: q1
+        prompt: What does "absence is data" mean?
+        options:
+          - A missing signal can itself be evidence, if you know what you expected to see
+          - Silence proves nothing happened
+          - Absence is always a failure
+          - Only errors matter
+        answer: 0
+        explanation: "The diagnostic question is what would have to be true for the silence to be informative."
+      - id: q2
+        prompt: What is the Dark Forest frame warning about?
+        options:
+          - Broadcasting your presence can attract attention from actors you cannot see
+          - The universe is literally dark
+          - Encryption is useless
+          - Hiding always works
+        answer: 0
+        explanation: "In security terms, reduce what you leak and know who is listening."
+      - id: q3
+        prompt: What does the Aestivation Hypothesis turn into a design question?
+        options:
+          - Heat and waste are decisions about how a civilisation spends energy
+          - Efficiency always reduces total use
+          - Computation is free
+          - Cooling is unrelated to AI
+        answer: 0
+        explanation: "Efficiency can lower the cost per task while increasing total use. The Jevons question is the human one."
+      - id: q4
+        prompt: What is the Zoo Hypothesis about?
+        options:
+          - When observing or protecting becomes controlling
+          - Animals in zoos are the only intelligence
+          - Nobody is watching
+          - Transparency is always benign
+        answer: 0
+        explanation: "The frame asks who has the power to observe, intervene or leave alone."
+      - id: q5
+        prompt: What is the Byzantine Generals problem?
+        options:
+          - Reaching agreement without a trusted central authority
+          - Winning a battle with a small army
+          - Encrypting a message twice
+          - Predicting the next token
+        answer: 0
+        explanation: "It is the distributed-systems problem behind consensus, trust and coordination."
+      - id: q6
+        prompt: What does the Great Filter ask?
+        options:
+          - Which step prevents a civilisation from surviving or expanding, and who can turn it off
+          - Which model has the most parameters
+          - Which planet is closest
+          - Which filter is best for images
+        answer: 0
+        explanation: "For AI, the question is which capability or failure point is the filter, and who controls it."
