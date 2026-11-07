@@ -6,6 +6,10 @@ from lorekeeper.site import build_site
 def test_site_builds_with_player_build_and_cname(tmp_path: Path):
     out = build_site(tmp_path / "site", cname="lorekeeper.borck.education")
     assert (out / "index.html").is_file()
+    landing = (out / "index.html").read_text(encoding="utf-8")
+    assert "Open Lorekeeper" in landing
+    assert "Private by design" in landing
+    assert "progressive web app" in landing
     assert (out / "nojekyll").is_file() is False
     assert (out / ".nojekyll").is_file()
     assert (out / "player" / "app.js").is_file()

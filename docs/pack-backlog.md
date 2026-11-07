@@ -7,14 +7,6 @@ candidates are source collections, not missing books.
 
 ## Candidate packs
 
-### Local AI Field Notes
-
-- Source: `/Volumes/Crucial X9/Projects/local-ai-field-notes`
-- Shape: method notes, governance checklist, hardware notes, benchmarks and decision records.
-- Candidate title: **Local First, Evidence First**
-- Why: practical, privacy-first AI delivery for regulated small firms and education.
-- Status: not built.
-
 ### Individual lab companions
 
 The security lab series already has broad packs:
