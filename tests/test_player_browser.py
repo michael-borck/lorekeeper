@@ -6,6 +6,7 @@ serve it locally, and exercise the learner-facing player in a clean context.
 
 from __future__ import annotations
 
+import re
 import threading
 from functools import partial
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
@@ -94,6 +95,29 @@ def test_player_shell_meets_basic_accessibility(page):
     labelledby = journey.get_attribute("aria-labelledby")
     assert labelledby and journey.locator(f"#{labelledby}").count() == 1
     page.locator("#journey-close").click()
+
+
+def test_skins_cover_art_and_arcade_sound_controls(page):
+    options = [option.inner_text() for option in page.locator("#theme-select option").all()]
+    assert options == ["Ink", "Arcade", "Illuminated"]
+    assert page.locator("#sound-picker").is_hidden()
+
+    page.locator("#theme-select").select_option("pixel")
+    playwright_api.expect(page.locator("#sound-picker")).to_be_visible()
+    assert page.locator("#sound-toggle").is_checked() is False
+
+    page.locator("[data-starter]").click()
+    playwright_api.expect(page.locator(".course-row")).to_have_count(3)
+    card = page.locator(".course-card").first
+    playwright_api.expect(card.locator(".course-cover-frame")).to_be_visible()
+    playwright_api.expect(card.locator(".course-emblem-badge svg")).to_be_visible()
+    playwright_api.expect(card.locator(".course-card-kicker")).not_to_have_text("")
+
+    page.locator('.course-card[href*="signal-and-noise"]').click()
+    page.wait_for_url("**/player/?course=signal-and-noise*")
+    playwright_api.expect(page.locator("#content")).to_have_class(
+        re.compile(r"motion-(?:ink|arcade|illuminated)")
+    )
 
 
 def test_player_starts_empty_and_restores_starter_kit(page):

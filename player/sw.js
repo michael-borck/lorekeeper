@@ -1,5 +1,5 @@
 /* Lorekeeper service worker: offline shell and visited course content. */
-const CACHE = "lorekeeper-v3";
+const CACHE = "lorekeeper-v4";
 const SHELL = [
   "./",
   "./index.html",
@@ -11,6 +11,7 @@ const SHELL = [
   "./progress-file.js",
   "./storage.js",
   "./sanitize.js",
+  "./sound.js",
   "./library.js",
   "./wayfinder.js",
   "./store.js",

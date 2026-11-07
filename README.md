@@ -72,7 +72,7 @@ Packs are hash- and signature-verified before install.
 ## Artwork
 
 Pack thumbnails and course covers use a curated subset of the SwipeVerse art
-library. The artwork is independent of the Ink/Pixel/Storybook UI skins: skins
+library. The artwork is independent of the Ink/Arcade/Illuminated UI skins: skins
 change the interface, while artwork identifies the pack or topic.
 
 ## Journey and tutor
@@ -102,23 +102,30 @@ Tauri and pack-store decisions.
   That is an engineering constraint, not learner-facing copy.
 - Internal keys, codes and paths stay in metadata for provenance. They do not
   appear in the player.
-- Art direction is separate from content. Three skins ship today: Ink, Pixel and
-  Storybook. A course sets its default, and the learner can switch.
+- Art direction is separate from content. Three skins ship today: Ink, Arcade
+  and Illuminated. A course sets its default, and the learner can switch.
 
 ## Skins
 
 | Skin | Feel | Default for |
 |---|---|---|
-| Ink | The quiet dark workbench | Fallback |
-| Pixel | 8-bit palette, hard edges, scanlines, mono type | Signal & Noise, Field Kit |
-| Storybook | Warm paper, serif headings, soft shadows, forest green | Ship It |
+| Ink | Professional field notebook: serif display type, dark paper, fine brass rules | Fallback |
+| Arcade | 16-bit quest: hard edges, offset shadows, scanlines, arcade sound optional | Signal & Noise, Field Kit |
+| Illuminated | Storybook kingdom: parchment, heraldic cover frames, drop caps, wax-seal achievements | Ship It |
 
 A course sets `theme` in `courses/<key>.yaml`. The learner can override it with
 the Skin selector in the sidebar; the choice is saved locally. All three skins are
 CSS only, so lesson content never changes. The course picker carries a small
 theme-specific illustration, the cards show their default skin, and each course
-has its own emblem in the picker and sidebar. Motion is subtle and disabled under
-`prefers-reduced-motion`.
+has a heraldic emblem in the picker and sidebar.
+
+Each skin has its own material language. Ink uses serif display type, dark paper
+and fine rules. Arcade uses hard edges, offset shadows, scanlines and optional
+sound. Illuminated uses parchment, arched cover frames, drop caps, heraldic
+badges and wax-seal achievements. Lesson changes use a quiet ink reveal, an
+arcade step wipe or a page turn. All motion is disabled under
+`prefers-reduced-motion`. Arcade sound is off by default and only appears in that
+skin.
 
 ## How it works
 
@@ -464,7 +471,7 @@ key-rotation procedure are in [`docs/store-policy.md`](docs/store-policy.md).
 | Sandboxed exercise tests | Working |
 | Tauri desktop shell | Deferred |
 | LMS grade export | Not built |
-| Ink, Pixel and Storybook skins | Working |
+| Ink, Arcade and Illuminated skins | Working |
 | Theme illustrations and motion | Working |
 | Course-specific emblems | Working |
 | PWA install and offline shell | Working |

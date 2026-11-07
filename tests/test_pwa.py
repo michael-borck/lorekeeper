@@ -13,6 +13,7 @@ def test_pwa_assets_are_present():
         "player/progress-file.js",
         "player/storage.js",
         "player/sanitize.js",
+        "player/sound.js",
         "player/library.js",
         "player/wayfinder.js",
         "player/store.js",

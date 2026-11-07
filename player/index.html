@@ -29,9 +29,13 @@
           <span>Skin</span>
           <select id="theme-select" aria-label="Skin">
             <option value="ink">Ink</option>
-            <option value="pixel">Pixel</option>
-            <option value="storybook">Storybook</option>
+            <option value="pixel">Arcade</option>
+            <option value="storybook">Illuminated</option>
           </select>
+        </label>
+        <label class="sound-picker" id="sound-picker" hidden>
+          <span>Arcade sound</span>
+          <input id="sound-toggle" type="checkbox">
         </label>
         <button id="journey-button" class="ghost small" type="button" data-journey-open>Journey</button>
         <button id="tutor-button" class="ghost small" type="button" data-tutor-open>AI tutor</button>
@@ -167,6 +171,7 @@
   <script src="progress-file.js"></script>
   <script src="storage.js"></script>
   <script src="sanitize.js"></script>
+  <script src="sound.js"></script>
   <script src="library.js"></script>
   <script src="wayfinder.js"></script>
   <script src="trusted-keys.js"></script>

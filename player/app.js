@@ -32,6 +32,7 @@ function applyTheme(name, persist = false) {
   document.documentElement.dataset.theme = theme;
   const select = document.getElementById("theme-select");
   if (select) select.value = theme;
+  window.LorekeeperSound?.refresh();
   if (persist) {
     try {
       localStorage.setItem(THEME_KEY, theme);
@@ -62,7 +63,7 @@ init().catch((error) => fatal(error.message || String(error)));
 
 async function init() {
   document.getElementById("reset-progress").addEventListener("click", resetProgress);
-  applyTheme(savedTheme() || "pixel", false);
+  applyTheme(savedTheme() || "ink", false);
   document.getElementById("theme-select").addEventListener("change", (event) => {
     applyTheme(event.target.value, true);
   });
@@ -135,13 +136,13 @@ async function loadCourse(slug) {
   }
 
   state.course = course;
-  applyTheme(savedTheme() || course.unit.theme || "pixel", false);
+  applyTheme(savedTheme() || course.unit.theme || "ink", false);
   loadProgress();
   window.LorekeeperBadges?.init();
   window.LorekeeperWayfinder?.renderSidebarTrail();
   document.title = `${course.unit.title} · Lorekeeper`;
   const emblem = window.LorekeeperArt
-    ? window.LorekeeperArt.courseEmblem(course.unit.slug)
+    ? window.LorekeeperArt.courseEmblem(course.unit.slug, course.unit)
     : "";
   els.courseMeta.innerHTML = `
     <div class="course-emblem">${emblem}</div>
@@ -170,6 +171,9 @@ function route() {
 function showLesson(id, push = true) {
   const entry = allLessons().find((item) => item.lesson.id === id);
   if (!entry) return;
+  if (state.currentId && state.currentId !== id) {
+    window.LorekeeperSound?.play(push ? "step" : "back");
+  }
   state.currentId = id;
   if (push && location.hash !== `#${id}`) {
     history.pushState({ id }, "", `#${encodeURIComponent(id)}`);
@@ -244,6 +248,7 @@ function completeLesson(lesson, { quiet = false } = {}) {
   renderSidebar();
   updateStats();
   syncCompleteControls(lesson);
+  window.LorekeeperSound?.play("complete");
   if (!quiet) toast(`Lesson complete +${lesson.xp} XP`);
   else toast(`Passed. +${lesson.xp} XP`);
   window.LorekeeperBadges?.sync(true);
@@ -324,14 +329,17 @@ function renderLesson(entry) {
   );
   els.content.className = wide ? "content wide" : "content";
   els.content.innerHTML = `
-    <div class="crumbs">
-      <span>Module ${String(module.number).padStart(2, "0")}</span>
-      <span class="sep">/</span>
-      <span>${escapeHtml(module.title)}</span>
-      <span class="pill ${lesson.kind}">${lesson.kind}</span>
-      <span class="xp-pill">${lesson.xp} XP</span>
+    <div class="lesson-heading">
+      <div class="crumbs">
+        <span>Module ${String(module.number).padStart(2, "0")}</span>
+        <span class="sep">/</span>
+        <span>${escapeHtml(module.title)}</span>
+        <span class="pill ${lesson.kind}">${lesson.kind}</span>
+        <span class="xp-pill">${lesson.xp} XP</span>
+      </div>
+      <h1 class="lesson-title">${escapeHtml(lesson.title)}</h1>
+      <div class="lesson-ornament" aria-hidden="true"><span></span></div>
     </div>
-    <h1 class="lesson-title">${escapeHtml(lesson.title)}</h1>
     <div data-blocks></div>
     <div class="lesson-footer" data-footer>
       <button class="btn" type="button" data-prev ${previous ? "" : "disabled"}>Previous</button>
@@ -344,6 +352,13 @@ function renderLesson(entry) {
       }
       <button class="btn primary" type="button" data-next ${next ? "" : "disabled"}>Next</button>
     </div>`;
+
+  const theme = document.documentElement.dataset.theme || "ink";
+  els.content.classList.remove("motion-ink", "motion-arcade", "motion-illuminated");
+  void els.content.offsetWidth;
+  els.content.classList.add(
+    theme === "pixel" ? "motion-arcade" : theme === "storybook" ? "motion-illuminated" : "motion-ink"
+  );
 
   if (previous) {
     els.content.querySelector("[data-prev]").addEventListener("click", () => showLesson(previous.lesson.id));
@@ -784,14 +799,23 @@ function assertEqual(actual, expected, message) {
 /* Course picker and errors */
 
 function renderPicker() {
+  els.content.className = "content picker-content";
+  const idleEmblem = window.LorekeeperArt ? window.LorekeeperArt.courseEmblem("library") : "";
+  els.courseMeta.innerHTML = `
+    <div class="course-emblem">${idleEmblem}</div>
+    <div class="course-meta-text">
+      <div class="code">library</div>
+      <div class="title">Choose a course to begin</div>
+    </div>`;
   els.content.innerHTML = `
-    <div class="placeholder">
+    <div class="placeholder picker">
       <div class="picker-hero">
         ${window.LorekeeperArt ? window.LorekeeperArt.picker() : ""}
         <div class="picker-intro">
           <p class="eyebrow">Lorekeeper · field notes</p>
           <h1>Choose your path</h1>
-          <p>Story-driven courses for your personal learning path. Your progress stays on this device.</p>
+          <p class="picker-lede">Story-driven courses for your personal learning path. Your progress stays on this device.</p>
+          <div class="picker-rule" aria-hidden="true"><span></span></div>
         </div>
       </div>
       <div id="wayfinder-host"></div>
@@ -801,14 +825,16 @@ function renderPicker() {
             (course) => `
           <div class="course-row">
             <a class="course-card" href="?course=${encodeURIComponent(course.slug)}">
-              <img class="course-cover" src="${window.LorekeeperArt ? window.LorekeeperArt.courseCoverUrl(course) : ""}" alt="" loading="lazy" width="54" height="54">
-              <span class="course-card-body">
-                <span class="title">${escapeHtml(course.title)}</span>
-                <span class="meta">${course.modules} modules · ${course.lessons} lessons
-                  <span class="skin-tag">${escapeHtml(window.LorekeeperArt ? window.LorekeeperArt.skinName(course.theme) : (course.theme || "ink"))}</span>
-                  ${course.source === "local" ? '<span class="skin-tag local-tag">Local pack</span>' : ""}
-                </span>
+              <span class="course-cover-frame">
+                <img class="course-cover" src="${window.LorekeeperArt ? window.LorekeeperArt.courseCoverUrl(course) : ""}" alt="" loading="lazy" width="640" height="360">
+                <span class="course-emblem-badge">${window.LorekeeperArt ? window.LorekeeperArt.courseEmblem(course.slug, course) : ""}</span>
               </span>
+              <span class="course-card-body">
+                <span class="course-card-kicker">${escapeHtml(window.LorekeeperArt ? window.LorekeeperArt.skinName(course.theme) : (course.theme || "ink"))}${course.source === "local" ? " · local pack" : ""}</span>
+                <span class="title">${escapeHtml(course.title)}</span>
+                <span class="meta">${course.modules} modules · ${course.lessons} lessons</span>
+              </span>
+              <span class="course-open" aria-hidden="true">Open <span>→</span></span>
             </a>
           </div>`
           )
