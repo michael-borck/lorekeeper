@@ -272,6 +272,12 @@ def compile_unit(unit: Unit, out_root: Path) -> dict:
     }
 
     out_dir.mkdir(parents=True, exist_ok=True)
+    asset_root = content_dir() / unit.key / "assets"
+    asset_out = out_dir / "assets"
+    if asset_out.exists():
+        shutil.rmtree(asset_out)
+    if asset_root.is_dir():
+        shutil.copytree(asset_root, asset_out, dirs_exist_ok=True)
     course_path = out_dir / "course.json"
     course_path.write_text(
         json.dumps(course, indent=2, ensure_ascii=False) + "\n", encoding="utf-8"

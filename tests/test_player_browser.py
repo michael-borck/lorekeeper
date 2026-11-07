@@ -103,6 +103,13 @@ def test_player_starts_empty_and_restores_starter_kit(page):
     playwright_api.expect(page.locator(".course-row")).to_have_count(3)
 
 
+def test_direct_link_to_hidden_builtin_course_still_opens(page):
+    page.goto(page.url.split("player/")[0] + "player/?course=signal-and-noise")
+    page.wait_for_load_state("networkidle")
+    playwright_api.expect(page.locator(".lesson-title")).to_be_visible()
+    playwright_api.expect(page.locator(".lesson-title")).not_to_have_text("Not quite yet")
+
+
 def test_store_search_and_filters(page):
     page.locator("#store-open").click()
     grid = page.locator(".store-grid")
@@ -174,7 +181,77 @@ def test_pack_prose_sanitizer_blocks_active_content(page):
     assert "onerror" not in result.lower()
     assert 'onclick' not in result.lower()
     assert "javascript:" not in result.lower()
+    safe_markup = page.evaluate(
+        """() => window.LorekeeperSanitize.html(
+          '<div class="hotspot-board" data-spot="bad"><a id="target" href="#target">link</a></div>'
+        )"""
+    )
+    assert 'class="hotspot-board"' in safe_markup
+    assert 'data-spot="bad"' in safe_markup
+    assert 'id="lr-target"' in safe_markup
+    assert 'href="#lr-target"' in safe_markup
     assert page.evaluate("() => window.__pwned === undefined")
+    asset = page.evaluate(
+        """() => {
+          window.LorekeeperPackAssets = {"dot.png": "data:image/png;base64,AAAA"};
+          return window.LorekeeperSanitize.html('<img src="assets/dot.png" alt="">');
+        }"""
+    )
+    assert 'src="data:image/png;base64,AAAA"' in asset
+
+
+def test_pack_structure_cannot_inject_markup(page):
+    error = page.evaluate(
+        """() => {
+          const pack = {
+            format: "lorekeeper.pack",
+            version: 1,
+            id: "bad-pack",
+            title: "Bad",
+            courses: [{
+              slug: "bad-pack",
+              course: {
+                unit: { slug: "bad-pack", title: "Bad" },
+                modules: [{
+                  number: 1,
+                  slug: "01-bad",
+                  title: "Bad",
+                  lessons: [{
+                    id: "01-01",
+                    title: "Bad",
+                    kind: 'reading\" onmouseover=\"alert(1)',
+                    xp: 10,
+                    blocks: [{ type: "html", html: "<p>ok</p>" }]
+                  }]
+                }]
+              },
+              stories: {}
+            }]
+          };
+          try {
+            window.LorekeeperLibrary.validatePack(pack);
+            return "";
+          } catch (error) {
+            return error.message;
+          }
+        }"""
+    )
+    assert "unknown lesson kind" in error
+
+
+def test_player_shell_works_offline(browser, site):
+    context = browser.new_context()
+    page = context.new_page()
+    page.goto(site + "player/")
+    page.wait_for_load_state("networkidle")
+    page.wait_for_function("() => navigator.serviceWorker && navigator.serviceWorker.controller", timeout=10_000)
+    page.reload()
+    page.wait_for_load_state("networkidle")
+    context.set_offline(True)
+    page.goto(site + "player/", wait_until="domcontentloaded")
+    assert page.locator("#content").inner_text().strip()
+    assert "Lorekeeper" in page.inner_text("body")
+    context.close()
 
 
 def test_player_has_no_console_errors(page):

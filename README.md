@@ -240,9 +240,11 @@ install it with pip, and run the local studio. For a browser-based editor, run:
 python3 -m lorekeeper studio
 ```
 
-It lists the courses and modules, edits the overlay YAML, validates with the
-same compiler, saves with a backup under `build/studio-backups/`, and previews
-through the real player. It is local-only, bound to `127.0.0.1`, and protected
+It lists the courses and modules, edits overlays with YAML and a field
+inspector, validates against the same compiler, checks duplicate lesson IDs
+across the course, saves with a backup under `build/studio-backups/`, previews
+through the real player, manages reading sources and images, and exports a pack
+with a complete manifest. It is local-only, bound to `127.0.0.1`, and protected
 by a per-run token. See [`docs/authoring-studio.md`](docs/authoring-studio.md).
 
 ## Lesson types
@@ -325,9 +327,9 @@ progress also clears the badge case.
 
 ## Progress backup
 
-Progress, badges, drafts and the chosen skin live in `localStorage` on the
-device. The **Progress** dialog exports them to one JSON file and imports a file
-with **Merge** or **Replace**. Merge unions completed lessons, activity dates,
+Progress and badges live in IndexedDB. Exercise drafts and the chosen skin live
+in `localStorage`. The **Progress** dialog exports them together as one JSON file
+and imports a file with **Merge** or **Replace**. Merge unions completed lessons, activity dates,
 badges and missing drafts; Replace restores the file exactly.
 
 Clearing browser storage erases the local copy. Lorekeeper asks the browser for
@@ -361,9 +363,10 @@ python3 -m lorekeeper pack --root ../isys2012-information-security \
   --tags security,risk,operations --theme pixel
 ```
 
-Import it from the course picker. Local packs live in `localStorage`, appear with
-a **Local pack** tag, and can be removed without touching the built-in courses.
-Progress and drafts stay separate from the pack file.
+Import it from the course picker. Local packs live in IndexedDB, appear with a
+**Local pack** tag, and can be removed without touching the built-in courses.
+Pack assets are embedded in the pack file. Progress and drafts stay separate
+from the pack file.
 
 Packs can contain exercise test code. Only import packs you trust.
 
@@ -446,8 +449,9 @@ key-rotation procedure are in [`docs/store-policy.md`](docs/store-policy.md).
 | Ink story with `inkjs` | Working |
 | Three Ink stories | Working |
 | Authoring studio (`lorekeeper studio`) | Working |
+| Studio field inspector, CRUD, sources, images, pack export | Working |
 | Badges and streaks | Working |
-| XP, progress, localStorage | Working |
+| XP, progress, IndexedDB | Working |
 | Ship It course | Complete |
 | Signal & Noise course | Complete, 12 chapters curated |
 | Field Kit demo | Complete |
@@ -490,6 +494,7 @@ The full suite compiles every registered course, checks overlay validity,
 asserts the source files are byte-identical before and after the build, and
 scans learner-facing output for source codes or institutional names.
 
-CI runs ruff, checks and builds the bundled Field Kit course, and runs the
-source-independent tests. The full suite and the site build need the sibling
-course repositories, so they stay a local check.
+CI runs ruff, checks and builds the bundled Field Kit course, runs the
+source-independent tests, and runs the studio UI tests in Chromium. The full
+course suite and the site build need the sibling course repositories, so they
+stay a local check.

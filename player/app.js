@@ -111,17 +111,27 @@ async function loadCourse(slug) {
     course = local.course;
     state.courseBaseUrl = null;
     state.coursePack = local.packId;
+    window.LorekeeperPackAssets = local.assets || {};
+    window.LorekeeperAssetBase = null;
   } else {
-    const meta = state.index.courses.find((item) => item.slug === slug);
-    const courseUrl = new URL(meta ? `../build/${meta.slug}/course.json` : slug, location.href);
+    const meta = (state.index.allCourses || state.index.courses).find((item) => item.slug === slug);
+    if (!meta) {
+      fatal(
+        `Course "${slug}" is not in this library. Open Manage library to add it, or browse the pack store.`
+      );
+      return;
+    }
+    const courseUrl = new URL(`../build/${meta.slug}/course.json`, location.href);
     try {
       course = await getJSON(courseUrl.href);
     } catch {
-      fatal(`Could not load course "${slug}".`);
+      fatal(`Could not load course "${slug}". Run lorekeeper build, then reload.`);
       return;
     }
     state.courseBaseUrl = new URL(".", courseUrl).href;
     state.coursePack = null;
+    window.LorekeeperPackAssets = {};
+    window.LorekeeperAssetBase = state.courseBaseUrl;
   }
 
   state.course = course;

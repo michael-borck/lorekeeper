@@ -2,17 +2,20 @@
 
 from __future__ import annotations
 
+import base64
 import json
+import mimetypes
 from datetime import datetime, timezone
 from pathlib import Path
 
 import yaml
 
 from .compile import compile_unit
-from .registry import Unit, engine_root, slugify
+from .registry import Unit, content_dir, engine_root, slugify
 
 PACK_FORMAT = "lorekeeper.pack"
 PACK_VERSION = 1
+MAX_ASSET_BYTES = 4 * 1024 * 1024
 
 
 def unit_from_root(
@@ -48,6 +51,26 @@ def unit_from_root(
         start=start,
         replacements={code: "this course"},
     )
+
+
+def collect_assets(unit: Unit) -> dict[str, str]:
+    root = (content_dir() / unit.key / "assets").resolve()
+    assets: dict[str, str] = {}
+    if not root.is_dir():
+        return assets
+    for path in sorted(root.iterdir()):
+        if not path.is_file() or not path.name[0].isalnum():
+            continue
+        if not all(char.isalnum() or char in "._-" for char in path.name):
+            continue
+        mime = mimetypes.guess_type(path.name)[0] or ""
+        if not mime.startswith("image/") or mime == "image/svg+xml":
+            continue
+        data = path.read_bytes()
+        if len(data) > MAX_ASSET_BYTES:
+            continue
+        assets[path.name] = f"data:{mime};base64,{base64.b64encode(data).decode('ascii')}"
+    return assets
 
 
 def build_pack(unit: Unit, build_root: Path | None = None) -> dict:
@@ -88,6 +111,7 @@ def build_pack(unit: Unit, build_root: Path | None = None) -> dict:
                 "start": unit.start,
                 "course": course,
                 "stories": stories,
+                "assets": collect_assets(unit),
             }
         ],
     }

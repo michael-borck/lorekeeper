@@ -12,6 +12,7 @@ material.
 ## What a pack may contain
 
 - original or properly licensed text, images and Ink stories
+- image assets limited to PNG, JPEG, GIF, WebP and AVIF
 - exercises whose tests run in the Lorekeeper sandbox
 - a complete manifest with id, title, version, author and licence
 

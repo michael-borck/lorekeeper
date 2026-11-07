@@ -24,8 +24,8 @@ desktop build today.
 - The same build is the future Tauri or Electron shell if one is ever needed.
 
 The PWA adds a manifest and service worker. It does not add accounts, analytics,
-push notifications, permissions or background execution. Progress stays in
-localStorage unless the learner exports it.
+push notifications, permissions or background execution. Progress and packs stay
+in IndexedDB unless the learner exports them.
 
 ## Hosting
 

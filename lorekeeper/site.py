@@ -149,7 +149,7 @@ python3 -m pip install -e .</code>
         </div>
         <div class="card">
           <h3>2. Open the studio</h3>
-          <p>The authoring studio is a private local workbench for lessons, checkpoints and exercises.</p>
+          <p>The authoring studio is a private local workbench. Edit lessons, validate them, preview the real player, and export a complete pack with its manifest.</p>
           <code class="code">python3 -m lorekeeper studio</code>
           <p class="note">It opens at <code>127.0.0.1</code> and writes only inside your local content folder.</p>
         </div>

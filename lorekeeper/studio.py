@@ -11,9 +11,13 @@ Run it with:
 
 from __future__ import annotations
 
+import base64
+import copy
 import errno
 import json
+import mimetypes
 import os
+import re
 import secrets
 import threading
 import webbrowser
@@ -27,13 +31,17 @@ from urllib.parse import parse_qs, unquote, urlparse
 
 import yaml
 
-from .compile import _lesson_from_spec, compile_unit
+from .compile import _default_specs, _lesson_from_spec, compile_unit, load_overlay
 from .discover import discover_modules
-from .registry import Unit, content_dir, engine_root, get_unit, load_units
+from .pack import build_pack, collect_assets, write_pack
+from .registry import Unit, content_dir, engine_root, get_unit, load_units, slugify
 from .validate import check_unit
 from .widgets import WIDGET_KINDS
 
-MAX_BODY_BYTES = 2 * 1024 * 1024
+MAX_BODY_BYTES = 8 * 1024 * 1024
+MAX_ASSET_BYTES = 4 * 1024 * 1024
+SLUG_RE = re.compile(r"^[a-z0-9][a-z0-9-]*$")
+SAFE_FILE_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]*$")
 
 LESSON_KINDS = ["reading", "checkpoint", "exercise", "story", *sorted(WIDGET_KINDS)]
 
@@ -339,9 +347,60 @@ def validate_overlay(unit: Unit, module: dict[str, Any], text: str) -> StudioVal
                 "title": lesson.get("title", fallback),
                 "kind": lesson.get("kind", "reading"),
                 "xp": lesson.get("xp", 0),
+                "spec": spec,
             }
         )
     return StudioValidation(problems, summaries)
+
+
+def _module_specs(
+    unit: Unit, module: dict[str, Any], override_text: str | None = None
+) -> list[dict[str, Any]]:
+    if override_text is not None:
+        return parse_lessons(override_text)
+    overlay = load_overlay(unit, module["slug"]) or {}
+    specs = overlay.get("lessons")
+    return specs if isinstance(specs, list) else _default_specs(module)
+
+
+def _course_lesson_ids(
+    unit: Unit, target: dict[str, Any], override_text: str | None = None
+) -> list[tuple[str, str]]:
+    ids: list[tuple[str, str]] = []
+    try:
+        modules = discover_modules(unit)
+    except FileNotFoundError:
+        return ids
+    for module in modules:
+        try:
+            specs = _module_specs(
+                unit, module, override_text if module["slug"] == target["slug"] else None
+            )
+        except (StudioError, OSError, ValueError):
+            continue
+        for index, spec in enumerate(specs, start=1):
+            fallback = f"{module['number']:02d}-{index:02d}"
+            try:
+                lesson = _lesson_from_spec(unit, module, spec, fallback)
+            except (ValueError, FileNotFoundError):
+                continue
+            ids.append((str(lesson.get("id", fallback)), module["slug"]))
+    return ids
+
+
+def validate_course_overlay(
+    unit: Unit, module: dict[str, Any], text: str
+) -> StudioValidation:
+    validation = validate_overlay(unit, module, text)
+    seen: dict[str, str] = {}
+    for lesson_id, module_slug in _course_lesson_ids(unit, module, text):
+        if lesson_id in seen and seen[lesson_id] != module_slug:
+            validation.problems.append(
+                f"duplicate lesson id {lesson_id} in modules {seen[lesson_id]} and {module_slug}"
+            )
+        else:
+            seen.setdefault(lesson_id, module_slug)
+    return validation
 
 
 def load_module(unit: Unit, module: dict[str, Any]) -> dict[str, Any]:
@@ -393,7 +452,7 @@ def save_overlay(
     content_root: Path | None = None,
     backup_root: Path | None = None,
 ) -> dict[str, Any]:
-    validation = validate_overlay(unit, module, text)
+    validation = validate_course_overlay(unit, module, text)
     if validation.problems:
         return {
             "ok": False,
@@ -421,6 +480,244 @@ def save_overlay(
     }
 
 
+def _yaml_lessons(lessons: list[dict[str, Any]]) -> str:
+    return yaml.safe_dump(
+        {"lessons": lessons}, sort_keys=False, allow_unicode=True, width=1000
+    )
+
+
+def next_lesson_id(module: dict[str, Any], lessons: list[dict[str, Any]]) -> str:
+    prefix = f"{module['number']:02d}-"
+    highest = 0
+    for lesson in lessons:
+        value = str(lesson.get("id", ""))
+        if not value.startswith(prefix):
+            continue
+        try:
+            highest = max(highest, int(value[len(prefix) :]))
+        except ValueError:
+            continue
+    return f"{prefix}{highest + 1:02d}"
+
+
+def transform_overlay(
+    unit: Unit,
+    module: dict[str, Any],
+    text: str,
+    action: str,
+    index: int,
+    target: int | None = None,
+    fields: dict[str, Any] | None = None,
+) -> dict[str, Any]:
+    lessons = parse_lessons(text)
+    if index < 0 or index >= len(lessons):
+        raise StudioError("lesson index is out of range")
+
+    if action == "move":
+        if target is None:
+            raise StudioError("move needs a target index")
+        target = max(0, min(int(target), len(lessons) - 1))
+        lesson = lessons.pop(index)
+        lessons.insert(target, lesson)
+    elif action == "duplicate":
+        lesson = copy.deepcopy(lessons[index])
+        lesson["id"] = next_lesson_id(module, lessons)
+        lesson["title"] = f"{lesson.get('title', 'Lesson')} (copy)"
+        lessons.insert(index + 1, lesson)
+    elif action == "delete":
+        lessons.pop(index)
+    elif action == "update":
+        if not isinstance(fields, dict):
+            raise StudioError("update needs a fields object")
+        for key, value in fields.items():
+            if key == "id" or not isinstance(key, str):
+                continue
+            lessons[index][key] = value
+    else:
+        raise StudioError(f"unknown lesson action '{action}'")
+
+    updated = _yaml_lessons(lessons)
+    validation = validate_course_overlay(unit, module, updated)
+    return {
+        "ok": not validation.problems,
+        "yaml": updated,
+        "problems": validation.problems,
+        "lessons": validation.lessons,
+    }
+
+
+def list_sources(unit: Unit, module: dict[str, Any]) -> list[dict[str, Any]]:
+    found: list[dict[str, Any]] = []
+    root = module["dir"]
+    if not root.is_dir():
+        return found
+    for path in sorted(root.rglob("*.qmd")):
+        if any(part.startswith((".", "_")) for part in path.relative_to(root).parts):
+            continue
+        try:
+            text = path.read_text(encoding="utf-8", errors="ignore")
+        except OSError:
+            continue
+        headings = [
+            match.group(1).strip()
+            for match in re.finditer(r"^#{1,3}\s+(.+?)\s*$", text, re.MULTILINE)
+        ]
+        found.append(
+            {
+                "path": str(path.relative_to(root)),
+                "headings": headings[:80],
+            }
+        )
+    return found
+
+
+def register_course(data: dict[str, Any]) -> dict[str, Any]:
+    key = slugify(str(data.get("key") or data.get("title") or ""))
+    if not key or not SLUG_RE.fullmatch(key):
+        raise StudioError("course key must use lowercase letters, numbers and hyphens")
+    title = str(data.get("title") or "").strip()
+    if not title:
+        raise StudioError("course title is required")
+    root_value = str(data.get("root") or "").strip()
+    if not root_value:
+        raise StudioError("source root is required")
+    root = Path(root_value).expanduser().resolve()
+    if not root.is_dir():
+        raise StudioError(f"source root not found: {root}")
+    if not (root / "modules").is_dir():
+        raise StudioError(f"source root has no modules directory: {root}")
+
+    path = engine_root() / "courses" / f"{key}.yaml"
+    if path.exists():
+        raise StudioError(f"course '{key}' is already registered")
+    slug = str(data.get("slug") or slugify(title) or key)
+    if not SLUG_RE.fullmatch(slug):
+        raise StudioError("course slug must use lowercase letters, numbers and hyphens")
+    code = str(data.get("code") or key.upper())
+    tags = data.get("tags") or []
+    if isinstance(tags, str):
+        tags = [tag.strip() for tag in tags.split(",") if tag.strip()]
+    payload = {
+        "key": key,
+        "code": code,
+        "slug": slug,
+        "title": title,
+        "root": str(root),
+        "theme": str(data.get("theme") or "ink"),
+        "tags": [str(tag) for tag in tags],
+        "level": str(data.get("level") or "beginner"),
+        "pitch": str(data.get("pitch") or ""),
+        "start": str(data.get("start") or ""),
+        "replacements": {code: "this course"},
+    }
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(
+        yaml.safe_dump(payload, sort_keys=False, allow_unicode=True), encoding="utf-8"
+    )
+    return {"ok": True, "key": key, "path": _display_path(path)}
+
+
+def initialise_overlay(unit: Unit, module: dict[str, Any]) -> dict[str, Any]:
+    specs = _default_specs(module)
+    text = _yaml_lessons(specs)
+    result = save_overlay(unit, module, text)
+    if result.get("ok"):
+        result["yaml"] = text
+    return result
+
+
+def _asset_root(unit: Unit) -> Path:
+    root = (content_dir() / unit.key / "assets").resolve()
+    content = content_dir().resolve()
+    if not root.is_relative_to(content):
+        raise StudioError("asset path escaped the content directory")
+    return root
+
+
+def list_assets(unit: Unit) -> list[dict[str, Any]]:
+    root = _asset_root(unit)
+    if not root.is_dir():
+        return []
+    return [
+        {"name": path.name, "url": f"/content/{unit.key}/assets/{path.name}", "size": path.stat().st_size}
+        for path in sorted(root.iterdir())
+        if path.is_file() and SAFE_FILE_RE.fullmatch(path.name)
+    ]
+
+
+def save_asset(unit: Unit, data: dict[str, Any]) -> dict[str, Any]:
+    name = str(data.get("name") or "").strip()
+    if not SAFE_FILE_RE.fullmatch(name):
+        raise StudioError("asset name must be a simple file name")
+    mime = mimetypes.guess_type(name)[0] or ""
+    if not mime.startswith("image/") or mime == "image/svg+xml":
+        raise StudioError("only PNG, JPEG, GIF, WebP and AVIF images are allowed")
+    raw = str(data.get("data") or "")
+    if "," in raw and raw.startswith("data:"):
+        raw = raw.split(",", 1)[1]
+    try:
+        payload = base64.b64decode(raw, validate=True)
+    except ValueError as exc:
+        raise StudioError("asset data is not valid base64") from exc
+    if len(payload) > MAX_ASSET_BYTES:
+        raise StudioError("asset is too large (limit 4 MB)")
+    root = _asset_root(unit)
+    root.mkdir(parents=True, exist_ok=True)
+    path = (root / name).resolve()
+    if not path.is_relative_to(root):
+        raise StudioError("asset path escaped the content directory")
+    path.write_bytes(payload)
+    return {"ok": True, "name": name, "url": f"/content/{unit.key}/assets/{name}", "assets": list_assets(unit)}
+
+
+def build_studio_pack(unit: Unit, data: dict[str, Any]) -> dict[str, Any]:
+    pack_id = str(data.get("id") or unit.slug).strip()
+    title = str(data.get("title") or unit.title).strip()
+    author = str(data.get("author") or "").strip()
+    licence = str(data.get("licence") or "").strip()
+    problems = []
+    if not SLUG_RE.fullmatch(pack_id):
+        problems.append("pack id must use lowercase letters, numbers and hyphens")
+    if not title:
+        problems.append("pack title is required")
+    if not author:
+        problems.append("author is required")
+    if not licence:
+        problems.append("licence is required")
+    if problems:
+        return {"ok": False, "problems": problems}
+
+    tags = data.get("tags") or []
+    if isinstance(tags, str):
+        tags = [tag.strip() for tag in tags.split(",") if tag.strip()]
+    pack = build_pack(unit, engine_root() / "build")
+    pack["id"] = pack_id
+    pack["title"] = title
+    pack["author"] = author
+    pack["licence"] = licence
+    entry = pack["courses"][0]
+    entry["title"] = title
+    entry["tags"] = [str(tag) for tag in tags]
+    entry["level"] = str(data.get("level") or unit.level)
+    entry["pitch"] = str(data.get("pitch") or unit.pitch)
+    entry["start"] = str(data.get("start") or unit.start)
+    entry["assets"] = collect_assets(unit)
+
+    out = (engine_root() / "build" / "studio-packs" / f"{pack_id}.json").resolve()
+    build_root = (engine_root() / "build").resolve()
+    if not out.is_relative_to(build_root):
+        raise StudioError("pack path escaped the build directory")
+    write_pack(pack, out)
+    return {
+        "ok": True,
+        "problems": [],
+        "path": _display_path(out),
+        "url": f"/build/studio-packs/{pack_id}.json",
+        "filename": f"{pack_id}.json",
+        "size": out.stat().st_size,
+    }
+
+
 def list_courses() -> list[dict[str, Any]]:
     courses = []
     for unit in load_units():
@@ -432,6 +729,11 @@ def list_courses() -> list[dict[str, Any]]:
                 "title": unit.title,
                 "root": str(unit.root),
                 "rootExists": unit.root.is_dir(),
+                "theme": unit.theme,
+                "tags": list(unit.tags),
+                "level": unit.level,
+                "pitch": unit.pitch,
+                "start": unit.start,
             }
         )
     return courses
@@ -488,9 +790,37 @@ class StudioHandler(SimpleHTTPRequestHandler):
             self.studio_token = studio_token
         super().__init__(*args, directory=str(engine_root()), **kwargs)
 
+    def _static_allowed(self) -> bool:
+        path = unquote(urlparse(self.path).path)
+        if path.startswith(("/studio/", "/player/", "/build/", "/store/")):
+            return True
+        return bool(re.fullmatch(r"/content/[a-z0-9][a-z0-9-]*/assets/[A-Za-z0-9][A-Za-z0-9._-]*", path))
+
+    def _not_found(self) -> None:
+        self.send_response(HTTPStatus.NOT_FOUND)
+        self.send_header("Content-Length", "0")
+        self.end_headers()
+
+    def do_HEAD(self) -> None:  # noqa: N802
+        if self.path.startswith("/api/studio/") or not self._static_allowed():
+            self._not_found()
+            return
+        super().do_HEAD()
+
     def do_GET(self) -> None:  # noqa: N802
+        parsed = urlparse(self.path)
+        if parsed.path in ("/", "/studio"):
+            query = f"?{parsed.query}" if parsed.query else ""
+            self.send_response(HTTPStatus.FOUND)
+            self.send_header("Location", f"/studio/{query}")
+            self.send_header("Content-Length", "0")
+            self.end_headers()
+            return
         if self.path.startswith("/api/studio/"):
             self._handle_api("GET")
+            return
+        if not self._static_allowed():
+            self._not_found()
             return
         super().do_GET()
 
@@ -557,6 +887,10 @@ class StudioHandler(SimpleHTTPRequestHandler):
             self._json(HTTPStatus.OK, {"ok": True, "courses": list_courses()})
             return
 
+        if method == "POST" and parts == ["courses"]:
+            self._json(HTTPStatus.OK, register_course(self._read_json()))
+            return
+
         if method == "GET" and parts == ["templates"]:
             self._json(
                 HTTPStatus.OK,
@@ -567,6 +901,23 @@ class StudioHandler(SimpleHTTPRequestHandler):
                 },
             )
             return
+
+        if len(parts) == 3 and parts[0] == "courses" and parts[2] == "sources":
+            unit = _unit(parts[1])
+            module = _module(unit, str(parse_qs(urlparse(self.path).query).get("module", [""])[0]))
+            self._json(HTTPStatus.OK, {"ok": True, "sources": list_sources(unit, module)})
+            return
+
+        if len(parts) == 3 and parts[0] == "courses" and parts[2] == "assets":
+            unit = _unit(parts[1])
+            if method == "GET":
+                self._json(HTTPStatus.OK, {"ok": True, "assets": list_assets(unit)})
+                return
+            if method == "POST":
+                body = self._read_json()
+                body["course"] = unit.key
+                self._json(HTTPStatus.OK, save_asset(unit, body))
+                return
 
         if len(parts) >= 3 and parts[0] == "courses" and parts[2] == "modules":
             unit = _unit(parts[1])
@@ -585,12 +936,19 @@ class StudioHandler(SimpleHTTPRequestHandler):
                     raise StudioError("yaml is empty")
                 self._json(HTTPStatus.OK, save_overlay(unit, module, text))
                 return
+            if len(parts) == 4 and method == "POST":
+                module = _module(unit, parts[3])
+                action = str(self._read_json().get("action", ""))
+                if action != "init":
+                    raise StudioError("unknown module action")
+                self._json(HTTPStatus.OK, initialise_overlay(unit, module))
+                return
 
         if method == "POST" and parts == ["validate"]:
             body = self._read_json()
             unit = _unit(str(body.get("course", "")))
             module = _module(unit, str(body.get("module", "")))
-            validation = validate_overlay(unit, module, str(body.get("yaml", "")))
+            validation = validate_course_overlay(unit, module, str(body.get("yaml", "")))
             self._json(
                 HTTPStatus.OK,
                 {
@@ -611,6 +969,30 @@ class StudioHandler(SimpleHTTPRequestHandler):
             body = self._read_json()
             unit = _unit(str(body.get("course", "")))
             self._json(HTTPStatus.OK, check_course(unit))
+            return
+
+        if method == "POST" and parts == ["lessons"]:
+            body = self._read_json()
+            unit = _unit(str(body.get("course", "")))
+            module = _module(unit, str(body.get("module", "")))
+            self._json(
+                HTTPStatus.OK,
+                transform_overlay(
+                    unit,
+                    module,
+                    str(body.get("yaml", "")),
+                    str(body.get("action", "")),
+                    int(body.get("index", -1)),
+                    int(body["target"]) if body.get("target") is not None else None,
+                    body.get("fields") if isinstance(body.get("fields"), dict) else None,
+                ),
+            )
+            return
+
+        if method == "POST" and parts == ["pack"]:
+            body = self._read_json()
+            unit = _unit(str(body.get("course", "")))
+            self._json(HTTPStatus.OK, build_studio_pack(unit, body))
             return
 
         raise StudioError("not found", HTTPStatus.NOT_FOUND)
