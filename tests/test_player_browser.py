@@ -367,3 +367,18 @@ def test_hotspot_markup_survives_sanitising(page):
     playwright_api.expect(page.locator(".hotspot-target")).to_have_count(3)
     assert page.locator(".hotspot-board button").first.get_attribute("type") == "button"
     assert page.locator(".hotspot-board").get_by_text("No hotspot targets").count() == 0
+
+
+def test_workshop_tools_are_marked_external(page):
+    page.locator("#menu-toggle").click()
+    for name in ("AI Toys", "Security Toys", "NetSim", "Programming Labs"):
+        link = page.locator(".tool-link.external", has_text=name)
+        playwright_api.expect(link).to_be_visible()
+        assert link.get_attribute("target") == "_blank"
+        assert "noopener" in link.get_attribute("rel")
+        assert link.locator(".tool-icon").count() == 1
+        assert "opens outside Lorekeeper" in link.locator(".sr-only").text_content()
+    for name in ("Study Buddy", "Career Compass"):
+        link = page.locator(".tool-link.download", has_text=name)
+        playwright_api.expect(link.locator(".tool-tag")).to_have_text("Desktop")
+        assert "desktop download" in link.locator(".sr-only").text_content()
