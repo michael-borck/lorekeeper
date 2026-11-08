@@ -131,6 +131,24 @@ scene. Quest sound is optional and off by default.
 Study mode keeps the same structure and wording in plain terms (chapters and
 lessons) and stays quiet. All motion respects `prefers-reduced-motion`.
 
+### Narrators
+
+Eight guides narrate Quest mode, each with their own voice: Orin the Archivist,
+Captain Vey (security), Cog (AI), Wren the Courier (networks), Tink
+(programming), Master Hale (systems), Mentor Ash (teaching) and Pip the
+Cartographer (reference). The guide for a course is chosen in this order:
+
+1. the learner's choice under **Menu, Guide**;
+2. the author's `narrator` field in the course registry or pack;
+3. the course tags.
+
+Lines come from `player/narrators.json` (about 30 KB, cached offline with the
+rest of the app). Each guide has voiced lines for every lesson type, mixed with a
+set of plain standard lines, and responds to the moment: the start of a course
+or chapter, the last scene of a chapter or course, coming back after three or
+more days, a wrong answer, and a level up. An author can replace the line for a
+single lesson with an optional `narration` field in the overlay.
+
 ## How it works
 
 ```
@@ -176,6 +194,7 @@ key: web-craft
 code: INTERNAL-CODE          # provenance only
 slug: ship-it                # public path and build folder
 title: "Ship It: Web Craft with an AI Partner"
+narrator: artificer          # optional Quest guide; omit to pick from tags
 root: ../../source-course
 replacements:
   "INTERNAL-CODE": "this course"
@@ -230,6 +249,8 @@ Notes:
 - `include` matches headings exactly (case-insensitive). A missing heading fails
   the build instead of silently dropping content.
 - `kind` is `reading`, `checkpoint` or `exercise`.
+- Any lesson can set `narration: "A line for the guide to say."` (up to 400
+  characters) to replace the narrator's default line for that scene.
 - Exercise tests are JavaScript. HTML exercises receive `doc` (the preview
   iframe document); `language: text` exercises receive `text` (the learner's
   answer) and render no preview. `language: js` exercises use `html` as the page

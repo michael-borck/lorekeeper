@@ -206,6 +206,7 @@ def _cmd_pack(args: argparse.Namespace) -> int:
                 level=args.level,
                 pitch=args.pitch or "",
                 start=args.start,
+                narrator=args.narrator or "",
             )
             with tempfile.TemporaryDirectory(prefix="lorekeeper-pack-") as temp:
                 pack = build_pack(unit, Path(temp))
@@ -310,6 +311,7 @@ def build_parser() -> argparse.ArgumentParser:
     pack.add_argument("--level", default="beginner", help="level for --root")
     pack.add_argument("--pitch", help="one-line pitch for --root")
     pack.add_argument("--start", default="01-01", help="starting lesson for --root")
+    pack.add_argument("--narrator", help="Quest narrator for --root (default: picked from tags)")
     pack.add_argument("--out", help="output file (default: build/packs/<slug>.json)")
     pack.set_defaults(func=_cmd_pack)
 

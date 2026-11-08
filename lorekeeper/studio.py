@@ -33,6 +33,7 @@ import yaml
 
 from .compile import _default_specs, _lesson_from_spec, compile_unit, load_overlay
 from .discover import discover_modules
+from .narrators import check_narrator, narrator_ids
 from .pack import build_pack, collect_assets, write_pack
 from .registry import Unit, content_dir, engine_root, get_unit, load_units, slugify
 from .validate import check_unit
@@ -610,6 +611,9 @@ def register_course(data: dict[str, Any]) -> dict[str, Any]:
         "start": str(data.get("start") or ""),
         "replacements": {code: "this course"},
     }
+    narrator = check_narrator(str(data.get("narrator") or ""), key)
+    if narrator:
+        payload["narrator"] = narrator
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(
         yaml.safe_dump(payload, sort_keys=False, allow_unicode=True), encoding="utf-8"
@@ -684,6 +688,11 @@ def build_studio_pack(unit: Unit, data: dict[str, Any]) -> dict[str, Any]:
         problems.append("author is required")
     if not licence:
         problems.append("licence is required")
+    try:
+        narrator = check_narrator(str(data.get("narrator") or ""), "pack")
+    except ValueError as exc:
+        problems.append(str(exc))
+        narrator = ""
     if problems:
         return {"ok": False, "problems": problems}
 
@@ -702,6 +711,9 @@ def build_studio_pack(unit: Unit, data: dict[str, Any]) -> dict[str, Any]:
     entry["pitch"] = str(data.get("pitch") or unit.pitch)
     entry["start"] = str(data.get("start") or unit.start)
     entry["assets"] = collect_assets(unit)
+    if narrator:
+        entry["narrator"] = narrator
+        entry["course"]["unit"]["narrator"] = narrator
 
     out = (engine_root() / "build" / "studio-packs" / f"{pack_id}.json").resolve()
     build_root = (engine_root() / "build").resolve()
@@ -734,6 +746,7 @@ def list_courses() -> list[dict[str, Any]]:
                 "level": unit.level,
                 "pitch": unit.pitch,
                 "start": unit.start,
+                "narrator": unit.narrator,
             }
         )
     return courses
@@ -898,6 +911,7 @@ class StudioHandler(SimpleHTTPRequestHandler):
                     "ok": True,
                     "kinds": LESSON_KINDS,
                     "templates": LESSON_TEMPLATES,
+                    "narrators": sorted(narrator_ids()),
                 },
             )
             return

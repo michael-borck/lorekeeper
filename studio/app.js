@@ -359,6 +359,7 @@ function fillPackDefaults(reset = false) {
   if (reset || !$("pack-pitch").value) $("pack-pitch").value = course.pitch || "";
   if (reset || !$("pack-start").value) $("pack-start").value = course.start || "01-01";
   if (course.level) $("pack-level").value = course.level;
+  if (reset || !$("pack-narrator").value) $("pack-narrator").value = course.narrator || "";
   $("pack-download").hidden = true;
   $("pack-result").textContent = "";
 }
@@ -585,6 +586,7 @@ async function buildPack() {
         level: $("pack-level").value,
         pitch: $("pack-pitch").value,
         start: $("pack-start").value,
+        narrator: $("pack-narrator").value,
       }),
     });
     if (!data.ok) {
@@ -614,6 +616,7 @@ async function registerCourse() {
         code: $("reg-code").value,
         root: $("reg-root").value,
         tags: $("reg-tags").value,
+        narrator: $("reg-narrator").value,
       }),
     });
     setStatus(`Registered ${data.key}. Reloading courses.`, "good");
@@ -739,6 +742,16 @@ async function loadTemplates() {
   const data = await api("/api/studio/templates");
   state.templates = data.templates || {};
   state.kinds = data.kinds || Object.keys(state.templates);
+  for (const id of ["pack-narrator", "reg-narrator"]) {
+    const narratorSelect = $(id);
+    if (!narratorSelect) continue;
+    for (const narrator of data.narrators || []) {
+      const option = document.createElement("option");
+      option.value = narrator;
+      option.textContent = narrator;
+      narratorSelect.append(option);
+    }
+  }
   const select = $("kind");
   select.textContent = "";
   for (const kind of state.kinds) {

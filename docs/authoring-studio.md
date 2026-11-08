@@ -63,7 +63,10 @@ python3 -m lorekeeper studio --port 8765 --no-open
 - Builds the course and opens the player at the selected lesson.
 - Runs the full course check.
 - Builds a signed-ready pack with manifest fields for id, title, author, licence,
-  tags, level, pitch and start lesson, with a download link and a submission link.
+  tags, level, pitch, start lesson and Quest narrator, with a download link and a
+  submission link.
+- Lets an author add `narration` to any lesson (through the field inspector or
+  YAML) to give the narrator a custom line for that scene.
 
 ## What v0.2 still does not do
 

@@ -28,6 +28,7 @@ def unit_from_root(
     level: str = "beginner",
     pitch: str = "",
     start: str = "01-01",
+    narrator: str = "",
 ) -> Unit:
     root = Path(root).expanduser().resolve()
     variables = {}
@@ -49,6 +50,7 @@ def unit_from_root(
         level=level,
         pitch=pitch,
         start=start,
+        narrator=narrator,
         replacements={code: "this course"},
     )
 
@@ -109,6 +111,7 @@ def build_pack(unit: Unit, build_root: Path | None = None) -> dict:
                 "tags": list(unit.tags),
                 "pitch": unit.pitch,
                 "start": unit.start,
+                "narrator": course["unit"].get("narrator", ""),
                 "course": course,
                 "stories": stories,
                 "assets": collect_assets(unit),

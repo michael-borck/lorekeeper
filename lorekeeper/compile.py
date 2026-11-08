@@ -117,6 +117,11 @@ def _lesson_from_spec(
         "xp": int(spec.get("xp") or xp_for(kind)),
         "blocks": [],
     }
+    narration = str(spec.get("narration") or "").strip()
+    if narration:
+        if len(narration) > 400:
+            raise ValueError(f"{lesson_id}: narration is longer than 400 characters")
+        lesson["narration"] = narration
 
     if kind == "reading":
         lesson["blocks"].extend(_reading_blocks(unit, module["dir"], spec))
@@ -225,8 +230,11 @@ def _default_specs(module: dict) -> list[dict]:
 
 
 def compile_unit(unit: Unit, out_root: Path) -> dict:
+    from .narrators import check_narrator
+
     out_dir = out_root / unit.slug
     assert_outside_source(out_dir, unit.root)
+    narrator = check_narrator(unit.narrator, unit.key)
 
     modules_out: list[dict] = []
     seen_lessons: set[str] = set()
@@ -267,6 +275,7 @@ def compile_unit(unit: Unit, out_root: Path) -> dict:
             "level": unit.level,
             "pitch": unit.pitch,
             "start": unit.start,
+            "narrator": narrator,
         },
         "modules": modules_out,
     }
@@ -301,6 +310,7 @@ def compile_all(out_root: Path | None = None) -> list[dict]:
                 "level": course["unit"]["level"],
                 "pitch": course["unit"]["pitch"],
                 "start": course["unit"]["start"],
+                "narrator": course["unit"].get("narrator", ""),
                 "url": f"{course['unit']['slug']}/course.json",
                 "modules": len(course["modules"]),
                 "lessons": sum(len(m["lessons"]) for m in course["modules"]),

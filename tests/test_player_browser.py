@@ -382,3 +382,48 @@ def test_workshop_tools_are_marked_external(page):
         link = page.locator(".tool-link.download", has_text=name)
         playwright_api.expect(link.locator(".tool-tag")).to_have_text("Desktop")
         assert "desktop download" in link.locator(".sr-only").text_content()
+
+
+def narration_data():
+    import json
+    root = Path(__file__).resolve().parents[1]
+    return json.loads((root / "player" / "narrators.json").read_text(encoding="utf-8"))
+
+
+def fill_vars(lines, **values):
+    return [line.replace("{course}", values.get("course", "")).replace("{chapter}", values.get("chapter", "")) for line in lines]
+
+
+def test_author_narrator_and_course_start_line(page):
+    open_signal_and_noise(page)
+    playwright_api.expect(page.locator(".narrator-box strong")).to_have_text("Master Hale")
+    course = "Signal & Noise: An Enterprise Systems Field Guide"
+    expected = fill_vars(narration_data()["narrators"]["architect"]["moments"]["courseStart"], course=course)
+    assert page.locator("[data-narrator-line]").text_content() in expected
+
+
+def test_learner_can_choose_a_guide(page):
+    open_signal_and_noise(page)
+    page.locator("#menu-toggle").click()
+    page.locator("#narrator-select").select_option("oracle")
+    playwright_api.expect(page.locator(".narrator-box strong")).to_have_text("Cog")
+    page.locator("#narrator-select").select_option("")
+    playwright_api.expect(page.locator(".narrator-box strong")).to_have_text("Master Hale")
+
+
+def test_chapter_start_line_names_the_chapter(page):
+    open_signal_and_noise(page)
+    page.locator(".outline-module summary").nth(1).click()
+    page.locator('[data-lesson="02-01"]').click()
+    chapter = page.locator(".outline-module").nth(1).locator(".chapter-title").text_content().strip()
+    expected = fill_vars(narration_data()["narrators"]["architect"]["moments"]["chapterStart"], chapter=chapter)
+    playwright_api.expect(page.locator("[data-narrator-line]")).to_have_text(re.compile("|".join(map(re.escape, expected))))
+
+
+def test_narrator_reacts_to_a_wrong_answer(page):
+    page.goto(page.url.split("player/")[0] + "player/?course=field-kit#01-01")
+    page.wait_for_load_state("networkidle")
+    playwright_api.expect(page.locator(".narrator-box strong")).to_have_text("Orin the Archivist")
+    page.get_by_role("button", name="Check order").click()
+    retry = narration_data()["narrators"]["keeper"]["moments"]["retry"]
+    playwright_api.expect(page.locator("[data-narrator-line]")).to_have_text(re.compile("|".join(map(re.escape, retry))))

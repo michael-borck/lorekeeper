@@ -7,6 +7,8 @@ code: ISYS2008
 slug: signal-and-noise
 theme: pixel
 tags: [systems, networking, security, operations, incident, story, exercise]
+# Quest narrator. Leave out to pick one from the tags.
+narrator: architect
 level: beginner
 start: "01-01"
 pitch: "Understand the estate behind the website: operating systems, networks, identity, storage and incidents."

@@ -19,6 +19,13 @@ def check_unit(unit: Unit) -> list[str]:
 
     known_slugs = {module["slug"] for module in modules}
 
+    from .narrators import check_narrator
+
+    try:
+        check_narrator(unit.narrator, unit.code)
+    except ValueError as exc:
+        problems.append(str(exc))
+
     for module in modules:
         overlay = load_overlay(unit, module["slug"])
         specs = (overlay or {}).get("lessons") or _default_specs(module)

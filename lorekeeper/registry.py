@@ -28,6 +28,7 @@ class Unit:
     level: str = "beginner"
     pitch: str = ""
     start: str = ""
+    narrator: str = ""
     replacements: dict[str, str] = field(default_factory=dict)
 
 
@@ -69,6 +70,7 @@ def load_units() -> list[Unit]:
                 level=str(data.get("level", "beginner")),
                 pitch=str(data.get("pitch", "")),
                 start=str(data.get("start", "")),
+                narrator=str(data.get("narrator") or ""),
                 replacements={
                     str(old): str(new) for old, new in raw_replacements.items()
                 },
