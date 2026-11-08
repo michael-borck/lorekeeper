@@ -72,8 +72,11 @@ Packs are hash- and signature-verified before install.
 ## Artwork
 
 Pack thumbnails and course covers use a curated subset of the SwipeVerse art
-library. The artwork is independent of the Ink/Arcade/Illuminated UI skins: skins
-change the interface, while artwork identifies the pack or topic.
+library. Quest mode adds narrator portraits, a library hero and a map backdrop
+generated with [limn](https://pypi.org/project/limn/) using the SwipeVerse pixel
+recipe (SDXL plus the `pixel-art-xl` LoRA, fixed seeds). Regenerate or extend them
+with `scripts/quest_art.py`; candidates and picks stay in the gitignored `art/`
+folder and only processed WebP ships in `player/art/quest/`.
 
 ## Journey and tutor
 
@@ -102,30 +105,31 @@ Tauri and pack-store decisions.
   That is an engineering constraint, not learner-facing copy.
 - Internal keys, codes and paths stay in metadata for provenance. They do not
   appear in the player.
-- Art direction is separate from content. Three skins ship today: Ink, Arcade
-  and Illuminated. A course sets its default, and the learner can switch.
+- Art direction is separate from content. Two modes ship today: Quest and
+  Study. The learner picks one; content never changes.
 
-## Skins
+## Modes
 
-| Skin | Feel | Default for |
+| Mode | Purpose | Look |
 |---|---|---|
-| Ink | Professional field notebook: serif display type, dark paper, fine brass rules | Fallback |
-| Arcade | 16-bit quest: hard edges, offset shadows, scanlines, arcade sound optional | Signal & Noise, Field Kit |
-| Illuminated | Storybook kingdom: parchment, heraldic cover frames, drop caps, wax-seal achievements | Ship It |
+| Quest (default) | Fun, game-like progress | 16-bit RPG: night-sky interface, parchment lesson pages, gold dialogue frames, narrator portraits, levels and a course map |
+| Study | Long reading, projection, accessibility | Calm dark interface, wider line spacing, narrower reading column, no banners, no animation |
 
-A course sets `theme` in `courses/<key>.yaml`. The learner can override it with
-the Skin selector in the sidebar; the choice is saved locally. All three skins are
-CSS only, so lesson content never changes. The course picker carries a small
-theme-specific illustration, the cards show their default skin, and each course
-has a heraldic emblem in the picker and sidebar.
+Switch modes from **Menu** in the sidebar. The choice is saved locally, and the
+old skin names migrate automatically (Ink becomes Study; Pixel and Storybook
+become Quest).
 
-Each skin has its own material language. Ink uses serif display type, dark paper
-and fine rules. Arcade uses hard edges, offset shadows, scanlines and optional
-sound. Illuminated uses parchment, arched cover frames, drop caps, heraldic
-badges and wax-seal achievements. Lesson changes use a quiet ink reveal, an
-arcade step wipe or a page turn. All motion is disabled under
-`prefers-reduced-motion`. Arcade sound is off by default and only appears in that
-skin.
+Quest mode turns the sidebar into a quest log: a player card with level, XP to
+the next level and a daily streak, then chapters as a path with verb icons for
+each lesson (Read, Quiz, Build, Sort, Spot, Decide and so on). Each lesson opens
+as a numbered scene with the course art as a banner and a narrator chosen from
+the pack's topic. Finishing a scene stamps it, finishing a chapter unlocks the
+next one, and levelling up gets its own moment. The **Course map** shows chapters
+as stops on a path. The picker leads with **Continue your quest** and the next
+scene. Quest sound is optional and off by default.
+
+Study mode keeps the same structure and wording in plain terms (chapters and
+lessons) and stays quiet. All motion respects `prefers-reduced-motion`.
 
 ## How it works
 
@@ -334,7 +338,7 @@ progress also clears the badge case.
 
 ## Progress backup
 
-Progress and badges live in IndexedDB. Exercise drafts and the chosen skin live
+Progress and badges live in IndexedDB. Exercise drafts and the chosen mode live
 in `localStorage`. The **Progress** dialog exports them together as one JSON file
 and imports a file with **Merge** or **Replace**. Merge unions completed lessons, activity dates,
 badges and missing drafts; Replace restores the file exactly.
@@ -471,7 +475,8 @@ key-rotation procedure are in [`docs/store-policy.md`](docs/store-policy.md).
 | Sandboxed exercise tests | Working |
 | Tauri desktop shell | Deferred |
 | LMS grade export | Not built |
-| Ink, Arcade and Illuminated skins | Working |
+| Quest and Study modes | Working |
+| Levels, streaks, completion moments, course map | Working |
 | Theme illustrations and motion | Working |
 | Course-specific emblems | Working |
 | PWA install and offline shell | Working |
@@ -484,7 +489,7 @@ key-rotation procedure are in [`docs/store-policy.md`](docs/store-policy.md).
 
 1. Open a public pack submission flow using the review policy.
 2. Add more real course overlays and Ink stories.
-3. Refine the skins with more custom art and course-specific scenes.
+3. Add per-course narrator art and course-specific scenes.
 4. Optional: a Tauri shell if native labs or offline pack management need it.
 5. Optional: a container runner for real shell exercises.
 6. Optional: an LLM-backed Socratic tutor for open viva answers.

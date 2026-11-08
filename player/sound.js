@@ -1,4 +1,4 @@
-/* Optional Arcade sound. Off by default and disabled outside the Arcade skin. */
+/* Optional Quest sound. Off by default and disabled in Study mode. */
 (function () {
   const KEY = "lorekeeper:sound";
   let context = null;
@@ -12,7 +12,7 @@
   }
 
   function active() {
-    return document.documentElement.dataset.theme === "pixel" && selected();
+    return document.documentElement.dataset.theme === "quest" && selected();
   }
 
   function audio() {
@@ -52,6 +52,12 @@
       tone(392, 0.05, "square", 0.02);
     } else if (name === "back") {
       tone(294, 0.05, "square", 0.02);
+    } else if (name === "level") {
+      [523.25, 659.25, 783.99, 1046.5].forEach((note, index) => tone(note, 0.12, "square", 0.035, index * 0.1));
+    } else if (name === "chapter") {
+      tone(392, 0.1, "triangle", 0.035);
+      tone(523.25, 0.1, "triangle", 0.035, 0.11);
+      tone(659.25, 0.22, "triangle", 0.035, 0.22);
     } else if (name === "badge") {
       tone(659.25, 0.06, "triangle", 0.03);
       tone(987.77, 0.12, "triangle", 0.03, 0.07);
@@ -61,8 +67,8 @@
   function refresh() {
     const picker = document.getElementById("sound-picker");
     const toggle = document.getElementById("sound-toggle");
-    const arcade = document.documentElement.dataset.theme === "pixel";
-    if (picker) picker.hidden = !arcade;
+    const quest = document.documentElement.dataset.theme === "quest";
+    if (picker) picker.hidden = !quest;
     if (toggle) toggle.checked = selected();
   }
 

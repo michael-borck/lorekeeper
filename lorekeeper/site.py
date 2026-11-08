@@ -110,7 +110,7 @@ LANDING_HTML = """<!doctype html>
         <div class="card"><div class="icon">You decide</div><h3>You control the library</h3><p>Add only the packs you want. Hide or remove them at any time. Progress stays local and exportable.</p></div>
         <div class="card"><div class="icon">Browser based</div><h3>Runs in the browser</h3><p>No install needed to start. The PWA can be installed when you want an app icon and offline access to visited lessons.</p></div>
         <div class="card"><div class="icon">Your path</div><h3>Choose your path</h3><p>Answer four questions for a suggested trail, or browse freely. The wayfinder is a recommendation, never a gate.</p></div>
-        <div class="card"><div class="icon">Look</div><h3>Three skins</h3><p>Ink, Arcade and Illuminated give the same content three different moods: professional, playful or storybook.</p></div>
+        <div class="card"><div class="icon">Look</div><h3>Quest or Study</h3><p>Quest turns courses into a pixel RPG with levels, narrators and a map. Study keeps things calm and readable for long sessions.</p></div>
         <div class="card"><div class="icon">Optional AI</div><h3>Optional AI tutor</h3><p>Connect a local Ollama model or an OpenAI-compatible endpoint. Nothing is sent until you press Send.</p></div>
       </div>
     </section>

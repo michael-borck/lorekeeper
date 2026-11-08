@@ -1,7 +1,7 @@
 /* Pack HTML sanitizer. Lesson prose may contain formatting, never active content. */
 (function () {
   const ALLOWED_TAGS = new Set([
-    "a", "abbr", "blockquote", "br", "caption", "code", "col", "colgroup", "dd", "del",
+    "a", "abbr", "blockquote", "br", "button", "caption", "code", "col", "colgroup", "dd", "del",
     "details", "dfn", "div", "dl", "dt", "em", "figcaption", "figure", "h1", "h2", "h3",
     "h4", "h5", "h6", "hr", "i", "img", "ins", "kbd", "li", "mark", "ol", "p", "pre",
     "q", "s", "small", "span", "strong", "sub", "summary", "sup", "table", "tbody", "td",
@@ -11,6 +11,7 @@
   const ALLOWED_ATTRS = {
     a: new Set(["href", "title"]),
     abbr: new Set(["title"]),
+    button: new Set(["disabled"]),
     col: new Set(["span"]),
     colgroup: new Set(["span"]),
     del: new Set(["cite"]),
@@ -25,7 +26,7 @@
   const GLOBAL_ATTRS = new Set(["class", "title", "lang", "dir", "id"]);
   const DANGEROUS_TAGS = new Set([
     "script", "style", "iframe", "frame", "frameset", "object", "embed", "link", "meta",
-    "base", "form", "input", "button", "select", "textarea", "svg", "math", "template",
+    "base", "form", "input", "select", "textarea", "svg", "math", "template",
   ]);
 
   function resolveAsset(raw, attributeName) {
@@ -96,6 +97,7 @@
         }
       }
       if (tag === "img") element.setAttribute("loading", element.getAttribute("loading") || "lazy");
+      if (tag === "button") element.setAttribute("type", "button");
       if (tag === "a") {
         const href = element.getAttribute("href") || "";
         if (href.startsWith("#")) {

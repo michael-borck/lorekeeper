@@ -229,7 +229,7 @@
       return `<div class="picker-art" aria-hidden="true">${PIXEL}${STORYBOOK}${INK}</div>`;
     },
     skinName(theme) {
-      return { pixel: "Arcade", storybook: "Illuminated", ink: "Ink" }[theme] || "Ink";
+      return { ink: "Study", study: "Study" }[theme] || "Quest";
     },
     courseEmblem(slug, course = null) {
       if (EMBLEMS[slug]) return EMBLEMS[slug];

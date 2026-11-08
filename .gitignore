@@ -7,3 +7,6 @@ __pycache__/
 ._*
 
 _site/
+
+# Quest art sources (only processed webp in player/art/ ships)
+/art/

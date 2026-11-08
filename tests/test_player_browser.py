@@ -52,7 +52,7 @@ def browser():
 
 @pytest.fixture
 def page(browser, site):
-    context = browser.new_context()
+    context = browser.new_context(reduced_motion="reduce")
     page = context.new_page()
     console_errors = []
     page.on(
@@ -89,6 +89,9 @@ def test_player_shell_meets_basic_accessibility(page):
     for image in page.locator("img").all():
         assert image.get_attribute("alt") is not None, "every image needs an alt attribute"
 
+    page.locator("#menu-toggle").click()
+    for button in page.locator(".menu-panel button:visible").all():
+        assert button.inner_text().strip(), "every menu button needs accessible text"
     journey = page.locator("#journey-dialog")
     page.locator("#journey-button").click()
     assert journey.get_attribute("open") is not None
@@ -97,27 +100,78 @@ def test_player_shell_meets_basic_accessibility(page):
     page.locator("#journey-close").click()
 
 
-def test_skins_cover_art_and_arcade_sound_controls(page):
-    options = [option.inner_text() for option in page.locator("#theme-select option").all()]
-    assert options == ["Ink", "Arcade", "Illuminated"]
-    assert page.locator("#sound-picker").is_hidden()
+def open_signal_and_noise(page):
+    page.locator("[data-starter]").click()
+    playwright_api.expect(page.locator(".course-row")).to_have_count(3)
+    page.locator('.course-card[href*="signal-and-noise"]').click()
+    page.wait_for_url("**/player/?course=signal-and-noise*")
+    playwright_api.expect(page.locator(".lesson-title")).to_be_visible()
 
-    page.locator("#theme-select").select_option("pixel")
+
+def test_modes_default_to_quest_with_sound_off(page):
+    assert page.locator("html").get_attribute("data-theme") == "quest"
+    options = [option.text_content() for option in page.locator("#theme-select option").all()]
+    assert options == ["Quest", "Study"]
+    page.locator("#menu-toggle").click()
     playwright_api.expect(page.locator("#sound-picker")).to_be_visible()
     assert page.locator("#sound-toggle").is_checked() is False
 
-    page.locator("[data-starter]").click()
-    playwright_api.expect(page.locator(".course-row")).to_have_count(3)
-    card = page.locator(".course-card").first
-    playwright_api.expect(card.locator(".course-cover-frame")).to_be_visible()
-    playwright_api.expect(card.locator(".course-emblem-badge svg")).to_be_visible()
-    playwright_api.expect(card.locator(".course-card-kicker")).not_to_have_text("")
+    page.locator("#theme-select").select_option("study")
+    assert page.locator("html").get_attribute("data-theme") == "study"
+    playwright_api.expect(page.locator("#sound-picker")).to_be_hidden()
 
-    page.locator('.course-card[href*="signal-and-noise"]').click()
-    page.wait_for_url("**/player/?course=signal-and-noise*")
-    playwright_api.expect(page.locator("#content")).to_have_class(
-        re.compile(r"motion-(?:ink|arcade|illuminated)")
-    )
+
+def test_legacy_skin_names_migrate_to_modes(browser, site):
+    for legacy, expected in (("pixel", "quest"), ("storybook", "quest"), ("ink", "study")):
+        context = browser.new_context(reduced_motion="reduce")
+        page = context.new_page()
+        page.add_init_script(f"localStorage.setItem('lorekeeper:theme', '{legacy}')")
+        page.goto(site + "player/")
+        page.wait_for_load_state("networkidle")
+        assert page.locator("html").get_attribute("data-theme") == expected
+        context.close()
+
+
+def test_quest_lesson_is_a_scene_with_narrator(page):
+    open_signal_and_noise(page)
+    playwright_api.expect(page.locator(".scene-banner")).to_be_visible()
+    playwright_api.expect(page.locator(".scene-banner-text")).to_contain_text("Scene 1 of")
+    playwright_api.expect(page.locator(".narrator-box strong")).not_to_have_text("")
+    playwright_api.expect(page.locator(".kind-pill")).to_contain_text("Read")
+    playwright_api.expect(page.locator("[data-complete]")).to_have_text("Done reading")
+    playwright_api.expect(page.locator(".player-card")).to_contain_text("Level 1")
+    playwright_api.expect(page.locator("#content")).to_have_class(re.compile(r"motion-quest"))
+
+    page.locator("#menu-toggle").click()
+    page.locator("#theme-select").select_option("study")
+    playwright_api.expect(page.locator(".scene-banner")).to_have_count(0)
+    playwright_api.expect(page.locator(".narrator")).to_have_count(0)
+    playwright_api.expect(page.locator(".scene-count")).to_contain_text("Lesson 1 of")
+
+
+def test_completion_moment_and_continue_hero(page):
+    open_signal_and_noise(page)
+    page.locator("[data-complete]").click()
+    moment = page.locator("#moment")
+    playwright_api.expect(moment).to_contain_text("Scene complete")
+    playwright_api.expect(page.locator(".lesson-link.done")).to_have_count(1)
+
+    page.goto(page.url.split("?")[0])
+    page.wait_for_load_state("networkidle")
+    hero = page.locator("#quest-hero.continuing")
+    playwright_api.expect(hero).to_contain_text("Continue your quest")
+    playwright_api.expect(hero.locator("[data-hero-next]")).to_contain_text("Next: Chapter 1, Scene 2")
+    playwright_api.expect(page.locator(".course-card-kicker").filter(has_text="In progress")).to_have_count(1)
+
+
+def test_course_map_shows_chapters_as_stops(page):
+    open_signal_and_noise(page)
+    page.locator("#map-link").click()
+    playwright_api.expect(page.locator(".map-stop")).to_have_count(12)
+    playwright_api.expect(page.locator(".map-stop.current")).to_have_count(1)
+    page.locator(".map-stop-button").nth(2).click()
+    playwright_api.expect(page.locator(".lesson-title")).to_be_visible()
+    assert "#03-" in page.url
 
 
 def test_player_starts_empty_and_restores_starter_kit(page):
@@ -159,13 +213,20 @@ def test_progress_is_persisted_in_indexeddb(page):
     complete.click()
     playwright_api.expect(complete).to_have_text("Completed")
 
+    # Read IndexedDB directly: the read transaction waits for the write to commit.
     value = page.evaluate(
-        "async () => {"
-        " await window.LorekeeperPackStorage.ready();"
-        " return window.LorekeeperPackStorage.getProgress('signal-and-noise');"
-        "}"
+        """() => new Promise((resolve, reject) => {
+          const request = indexedDB.open("lorekeeper");
+          request.onerror = () => reject(request.error);
+          request.onsuccess = () => {
+            const read = request.result.transaction("progress").objectStore("progress").get("signal-and-noise");
+            read.onsuccess = () => resolve(read.result ? read.result.value : null);
+            read.onerror = () => reject(read.error);
+          };
+        })"""
     )
     assert value and value.get("completed", {}).get("01-01") is True
+    assert value.get("xp", 0) > 0
 
     page.reload()
     page.wait_for_load_state("networkidle")
@@ -281,3 +342,28 @@ def test_player_shell_works_offline(browser, site):
 def test_player_has_no_console_errors(page):
     assert page.locator("#content").inner_text().strip()
     assert page.console_errors == []
+
+
+def test_interrupted_progress_write_is_replayed(page):
+    page.evaluate(
+        """() => localStorage.setItem(
+          'lorekeeper:pending-progress:field-kit',
+          JSON.stringify({ completed: { '01-01': true }, xp: 20, history: [] })
+        )"""
+    )
+    page.reload()
+    page.wait_for_load_state("networkidle")
+    value = page.evaluate(
+        "async () => { await window.LorekeeperPackStorage.ready();"
+        " return window.LorekeeperPackStorage.getProgress('field-kit'); }"
+    )
+    assert value["completed"]["01-01"] is True
+    assert page.evaluate("() => localStorage.getItem('lorekeeper:pending-progress:field-kit')") is None
+
+
+def test_hotspot_markup_survives_sanitising(page):
+    page.goto(page.url.split("player/")[0] + "player/?course=field-kit#01-03")
+    page.wait_for_load_state("networkidle")
+    playwright_api.expect(page.locator(".hotspot-target")).to_have_count(3)
+    assert page.locator(".hotspot-board button").first.get_attribute("type") == "button"
+    assert page.locator(".hotspot-board").get_by_text("No hotspot targets").count() == 0
