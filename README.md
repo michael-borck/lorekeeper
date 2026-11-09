@@ -48,15 +48,29 @@ The site contains only built player files and course JSON. The custom domain is
 `michael-borck.github.io` with the proxy off, then attach the domain in GitHub
 Pages.
 
-## Wayfinder
+## Wayfinder and world map
 
-A first visit offers a four-question wayfinder: goal, experience, a familiar
-situation and a preferred start. It scores the courses by tags, picks a starting
-course and three lessons, and stores the trail in `localStorage`.
+The **world map** (`?view=world`) is a Tolkien-style parchment map of the realm.
+Each narrator rules a region (Captain Vey's Northern Ramparts for security, Cog's
+Clockwork Heights for AI, Tinker's Vale for programming, Hale's Keep for systems,
+the Harbour Reach for networks, Ashwood for teaching, the Far Shore for
+reference, and Orin's Archive at the centre), and every course is a place in its
+guide's region. Courses in your library are bright and labelled; packs in the
+store and built-in courses you have not added appear greyed out as unexplored,
+and clicking one finds it in the store or adds it to your library. On phones and
+in Study mode the map becomes a list grouped by region.
 
-The trail appears in the picker and the sidebar, updates as lessons are
-completed, and can be changed at any time. It is a recommendation, not a gate:
-every course remains visible. No account, server or model call is involved.
+**Find my trail** asks four questions (goal, experience, a familiar situation and
+a preferred start) and plots a route of two to four courses across the realm,
+starting with one you already have where possible. Each stop's goal is to clear
+that course's first chapter. The trail is drawn on the world map as a dashed
+route and shown in a collapsible **Your trail** panel in the sidebar. Finishing
+every stop earns the Pathfinder moment. It is a recommendation, not a gate, and
+nothing leaves the device. Older single-course trails migrate automatically.
+
+The region for a course comes from its narrator: the author's `narrator` field,
+or `PACK_NARRATOR` in `lorekeeper/store.py` for store packs, then the tags. The
+map art was made with limn (`scripts/quest_art.py`, job `world`).
 
 ## Library and store
 

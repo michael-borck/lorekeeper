@@ -81,3 +81,11 @@ def test_pack_carries_author_narrator(tmp_path: Path):
     entry = pack["courses"][0]
     assert entry["narrator"] == "mentor"
     assert entry["course"]["unit"]["narrator"] == "mentor"
+
+
+def test_every_store_pack_has_a_valid_narrator():
+    from lorekeeper.store import PACK_NARRATOR
+
+    catalog = json.loads((ROOT / "store" / "catalog.json").read_text(encoding="utf-8"))
+    assert {pack["id"] for pack in catalog["packs"]} == set(PACK_NARRATOR)
+    assert set(PACK_NARRATOR.values()) <= narrator_ids()

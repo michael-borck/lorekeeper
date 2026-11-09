@@ -427,3 +427,111 @@ def test_narrator_reacts_to_a_wrong_answer(page):
     page.get_by_role("button", name="Check order").click()
     retry = narration_data()["narrators"]["keeper"]["moments"]["retry"]
     playwright_api.expect(page.locator("[data-narrator-line]")).to_have_text(re.compile("|".join(map(re.escape, retry))))
+
+
+def plan_security_trail(page):
+    page.locator("[data-starter]").click()
+    playwright_api.expect(page.locator(".course-row")).to_have_count(3)
+    page.locator(".wayfinder-cta [data-wayfinder-open]").click()
+    for question, value in (("goal", 4), ("experience", 0), ("situation", 3), ("style", 1)):
+        page.locator(f'input[name="{question}"][value="{value}"]').check()
+    page.locator("#wayfinder-submit").click()
+    playwright_api.expect(page.locator("#wayfinder-body .trail-strip")).to_be_visible()
+
+
+def test_wayfinder_plans_a_trail_across_courses(page):
+    plan_security_trail(page)
+    stops = page.locator("#wayfinder-body .trail-stop")
+    assert 2 <= stops.count() <= 4
+    playwright_api.expect(stops.first).to_have_class(re.compile("current"))
+    assert page.locator("#wayfinder-body .trail-stop.unexplored").count() >= 1
+    page.locator("#wayfinder-close").click()
+    panel = page.locator("#trail-card")
+    playwright_api.expect(panel).to_be_visible()
+    playwright_api.expect(panel.locator(".trail-summary-count")).to_have_text(re.compile(r"0/\d"))
+    panel.locator("summary").click()
+    assert panel.get_attribute("open") is None
+    page.reload()
+    page.wait_for_load_state("networkidle")
+    assert page.locator("#trail-card").get_attribute("open") is None
+
+
+def test_world_map_shows_regions_courses_unexplored_and_trail(page):
+    plan_security_trail(page)
+    page.goto(page.url.split("?")[0] + "?view=world")
+    page.wait_for_load_state("networkidle")
+    playwright_api.expect(page.locator(".world-region-label")).to_have_count(8)
+    playwright_api.expect(page.locator(".world-marker.known")).to_have_count(3)
+    assert page.locator(".world-marker.unexplored").count() >= 25
+    playwright_api.expect(page.locator(".world-route-line")).to_have_count(1)
+    assert page.locator(".world-marker.on-trail").count() >= 2
+    playwright_api.expect(page.locator(".world-marker.trail-current")).to_have_count(1)
+    shire = page.locator(".world-marker.known", has=page.locator(".world-label", has_text="Signal & Noise"))
+    assert "Hale's Keep" in shire.get_attribute("aria-label")
+
+    page.locator("[data-world-unexplored]").uncheck()
+    playwright_api.expect(page.locator(".world-marker.unexplored:not(.on-trail)")).to_have_count(0)
+    page.locator("[data-world-unexplored]").check()
+
+    page.locator(".world-marker.unexplored[data-world-store]").first.click(force=True)
+    playwright_api.expect(page.locator("#store-dialog")).to_have_attribute("open", "")
+    assert page.locator("#store-search").input_value()
+    playwright_api.expect(page.locator(".store-card")).not_to_have_count(0)
+
+
+def test_world_map_can_add_a_hidden_builtin_course(page):
+    page.goto(page.url.split("?")[0] + "?view=world")
+    page.wait_for_load_state("networkidle")
+    playwright_api.expect(page.locator(".world-marker.known")).to_have_count(0)
+    page.locator('.world-marker[data-world-add="field-kit"]').click(force=True)
+    page.wait_for_url("**course=field-kit**")
+    page.goto(page.url.split("?")[0])
+    page.wait_for_load_state("networkidle")
+    playwright_api.expect(page.locator(".course-card[href*='field-kit']")).to_have_count(1)
+
+
+def test_version_one_trail_migrates(page):
+    page.evaluate(
+        """() => localStorage.setItem('lorekeeper:path', JSON.stringify({
+          version: 1, course: 'field-kit', title: 'Field Kit',
+          steps: [{ id: '01-01', title: 'Order the incident response', kind: 'order' }],
+          secondary: { slug: 'ship-it', title: 'Ship It' }
+        }))"""
+    )
+    page.reload()
+    page.wait_for_load_state("networkidle")
+    path = page.evaluate("() => JSON.parse(localStorage.getItem('lorekeeper:path'))")
+    assert path["version"] == 2
+    assert [stop["slug"] for stop in path["stops"]] == ["field-kit", "ship-it"]
+
+
+def test_study_mode_world_is_a_list(page):
+    page.goto(page.url.split("?")[0] + "?view=world")
+    page.wait_for_load_state("networkidle")
+    page.locator("#menu-toggle").click()
+    page.locator("#theme-select").select_option("study")
+    playwright_api.expect(page.locator(".world-stage")).to_be_hidden()
+    playwright_api.expect(page.locator(".world-list")).to_be_visible()
+    assert page.locator(".world-region").count() >= 5
+
+
+def test_completing_every_stop_finishes_the_trail(page):
+    page.evaluate(
+        """() => {
+          localStorage.setItem('lorekeeper:path', JSON.stringify({
+            version: 2, answers: {}, createdAt: new Date().toISOString(),
+            stops: [{ slug: 'field-kit', title: 'Field Kit', tags: [], narrator: '',
+                      goal: [{ id: '01-01', title: 'Order the incident response', kind: 'order' }], chapter: 'Chapter 1' }]
+          }));
+          localStorage.setItem('lorekeeper:setting:hidden-courses', '[]');
+          localStorage.setItem('lorekeeper:pending-progress:field-kit',
+            JSON.stringify({ completed: { '01-01': true }, xp: 20, history: [] }));
+        }"""
+    )
+    page.locator("[data-starter]").click()
+    playwright_api.expect(page.locator(".course-row")).to_have_count(3)
+    page.reload()
+    page.wait_for_load_state("networkidle")
+    playwright_api.expect(page.locator("#moment")).to_contain_text("Trail complete")
+    playwright_api.expect(page.locator(".picker-trail")).to_contain_text("Pathfinder")
+    assert page.evaluate("() => JSON.parse(localStorage.getItem('lorekeeper:path')).completedAt")

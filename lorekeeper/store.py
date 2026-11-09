@@ -51,6 +51,41 @@ PACK_ART = {
     "netsim-field-guide": ("cyberpunk", "chain"),
 }
 
+# Hand-picked Quest narrator per pack. It sets the pack's guide and its region
+# on the world map; tags are only the fallback for packs without one.
+PACK_NARRATOR = {
+    "pocket-incidents": "sentinel",
+    "information-security": "sentinel",
+    "audit-and-control": "sentinel",
+    "assume-breach": "sentinel",
+    "follow-the-trace": "sentinel",
+    "test-the-claim": "sentinel",
+    "substantiate-dont-assume": "sentinel",
+    "break-with-permission": "sentinel",
+    "security-toys": "sentinel",
+    "speak-software": "oracle",
+    "the-human-edge": "oracle",
+    "conversation-not-delegation": "oracle",
+    "prove-dont-persuade": "oracle",
+    "build-ai-understand-ai": "oracle",
+    "the-great-silence": "oracle",
+    "ai-toys": "oracle",
+    "build-web-guide-ai": "artificer",
+    "simplebot": "artificer",
+    "think-python-direct-ai": "artificer",
+    "code-python-consult-ai": "artificer",
+    "ship-python-orchestrate-ai": "artificer",
+    "converse-python-partner-ai": "artificer",
+    "programming-paradigms": "artificer",
+    "follow-the-packet": "courier",
+    "netsim-field-guide": "courier",
+    "systems-analysis-and-design": "architect",
+    "simulate-it": "architect",
+    "build-it-teach-it": "mentor",
+    "partner-dont-police": "mentor",
+    "the-absolute-minimum-you-must-know": "cartographer",
+}
+
 
 def _now() -> str:
     return datetime.now(timezone.utc).isoformat(timespec="seconds")
@@ -542,6 +577,11 @@ def _netsim_field_guide() -> dict:
 
 
 def _write_pack(out: Path, pack: dict, key) -> dict:
+    narrator = PACK_NARRATOR.get(pack["id"], "")
+    for course in pack["courses"]:
+        if narrator and not course.get("narrator"):
+            course["narrator"] = narrator
+            course["course"]["unit"]["narrator"] = narrator
     packs_dir = out / "packs"
     packs_dir.mkdir(parents=True, exist_ok=True)
     pack_path = packs_dir / f"{pack['id']}.json"
@@ -562,6 +602,7 @@ def _write_pack(out: Path, pack: dict, key) -> dict:
         "level": entry["level"],
         "artSet": PACK_ART.get(pack["id"], ("base", "advisor"))[0],
         "artScene": PACK_ART.get(pack["id"], ("base", "advisor"))[1],
+        "narrator": entry.get("narrator", ""),
         "courses": len(pack["courses"]),
         "lessons": sum(len(module["lessons"]) for module in entry["course"]["modules"]),
         "size": pack_path.stat().st_size,

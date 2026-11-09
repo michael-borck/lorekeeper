@@ -7,6 +7,7 @@ code: ISYS3004
 slug: ship-it
 theme: storybook
 tags: [web, design, client, ai, accessibility, api, story, exercise]
+narrator: artificer
 level: beginner
 start: "01-01"
 pitch: "Build and ship a client website with an AI partner, from the first brief to the final handover."

@@ -46,6 +46,13 @@ SCENE = (
     "{desc}, " + PALETTE + ", game art"
 )
 
+WORLD_PROMPT = (
+    "FLAT TOP-DOWN fantasy kingdom map in the style of a classic fantasy novel endpaper map, "
+    "viewed straight down, aged parchment, brown ink linework, light green and blue watercolour "
+    "washes: inked mountain range across the north, forests of tiny trees, a long winding river, "
+    "a coastline with a sea and islands, small castles towers and villages as ink icons, no text, no labels"
+)
+
 JOBS = {
     # Narrators, one per pack category. Width shipped: 384px.
     "keeper": (PORTRAIT, "an old bearded archivist sage in a hooded robe holding a glowing lantern, round spectacles, a large leather book", PORTRAIT_SIZE),
@@ -59,14 +66,18 @@ JOBS = {
     # Scenes.
     "hero": (SCENE, "a cozy tall stone library tower at dusk with glowing windows, a winding dirt path with lanterns leading from its door across green hills toward distant mountains and a small castle", SCENE_SIZE),
     "map": (SCENE, "a top-down parchment fantasy world map, a dotted winding trail connecting small villages, forests, rivers, mountains and a castle, compass rose in one corner", SCENE_SIZE),
+    # The shipped world map is a novel-endpaper style render (no pixel LoRA), picked
+    # from: limn -m juggernautXL_v9 -s 1216x832 --seed 7442 with WORLD_PROMPT below.
+    "world": (WORLD_PROMPT, "", SCENE_SIZE),
 }
-WIDTHS = {"hero": 1216, "map": 1216}
+WIDTHS = {"hero": 1216, "map": 1216, "world": 1600}
 BASE_SEED = 7300
 
 
 def run_limn(prompt: str, size: str, seed: int, out: Path) -> bool:
+    lora = "" if prompt == WORLD_PROMPT else LORA
     cmd = [
-        "limn", "generate", LORA + prompt,
+        "limn", "generate", lora + prompt,
         "-m", MODEL, "-s", size, "--seed", str(seed),
         "--negative", NEGATIVE, "-o", str(out),
     ]
@@ -86,8 +97,8 @@ def cmd_generate(args: argparse.Namespace) -> int:
     failures = 0
     for index, name in enumerate(names):
         template, desc, size = JOBS[name]
-        prompt = template.format(desc=desc)
-        seed_base = BASE_SEED + list(JOBS).index(name) * 10
+        prompt = template.format(desc=desc) if desc else template
+        seed_base = 7441 if name == "world" else BASE_SEED + list(JOBS).index(name) * 10
         for k in range(1, args.candidates + 1):
             out = CANDIDATES / f"{name}-{k}.png"
             out.parent.mkdir(parents=True, exist_ok=True)
