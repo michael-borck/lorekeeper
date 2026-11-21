@@ -1,5 +1,9 @@
 # Lorekeeper
 
+<p align="center">
+  <img src="player/art/quest/hero.webp" alt="Lorekeeper" width="640">
+</p>
+
 Story-driven courses for your personal learning path.
 
 Lorekeeper turns a course source tree into short readings, checkpoints and
