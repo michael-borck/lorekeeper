@@ -16,6 +16,14 @@ LANDING_HTML = """<!doctype html>
   <title>Lorekeeper · A learning quest you carry with you</title>
   <meta name="description" content="Lorekeeper is a local-first learning app. Pick a quest, play through short scenes, level up and keep your progress on your own device.">
   <meta name="theme-color" content="#15122a">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Lorekeeper · A learning quest you carry with you">
+  <meta property="og:description" content="Lorekeeper is a local-first learning app. Pick a quest, play through short scenes, level up and keep your progress on your own device.">
+  <meta property="og:image" content="https://raw.githubusercontent.com/michael-borck/lorekeeper/main/social-preview.jpg">
+  <meta property="og:image:width" content="1280">
+  <meta property="og:image:height" content="640">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://raw.githubusercontent.com/michael-borck/lorekeeper/main/social-preview.jpg">
   <link rel="icon" href="./player/favicon.svg">
   <style>
     :root { color-scheme: dark; --bg:#15122a; --panel:#241f42; --panel-2:#2e2852; --inset:#1b1733; --text:#f6ecd2; --soft:#e6d9b8; --muted:#aaa0c8; --gold:#f4c654; --gold-2:#e2a92a; --frame:#0a0818; --line:#463d78; --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; }
