@@ -43,8 +43,8 @@ python3 -m http.server --directory _site 8000
 ```
 
 `scripts/deploy-site.sh` builds `_site/` and pushes it to the public
-`michael-borck/lorekeeper-site` repository. GitHub Pages serves that repo, while
-the source and private course repos stay private. The live test URL is
+`michael-borck/lorekeeper-site` repository. GitHub Pages serves that repo; the
+course source repositories it compiles from are not included here. The live test URL is
 <https://michael-borck.github.io/lorekeeper-site/>.
 
 The site contains only built player files and course JSON. The custom domain is
@@ -408,7 +408,7 @@ stripped for now, and the book's CC BY licence is carried into the pack manifest
 Package a unit folder directly, without registering it as a built-in course:
 
 ```bash
-python3 -m lorekeeper pack --root ../isys2012-information-security \
+python3 -m lorekeeper pack --root ../source-course \
   --id information-security --title "Information Security: A Field Guide" \
   --tags security,risk,operations --theme pixel
 ```

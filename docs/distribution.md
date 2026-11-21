@@ -31,7 +31,8 @@ in IndexedDB unless the learner exports them.
 
 The player is deployed as a static site from `scripts/deploy-site.sh` to the
 public `michael-borck/lorekeeper-site` repository. GitHub Pages serves the built
-`_site/` output. The source and private course repositories stay private.
+`_site/` output. The course source repositories it compiles from are not
+included in this repository.
 
 Custom domain: `lorekeeper.borck.education`, with a Cloudflare `CNAME` for
 `lorekeeper` pointing at `michael-borck.github.io`, DNS-only (no proxy) while
