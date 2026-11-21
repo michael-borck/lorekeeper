@@ -5,7 +5,7 @@ from lorekeeper.registry import get_unit
 
 
 def test_pack_from_an_unregistered_unit_folder(tmp_path: Path):
-    root = get_unit("DEMO").root
+    root = get_unit("field-kit").root
     unit = unit_from_root(
         root,
         unit_id="demo-pack",

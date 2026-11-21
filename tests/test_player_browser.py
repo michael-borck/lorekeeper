@@ -17,6 +17,15 @@ import pytest
 playwright_api = pytest.importorskip("playwright.sync_api")
 
 
+
+@pytest.fixture(autouse=True)
+def _require_course_sources():
+    from lorekeeper.registry import load_units
+
+    for unit in load_units():
+        if not unit.root.is_dir():
+            pytest.skip(f"course source not available: {unit.root}")
+
 def serve_directory(path: Path):
     handler = partial(SimpleHTTPRequestHandler, directory=str(path))
     handler.log_message = lambda *args, **kwargs: None
@@ -28,7 +37,12 @@ def serve_directory(path: Path):
 
 @pytest.fixture(scope="module")
 def site(tmp_path_factory) -> str:
+    from lorekeeper.registry import load_units
     from lorekeeper.site import build_site
+
+    for unit in load_units():
+        if not unit.root.is_dir():
+            pytest.skip(f"course source not available: {unit.root}")
 
     out = build_site(tmp_path_factory.mktemp("player-site") / "site")
     server, url = serve_directory(out)

@@ -1,4 +1,5 @@
 import json
+import pytest
 from pathlib import Path
 
 from lorekeeper.pack import PACK_FORMAT, build_pack, write_pack
@@ -6,7 +7,10 @@ from lorekeeper.registry import get_unit
 
 
 def test_pack_builds_with_course_and_stories():
-    pack = build_pack(get_unit("ISYS3004"))
+    unit = get_unit("ship-it")
+    if not unit.root.is_dir():
+        pytest.skip(f"course source not available: {unit.root}")
+    pack = build_pack(get_unit("ship-it"))
     assert pack["format"] == PACK_FORMAT
     assert pack["version"] == 1
     assert pack["id"] == "ship-it"
@@ -21,7 +25,7 @@ def test_pack_builds_with_course_and_stories():
 
 
 def test_pack_writes_json(tmp_path: Path):
-    out = write_pack(build_pack(get_unit("DEMO")), tmp_path / "field-kit.json")
+    out = write_pack(build_pack(get_unit("field-kit")), tmp_path / "field-kit.json")
     data = json.loads(out.read_text(encoding="utf-8"))
     assert data["courses"][0]["slug"] == "field-kit"
     assert out.stat().st_size > 0
@@ -34,5 +38,5 @@ def test_pack_includes_course_assets(tmp_path: Path, monkeypatch):
     assets = tmp_path / "content" / "field-kit" / "assets"
     assets.mkdir(parents=True)
     (assets / "dot.png").write_bytes(b"\x89PNG\r\n\x1a\n")
-    pack = build_pack(get_unit("DEMO"))
+    pack = build_pack(get_unit("field-kit"))
     assert pack["courses"][0]["assets"]["dot.png"].startswith("data:image/png;base64,")

@@ -1,9 +1,8 @@
 # Lorekeeper course registry.
-# `key` and `code` are internal provenance. They never appear in the player.
+# `key` is internal provenance; `slug` is the public path.
 # `title` is the learner-facing course title.
 # `theme` is the default skin: ink, pixel or storybook.
 key: field-kit
-code: DEMO
 slug: field-kit
 theme: pixel
 tags: [practice, tools, quick, sql, data, exercise]

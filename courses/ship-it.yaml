@@ -1,9 +1,8 @@
 # Lorekeeper course registry.
-# `key` and `code` are internal provenance. They never appear in the player.
+# `key` is internal provenance; `slug` is the public path and build folder.
 # `title` is the learner-facing course title.
 # `theme` is the default skin: ink, pixel or storybook.
-key: isys3004
-code: ISYS3004
+key: ship-it
 slug: ship-it
 theme: storybook
 tags: [web, design, client, ai, accessibility, api, story, exercise]
@@ -12,6 +11,4 @@ level: beginner
 start: "01-01"
 pitch: "Build and ship a client website with an AI partner, from the first brief to the final handover."
 title: "Ship It: Web Craft with an AI Partner"
-root: ../../isys3004-business-web-and-mobile-technologies
-replacements:
-  "ISYS3004": "this course"
+root: ../../course-source/ship-it

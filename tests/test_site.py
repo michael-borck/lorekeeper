@@ -1,7 +1,17 @@
 from pathlib import Path
 
 from lorekeeper.site import build_site
+import pytest
 
+
+
+@pytest.fixture(autouse=True)
+def _require_course_sources():
+    from lorekeeper.registry import load_units
+
+    for unit in load_units():
+        if not unit.root.is_dir():
+            pytest.skip(f"course source not available: {unit.root}")
 
 def test_site_builds_with_player_build_and_cname(tmp_path: Path):
     out = build_site(tmp_path / "site", cname="lorekeeper.borck.education")

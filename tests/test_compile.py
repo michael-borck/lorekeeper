@@ -4,7 +4,12 @@ from pathlib import Path
 
 import pytest
 
-from lorekeeper.compile import assert_outside_source, compile_all, compile_unit
+from lorekeeper.compile import (
+    apply_replacements,
+    assert_outside_source,
+    compile_all,
+    compile_unit,
+)
 from lorekeeper.registry import get_unit, load_units
 from lorekeeper.validate import check_unit
 from lorekeeper.widgets import WIDGET_KINDS
@@ -22,15 +27,31 @@ def tree_digest(root: Path) -> str:
     return digest.hexdigest()
 
 
+
+def _require(*keys: str) -> None:
+    for key in keys:
+        unit = get_unit(key)
+        if not unit.root.is_dir():
+            pytest.skip(f"course source not available: {unit.root}")
+
+
+def _require_all() -> None:
+    for unit in load_units():
+        if not unit.root.is_dir():
+            pytest.skip(f"course source not available: {unit.root}")
+
+
 def test_all_registered_units_have_valid_overlays():
+    _require_all()
     problems = []
     for unit in load_units():
         problems.extend(check_unit(unit))
     assert problems == []
 
 
-def test_compile_isys3004_keeps_unit_repo_unchanged(tmp_path):
-    unit = get_unit("ISYS3004")
+def test_compile_ship_it_keeps_unit_repo_unchanged(tmp_path):
+    _require("ship-it")
+    unit = get_unit("ship-it")
     before = tree_digest(unit.root)
 
     course = compile_unit(unit, tmp_path)
@@ -48,6 +69,7 @@ def test_compile_isys3004_keeps_unit_repo_unchanged(tmp_path):
 
 
 def test_written_course_json_has_exercise_tests(tmp_path):
+    _require_all()
     compile_all(tmp_path)
     course_path = tmp_path / "ship-it" / "course.json"
     course = json.loads(course_path.read_text(encoding="utf-8"))
@@ -65,6 +87,7 @@ def test_written_course_json_has_exercise_tests(tmp_path):
 
 
 def test_checkpoint_answers_are_in_range(tmp_path):
+    _require_all()
     compile_all(tmp_path)
     course = json.loads((tmp_path / "signal-and-noise" / "course.json").read_text(encoding="utf-8"))
     checkpoints = [
@@ -81,13 +104,15 @@ def test_checkpoint_answers_are_in_range(tmp_path):
 
 
 def test_refuses_to_write_inside_unit_repo():
-    unit = get_unit("ISYS3004")
+    _require("ship-it")
+    unit = get_unit("ship-it")
     with pytest.raises(ValueError):
         assert_outside_source(unit.root / "build", unit.root)
 
 
 def test_exercise_viewport_is_compiled(tmp_path):
-    course = compile_unit(get_unit("ISYS3004"), tmp_path)
+    _require("ship-it")
+    course = compile_unit(get_unit("ship-it"), tmp_path)
     module_two = course["modules"][1]
     exercise = next(
         block
@@ -114,6 +139,7 @@ def learner_strings(value, skip_keys=None):
 
 
 def test_learner_facing_content_is_unbranded(tmp_path):
+    _require_all()
     compile_all(tmp_path)
     for path in sorted(tmp_path.glob("*/course.json")):
         course = json.loads(path.read_text(encoding="utf-8"))
@@ -123,23 +149,22 @@ def test_learner_facing_content_is_unbranded(tmp_path):
 
 
 def test_course_titles_and_slugs_are_thematic():
-    courses = {unit.code: unit for unit in load_units()}
-    assert courses["ISYS3004"].title.startswith("Ship It")
-    assert courses["ISYS3004"].slug == "ship-it"
-    assert courses["ISYS3004"].theme == "storybook"
-    assert courses["ISYS2008"].title.startswith("Signal & Noise")
-    assert courses["ISYS2008"].slug == "signal-and-noise"
-    assert courses["ISYS2008"].theme == "pixel"
+    courses = {unit.slug: unit for unit in load_units()}
+    assert courses["ship-it"].title.startswith("Ship It")
+    assert courses["ship-it"].theme == "storybook"
+    assert courses["signal-and-noise"].title.startswith("Signal & Noise")
+    assert courses["signal-and-noise"].theme == "pixel"
 
 
-def test_course_code_replacements_apply_to_titles(tmp_path):
-    course = compile_unit(get_unit("ISYS2008"), tmp_path)
-    module_twelve = course["modules"][-1]
-    assert "ISYS" not in module_twelve["title"]
-    assert "the next course" in module_twelve["title"]
+def test_course_codes_are_scrubbed_from_learner_text():
+    assert "ABCD1234" not in apply_replacements("Welcome to ABCD1234", {})
+    assert apply_replacements("ABCD1234", {"ABCD1234": "the next course"}) == (
+        "the next course"
+    )
 
 
 def test_index_is_unbranded(tmp_path):
+    _require_all()
     compile_all(tmp_path)
     index = json.loads((tmp_path / "index.json").read_text(encoding="utf-8"))
     for text in learner_strings(index):
@@ -148,7 +173,7 @@ def test_index_is_unbranded(tmp_path):
 
 
 def test_field_kit_contains_every_widget(tmp_path):
-    course = compile_unit(get_unit("DEMO"), tmp_path)
+    course = compile_unit(get_unit("field-kit"), tmp_path)
     kinds = {
         lesson["kind"]
         for module in course["modules"]
@@ -164,7 +189,8 @@ def test_sql_engine_is_vendored():
 
 
 def test_story_is_copied_into_the_build(tmp_path):
-    course = compile_unit(get_unit("ISYS3004"), tmp_path)
+    _require("ship-it")
+    course = compile_unit(get_unit("ship-it"), tmp_path)
     story = next(
         block
         for module in course["modules"]
@@ -177,6 +203,7 @@ def test_story_is_copied_into_the_build(tmp_path):
 
 
 def test_index_includes_course_themes(tmp_path):
+    _require_all()
     compile_all(tmp_path)
     index = json.loads((tmp_path / "index.json").read_text(encoding="utf-8"))
     themes = {course["slug"]: course["theme"] for course in index["courses"]}
@@ -186,6 +213,7 @@ def test_index_includes_course_themes(tmp_path):
 
 
 def test_every_story_is_copied_into_its_course_build(tmp_path):
+    _require_all()
     compile_all(tmp_path)
     for path in sorted(tmp_path.glob("*/course.json")):
         course = json.loads(path.read_text(encoding="utf-8"))
@@ -198,6 +226,7 @@ def test_every_story_is_copied_into_its_course_build(tmp_path):
 
 
 def test_course_wayfinder_metadata_is_compiled(tmp_path):
+    _require_all()
     compile_all(tmp_path)
     index = json.loads((tmp_path / "index.json").read_text(encoding="utf-8"))
     courses = {course["slug"]: course for course in index["courses"]}

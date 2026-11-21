@@ -5,6 +5,7 @@ from __future__ import annotations
 import copy
 import hashlib
 import json
+import os
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -92,7 +93,7 @@ def _now() -> str:
 
 
 def _pocket_incidents(build_root: Path) -> dict:
-    unit = get_unit("ISYS2008")
+    unit = get_unit("signal-and-noise")
     source = compile_unit(unit, build_root)
     module = next(
         module for module in source["modules"] if module.get("number") == 11
@@ -150,8 +151,15 @@ def _pocket_incidents(build_root: Path) -> dict:
     }
 
 
+def _course_source(name: str) -> Path:
+    base = Path(
+        os.environ.get("LOREKEEPER_COURSE_SOURCE", engine_root().parent / "course-source")
+    )
+    return base / name
+
+
 def _information_security(build_root: Path) -> dict:
-    root = engine_root().parent / "isys2012-information-security"
+    root = _course_source("information-security")
     if not root.is_dir():
         raise FileNotFoundError(f"information security source not found: {root}")
     unit = unit_from_root(
@@ -170,7 +178,7 @@ def _information_security(build_root: Path) -> dict:
 
 
 def _audit_and_control(build_root: Path) -> dict:
-    root = engine_root().parent / "isys6018-information-security-audit-and-control"
+    root = _course_source("audit-and-control")
     if not root.is_dir():
         raise FileNotFoundError(f"audit and control source not found: {root}")
     unit = unit_from_root(

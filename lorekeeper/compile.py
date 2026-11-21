@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import re
 import shutil
 from datetime import datetime, timezone
 from pathlib import Path
@@ -15,6 +16,7 @@ from .registry import Unit, content_dir, engine_root, slugify
 from .widgets import WIDGET_KINDS, normalise_question, normalise_widget
 
 SCHEMA_VERSION = 1
+COURSE_CODE_RE = re.compile(r"\b[A-Z]{4}\d{4}\b")
 XP = {
     "reading": 10,
     "checkpoint": 25,
@@ -37,14 +39,18 @@ def xp_for(kind: str) -> int:
     return XP.get(kind, 10)
 
 
+def _scrub_codes(value: str) -> str:
+    """Strip internal course codes even when no explicit replacement is given."""
+    value = COURSE_CODE_RE.sub("the course", value)
+    return re.sub(r"[ \t]{2,}", " ", value).strip()
+
+
 def apply_replacements(value, replacements: dict[str, str]):
-    """Apply a course's word replacements to learner-facing values."""
-    if not replacements:
-        return value
+    """Apply a course's word replacements and strip internal codes."""
     if isinstance(value, str):
         for old, new in replacements.items():
             value = value.replace(old, new)
-        return value
+        return _scrub_codes(value)
     if isinstance(value, list):
         return [apply_replacements(item, replacements) for item in value]
     if isinstance(value, dict):

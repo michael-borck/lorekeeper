@@ -209,14 +209,18 @@ A registry entry gives the engine a source and a learner-facing identity:
 
 ```yaml
 key: web-craft
-code: INTERNAL-CODE          # provenance only
 slug: ship-it                # public path and build folder
 title: "Ship It: Web Craft with an AI Partner"
 narrator: artificer          # optional Quest guide; omit to pick from tags
-root: ../../source-course
+root: ../../course-source/web-craft
+```
+
+Course codes are scrubbed from learner-facing output automatically. If a source
+uses other internal wording, add an optional `replacements` mapping:
+
+```yaml
 replacements:
-  "INTERNAL-CODE": "this course"
-  "NEXT-CODE": "the next course"
+  "INTERNAL-WORDING": "learner-facing wording"
 ```
 
 `key`, `code` and `root` are internal. `slug`, `title` and `replacements` shape

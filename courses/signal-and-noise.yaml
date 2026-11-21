@@ -1,19 +1,14 @@
 # Lorekeeper course registry.
-# `key` and `code` are internal provenance. They never appear in the player.
+# `key` is internal provenance; `slug` is the public path and build folder.
 # `title` is the learner-facing course title.
 # `theme` is the default skin: ink, pixel or storybook.
-key: isys2008
-code: ISYS2008
+key: signal-and-noise
 slug: signal-and-noise
 theme: pixel
 tags: [systems, networking, security, operations, incident, story, exercise]
-# Quest narrator. Leave out to pick one from the tags.
 narrator: architect
 level: beginner
 start: "01-01"
 pitch: "Understand the estate behind the website: operating systems, networks, identity, storage and incidents."
 title: "Signal & Noise: An Enterprise Systems Field Guide"
-root: ../../isys2008-enterprise-technologies
-replacements:
-  "ISYS2008": "this course"
-  "ISYS3012": "the next course"
+root: ../../course-source/signal-and-noise

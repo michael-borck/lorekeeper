@@ -3,7 +3,17 @@ from pathlib import Path
 from lorekeeper.signing import keygen
 from lorekeeper.store import build_store
 from lorekeeper.verify import verify_store
+import pytest
 
+
+
+@pytest.fixture(autouse=True)
+def _require_course_sources():
+    from lorekeeper.registry import load_units
+
+    for unit in load_units():
+        if not unit.root.is_dir():
+            pytest.skip(f"course source not available: {unit.root}")
 
 def make_store(tmp_path: Path):
     private = tmp_path / "private.pem"

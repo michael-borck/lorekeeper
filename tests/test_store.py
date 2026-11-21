@@ -8,7 +8,17 @@ from cryptography.hazmat.primitives import serialization
 
 from lorekeeper.signing import key_id, public_bytes
 from lorekeeper.store import build_store
+import pytest
 
+
+
+@pytest.fixture(autouse=True)
+def _require_course_sources():
+    from lorekeeper.registry import load_units
+
+    for unit in load_units():
+        if not unit.root.is_dir():
+            pytest.skip(f"course source not available: {unit.root}")
 
 def test_store_builds_catalog_and_pack(tmp_path: Path):
     catalog = build_store(tmp_path / "store")
