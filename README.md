@@ -205,6 +205,11 @@ not require a full build.
 
 ## Authoring a course
 
+Private course sources are not included. Put them under `../course-source/`
+relative to this repository (for example `../course-source/signal-and-noise/`)
+or set `LOREKEEPER_COURSE_SOURCE` to another directory for the store packs. The
+demo course works without any private source.
+
 A registry entry gives the engine a source and a learner-facing identity:
 
 ```yaml
